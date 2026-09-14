@@ -7,6 +7,7 @@ from src.core.emitter.pbip_writer import PbipWriter
 from src.core.ast.semantic import TableRole
 
 current_dir = Path(__file__).parent
+data_engine_path = str(current_dir / "data_engine")
 if str(current_dir) not in sys.path:
     sys.path.insert(0, str(current_dir))
 
@@ -48,7 +49,7 @@ def test_massive_falabella_data_stress_pipeline():
 
     # 4. Escribir bundle PBIP con particiones M conectadas a los CSVs locales
     t3 = time.time()
-    output_dir = Path("Artefactos/Falabella_Retail_PBIP")
+    output_dir = Path("output/SemanticFlow_Data/Falabella_Retail_PBIP")
     writer = PbipWriter()
     pbip_file = writer.write_bundle(semantic_model, output_dir, data_dir=data_dir)
     t_emit = time.time() - t3

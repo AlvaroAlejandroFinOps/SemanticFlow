@@ -2,19 +2,23 @@ import sys
 from pathlib import Path
 import time
 
+import importlib.util
 current_dir = Path(__file__).parent
 project_root = r"D:\0001 HyperScale Thinking\PROYECTOS CLOUD\Data & AI Strategy\SemanticFlow"
 
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
-if str(current_dir) not in sys.path:
-    sys.path.insert(0, str(current_dir))
 
 from src.core.parsers.markdown_parser import MarkdownSchemaParser
 from src.core.engine.compiler import SemanticCompiler
 from src.core.emitter.pbip_writer import PbipWriter
 from src.core.ast.semantic import TableRole
-from data_engine.generator import MetroDataGenerator
+
+v2_generator_file = current_dir / "data_engine" / "generator.py"
+spec = importlib.util.spec_from_file_location("v2_generator", v2_generator_file)
+v2_mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(v2_mod)
+MetroDataGenerator = v2_mod.MetroDataGenerator
 
 def test_massive_metro_santiago_data_stress_v2_pipeline():
     schema_path = Path(project_root) / "docs" / "architecture" / "esquema_relacional.md"
@@ -51,7 +55,7 @@ def test_massive_metro_santiago_data_stress_v2_pipeline():
 
     # 4. Escribir bundle PBIP con particiones M conectadas a los CSVs locales
     t3 = time.time()
-    output_dir = Path(project_root) / "Artefactos" / "SemanticFlow_Data" / "Massive_Stress_v2_PBIP"
+    output_dir = Path(project_root) / "output" / "SemanticFlow_Data" / "Massive_Stress_v2_PBIP"
     writer = PbipWriter()
     pbip_file = writer.write_bundle(semantic_model, output_dir, data_dir=data_dir)
     t_emit = time.time() - t3

@@ -48,7 +48,7 @@ def compile(
         readable=True,
     ),
     output_dir: Path = typer.Option(
-        Path("Artefactos/PBIP"),
+        Path("output/PBIP"),
         "--output",
         "-o",
         help="Directorio destino donde se generará el proyecto PBIP y TMDL.",
@@ -169,5 +169,159 @@ def inspect(
     )
 
 
+@app.command()
+def explain(
+    input_path: Path = typer.Option(
+        ...,
+        "--input",
+        "-i",
+        help="Ruta al archivo del esquema relacional (.md, .yaml, etc.).",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+    ),
+    format: str = typer.Option(
+        "human",
+        "--format",
+        "-f",
+        help="Formato de salida: 'human' (consola) o 'json'.",
+    ),
+):
+    """
+    Explica la procedencia (provenance) y evidencia de las inferencias del modelo semántico.
+    """
+    from src.core.mappers.raw_to_canonical import raw_to_canonical
+    from src.core.engine.explainer import SemanticExplainer
+    import json
+
+    parser = _get_parser_for_file(input_path)
+    raw_schema = parser.parse(input_path)
+    canonical_project = raw_to_canonical(raw_schema)
+    explainer = SemanticExplainer(canonical_project)
+
+    if format.lower() == "json":
+        console.print_json(json.dumps(explainer.to_dict()))
+    else:
+        explainer.explain_entity_roles()
+
+
+@app.command()
+def validate(
+    input_path: Path = typer.Option(
+        ...,
+        "--input",
+        "-i",
+        help="Ruta al archivo del esquema relacional (.md, .yaml, etc.).",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+    ),
+    min_score: float = typer.Option(
+        70.0,
+        "--min-score",
+        "-s",
+        help="Puntuación mínima de calidad requerida para pasar la validación (0-100).",
+    ),
+):
+    """
+    Evalúa el Semantic Quality Score (cQS) y valida el modelo contra reglas de gobierno y calidad.
+    """
+    from src.core.mappers.raw_to_canonical import raw_to_canonical
+    from src.core.quality.scorer import SemanticQualityScorer
+
+    parser = _get_parser_for_file(input_path)
+    raw_schema = parser.parse(input_path)
+    canonical_project = raw_to_canonical(raw_schema)
+
+    scorer = SemanticQualityScorer(canonical_project)
+    result = scorer.evaluate()
+
+    score_color = "green" if result.score >= min_score else "red"
+    console.print(
+        Panel.fit(
+            f"[bold]Semantic Quality Score (cQS):[/bold] [{score_color}]{result.score:.1f} / {result.max_score:.1f}[/{score_color}]\n"
+            f"[dim]Errores Bloqueantes:[/dim] [red]{result.blocking_errors}[/red] | "
+            f"[dim]Advertencias:[/dim] [yellow]{result.warnings}[/yellow]",
+            title="[bold cyan]Calificación de Calidad Semántica[/bold cyan]",
+            box=box.ROUNDED,
+        )
+    )
+
+    if result.diagnostics:
+        diag_table = Table(
+            title="Diagnósticos de Calidad y Gobierno",
+            box=box.SIMPLE,
+            header_style="bold yellow",
+        )
+        diag_table.add_column("Código", style="bold")
+        diag_table.add_column("Severidad", justify="center")
+        diag_table.add_column("Mensaje")
+        diag_table.add_column("Acción Sugerida", style="dim")
+
+        for d in result.diagnostics:
+            sev_color = "red" if d.severity == "ERROR" else "yellow"
+            diag_table.add_row(
+                d.code,
+                f"[{sev_color}]{d.severity.value}[/{sev_color}]",
+                d.message,
+                d.suggested_action or "N/A",
+            )
+        console.print(diag_table)
+
+    if result.score < min_score or result.blocking_errors > 0:
+        console.print(
+            f"\n[bold red][FAIL][/bold red] La compilación no cumple con la calidad mínima requerida ({min_score})."
+        )
+        raise typer.Exit(code=1)
+    else:
+        console.print("\n[bold green][PASS][/bold green] Validación de calidad exitosa.")
+
+
+@app.command()
+def docgen(
+    input_path: Path = typer.Option(
+        ...,
+        "--input",
+        "-i",
+        help="Ruta al archivo del esquema relacional (.md, .yaml, etc.).",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+    ),
+    output_dir: Path = typer.Option(
+        Path("output/docs"),
+        "--output",
+        "-o",
+        help="Directorio donde se guardará el Data Dictionary y el Diagrama ERD.",
+    ),
+):
+    """
+    Genera documentación enterprise automáticamente (Diccionario de Datos Markdown y Diagrama ERD Mermaid).
+    """
+    from src.core.mappers.raw_to_canonical import raw_to_canonical
+    from src.core.docs.emitter import DocumentationEmitter
+
+    parser = _get_parser_for_file(input_path)
+    raw_schema = parser.parse(input_path)
+    canonical_project = raw_to_canonical(raw_schema)
+
+    emitter = DocumentationEmitter(canonical_project)
+    res = emitter.export_all(str(output_dir))
+
+    console.print(
+        Panel(
+            f"[bold green]Documentación generada exitosamente![/bold green]\n\n"
+            f"- Diccionario de Datos: [bold white]{res['dictionary']}[/bold white]\n"
+            f"- Diagrama ERD (Mermaid): [bold white]{res['erd']}[/bold white]",
+            title="[bold cyan]Documentación Enterprise[/bold cyan]",
+            box=box.ROUNDED,
+        )
+    )
+
+
 if __name__ == "__main__":
+
     app()

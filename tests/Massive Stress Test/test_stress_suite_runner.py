@@ -16,7 +16,7 @@ def test_massive_stress_suite_runner():
     compiler = SemanticCompiler()
     writer = PbipWriter()
 
-    output_root = Path("Artefactos/Massive_Stress_PBIP")
+    output_root = Path("output/SemanticFlow_Empty/Massive_Stress_PBIP")
     output_root.mkdir(parents=True, exist_ok=True)
 
     summary_metrics = []

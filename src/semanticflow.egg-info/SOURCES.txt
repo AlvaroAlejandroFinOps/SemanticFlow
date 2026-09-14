@@ -1,0 +1,7 @@
+pyproject.toml
+src/semanticflow.egg-info/PKG-INFO
+src/semanticflow.egg-info/SOURCES.txt
+src/semanticflow.egg-info/dependency_links.txt
+src/semanticflow.egg-info/entry_points.txt
+src/semanticflow.egg-info/requires.txt
+src/semanticflow.egg-info/top_level.txt

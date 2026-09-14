@@ -1,0 +1,1593 @@
+SEMANTICFLOW
+PLAN MAESTRO DE EVOLUCION ENTERPRISE
+Instruccion detallada para ejecucion gradual mediante Antigravity IDE
+
+Version del plan: 1.0
+Fecha de definicion: 2026-09-13
+Estado: Planificacion arquitectonica previa a cambios de codigo
+Proyecto: SemanticFlow
+
+======================================================================
+0. PROPOSITO DE ESTE DOCUMENTO
+======================================================================
+
+Este documento es la instruccion maestra para evolucionar SemanticFlow desde un compilador local determinista orientado a Power BI y TMDL hacia una plataforma enterprise de Semantic Model Engineering, manteniendo Power BI como backend de referencia y preservando el funcionamiento actual.
+
+El agente de Antigravity debe usar este documento como plan de ejecucion gradual. No debe interpretar este plan como autorizacion para implementar todas las fases de una sola vez. Cada fase requiere analisis, propuesta de impacto, implementacion pequena, pruebas, evidencia y cierre antes de avanzar.
+
+Objetivos del plan:
+
+1. Preservar la arquitectura desacoplada Parser -> AST -> Compiler -> Emitter.
+2. Evitar regresiones en la generacion actual de PBIP y TMDL.
+3. Introducir progresivamente un Canonical Semantic Model neutral respecto del proveedor.
+4. Organizar la plataforma en capacidades de producto y vistas por persona.
+5. Incorporar gobierno, seguridad, calidad, linaje, explicabilidad y operacion como capacidades de primera clase.
+6. Consolidar Power BI como primer target enterprise.
+7. Preparar, sin implementar todavia, una arquitectura extensible para futuros targets.
+8. Posponer expresamente los emitters de Looker/LookML y Qlik Sense/Qlik Cloud para actualizaciones futuras.
+9. Profesionalizar el repositorio para su publicacion en GitHub y su presentacion en empresas.
+10. Mantener una experiencia local y offline como capacidad base, sin agregar dependencias cloud obligatorias.
+
+======================================================================
+1. CONTEXTO Y ESTADO ACTUAL QUE DEBE PRESERVARSE
+======================================================================
+
+SemanticFlow es actualmente un compilador local determinista de modelos semanticos para Power BI. Transforma esquemas relacionales en Markdown, YAML o JSON en proyectos PBIP y codigo TMDL.
+
+Arquitectura actual confirmada:
+
+- Parsers de entrada.
+- AST relacional crudo basado en Pydantic v2.
+- Semantic Compiler Engine.
+- Inferencia de roles y relaciones.
+- Reglas basicas de gobierno.
+- Generacion de medidas DAX.
+- TMDL Emitter.
+- PBIP Writer.
+- CLI basada en Typer y Rich.
+- Pruebas unitarias, de integracion y stress.
+
+Rutas actuales relevantes:
+
+- src/cli.py
+- src/core/ast/
+- src/core/parsers/
+- src/core/engine/compiler.py
+- src/core/engine/
+- src/core/emitter/
+- tests/
+- tests/Massive Stress Test/
+- tests/Massive Data Stress/
+- Artefactos/
+- 001_Seed/
+- pyproject.toml
+- README.md
+
+Restricciones inviolables iniciales:
+
+- Mantener indentacion TMDL mediante tabuladores.
+- Mantener el comportamiento determinista.
+- No agregar dependencias cloud obligatorias al nucleo.
+- No romper los parsers existentes.
+- No romper los contratos publicos sin estrategia de compatibilidad.
+- Mantener el ocultamiento automatico de claves foraneas como regla configurable de gobierno.
+- No convertir TMDL ni DAX en el modelo canonico neutral.
+- No implementar Looker ni Qlik durante este plan base.
+
+======================================================================
+2. VISION OBJETIVO
+======================================================================
+
+Vision en espanol:
+
+SemanticFlow es un compilador abierto y determinista de modelos semanticos que transforma contratos declarativos de datos en modelos analiticos gobernados, comprobables, explicables y desplegables sobre plataformas empresariales de BI.
+
+Vision tecnica:
+
+SemanticFlow debe evolucionar hacia un framework declarativo y extensible capaz de:
+
+- Descubrir y normalizar metadatos.
+- Representar conceptos fisicos, analiticos y empresariales.
+- Inferir semantica con evidencia y explicacion.
+- Definir metricas gobernadas.
+- Aplicar politicas de calidad y seguridad.
+- Validar modelos antes de emitirlos.
+- Compilar artefactos especificos por plataforma.
+- Generar documentacion y linaje.
+- Integrarse con CI/CD.
+- Mantener trazabilidad completa desde fuente hasta artefacto generado.
+
+Arquitectura objetivo conceptual:
+
+Fuentes y contratos
+    -> Parsers e Importers
+    -> Raw Metadata AST
+    -> Canonical Semantic Model
+        -> Semantic Inference
+        -> Metric Compiler
+        -> Governance Policies
+        -> Security Policies
+        -> Quality Validation
+        -> Optimization Rules
+        -> Lineage Graph
+    -> Target Capability Planner
+    -> Target Adapters
+        -> Power BI / TMDL / PBIP, implementacion de referencia
+        -> Documentacion, implementacion temprana
+        -> Looker / LookML, futuro
+        -> Qlik Sense / Qlik Cloud, futuro
+        -> Otros targets, futuro
+
+======================================================================
+3. MODELO ORGANIZATIVO DE DOS DIMENSIONES
+======================================================================
+
+El producto debe ordenarse mediante dos dimensiones complementarias. No se deben crear motores separados por profesion. Todas las personas deben consumir el mismo Canonical Semantic Model, usando vistas, validaciones, permisos, comandos o reportes adaptados a sus necesidades.
+
+------------------------------------------------------------------
+3.1 DIMENSION A: CAPACIDADES DEL PRODUCTO
+------------------------------------------------------------------
+
+A1. Descubrimiento e ingesta de metadatos
+
+Responsabilidades:
+
+- Leer Markdown, YAML y JSON existentes.
+- Incorporar gradualmente SQL DDL como fuente declarativa.
+- Detectar tablas, columnas, claves, relaciones y tipos.
+- Registrar origen y evidencia de cada metadato.
+- Diferenciar metadatos declarados, inferidos y enriquecidos.
+- Permitir validacion previa antes de compilar.
+
+A2. Modelado semantico
+
+Responsabilidades:
+
+- Representar tablas de hechos, dimensiones y puentes.
+- Declarar grano.
+- Modelar dimensiones conformadas.
+- Modelar dimensiones de rol.
+- Soportar copo de nieve de forma controlada.
+- Representar jerarquias.
+- Representar relaciones y su cardinalidad.
+- Registrar ambiguedad y rutas de filtro.
+- Distinguir semantica neutral de propiedades exclusivas de Power BI.
+
+A3. Definicion de metricas
+
+Responsabilidades:
+
+- Definir metricas base, derivadas y KPI.
+- Declarar expresion logica neutral cuando sea posible.
+- Registrar implementacion DAX como expresion especifica del target.
+- Declarar unidad, formato, moneda y periodicidad.
+- Declarar aditividad, semi-aditividad o no aditividad.
+- Registrar numerador y denominador para ratios.
+- Declarar dimensiones compatibles y filtros predeterminados.
+- Mantener dependencias entre metricas.
+- Asignar ownership y estado de certificacion.
+
+A4. Gobierno y seguridad
+
+Responsabilidades:
+
+- Propietario y data steward.
+- Clasificacion de sensibilidad.
+- Identificacion de PII y otros datos regulados.
+- Row-Level Security.
+- Object-Level Security.
+- Enmascaramiento como capacidad neutral cuando corresponda.
+- Retencion y restricciones de uso.
+- Politicas obligatorias, advertencias y recomendaciones.
+- Excepciones documentadas y auditables.
+
+A5. Optimizacion
+
+Responsabilidades:
+
+- Analizar cardinalidad declarada o estimada.
+- Detectar columnas innecesarias.
+- Evaluar relaciones potencialmente costosas.
+- Recomendar estrategias de particionamiento.
+- Representar storage mode de forma neutral y mapearlo al target.
+- Evaluar Import, DirectQuery, Direct Lake y modelos compuestos cuando el target sea Power BI.
+- Separar escala de metadatos de escala de datos.
+- Producir recomendaciones sin alterar automaticamente decisiones criticas.
+
+A6. Validacion y pruebas
+
+Responsabilidades:
+
+- Validacion de contratos.
+- Pruebas del modelo semantico.
+- Pruebas de reglas de negocio.
+- Pruebas de relaciones.
+- Pruebas de metricas.
+- Pruebas de seguridad.
+- Pruebas de compatibilidad por target.
+- Pruebas deterministas y de regresion.
+- Golden files para emitters.
+- Semantic Quality Score.
+
+A7. Compilacion por plataforma
+
+Responsabilidades:
+
+- Mantener Power BI como target de referencia.
+- Separar Canonical Semantic Model de la representacion Power BI.
+- Introducir Target Capability Planner.
+- Informar compatibilidad total, transformada, parcial, no soportada o pendiente de revision.
+- Mantener emitters como adaptadores reemplazables.
+- No implementar Looker ni Qlik en el alcance inicial.
+
+A8. Documentacion y linaje
+
+Responsabilidades:
+
+- Diccionario de datos.
+- Catalogo de metricas.
+- Documentacion de entidades empresariales.
+- Diagramas Mermaid.
+- Linaje fuente -> tabla -> columna -> metrica -> KPI -> target.
+- Analisis de impacto.
+- Registro de decisiones de inferencia.
+- Diferenciacion entre elementos declarados, inferidos y heredados.
+
+A9. Despliegue y operacion
+
+Responsabilidades:
+
+- CLI estable.
+- Salida humana mediante Rich.
+- Salida estructurada JSON.
+- Codigos de salida consistentes.
+- Dry run.
+- Validate-only.
+- Explain.
+- Diff semantico.
+- Compilacion reproducible.
+- Integracion con GitHub Actions.
+- Versionado y changelog.
+- Telemetria opcional y desactivada por defecto.
+
+------------------------------------------------------------------
+3.2 DIMENSION B: VISTAS POR PERSONA
+------------------------------------------------------------------
+
+B1. Data Analyst
+
+Necesita:
+
+- Catalogo claro de tablas, dimensiones y metricas.
+- Definiciones de negocio.
+- Formatos y unidades consistentes.
+- Jerarquias y calendarios.
+- Medidas certificadas.
+- Advertencias sobre metricas incompatibles.
+
+Entregables sugeridos:
+
+- Vista de metricas.
+- Diccionario funcional.
+- Reporte de campos recomendados y ocultos.
+- Documentacion simple sin detalles de infraestructura.
+
+B2. Analytics Engineer
+
+Necesita:
+
+- Grano, dimensiones conformadas y relaciones.
+- Metricas reutilizables.
+- Validacion dimensional.
+- Time intelligence.
+- Pruebas semanticas.
+- Diff entre versiones del modelo.
+
+Entregables sugeridos:
+
+- Vista dimensional.
+- Dependencias de metricas.
+- Reporte de calidad semantica.
+- Reglas de modelado y compatibilidad.
+
+B3. Data Engineer
+
+Necesita:
+
+- Esquema fisico de origen.
+- Tipos y claves.
+- Particionamiento.
+- Frecuencia de actualizacion.
+- Contratos de datos.
+- Linaje tecnico.
+- Recomendaciones de carga.
+
+Entregables sugeridos:
+
+- Vista fisica y operacional.
+- Reporte de tipos incompatibles.
+- Linaje de fuentes.
+- Requisitos de refresco y volumen.
+
+B4. Data Scientist
+
+Necesita:
+
+- Entidades de observacion.
+- Features candidatas.
+- Variables objetivo.
+- Ventanas temporales.
+- Riesgo de leakage.
+- Tipo estadistico.
+- Version de definiciones.
+- Restricciones de seguridad y uso.
+
+Entregables sugeridos:
+
+- Vista analitica de features.
+- Inventario de variables.
+- Politicas de uso.
+- Relacion entre metrica empresarial y feature.
+
+Limite:
+
+SemanticFlow no debe convertirse en una plataforma de entrenamiento ML. Debe actuar como puente semantico entre BI, analitica e IA.
+
+B5. BI Developer
+
+Necesita:
+
+- DAX y TMDL validos.
+- Calculation groups.
+- Perspectivas.
+- Jerarquias.
+- Roles.
+- Particiones.
+- Propiedades especificas de Power BI.
+
+Entregables sugeridos:
+
+- Proyecto PBIP.
+- Arbol TMDL.
+- Reporte de compatibilidad.
+- Golden diff de los objetos generados.
+
+B6. Data Architect
+
+Necesita:
+
+- Vista end-to-end.
+- Dominios y limites.
+- Decisiones arquitectonicas.
+- Compatibilidad entre targets.
+- Analisis de impacto.
+- Dependencias.
+- Escalabilidad.
+
+Entregables sugeridos:
+
+- Diagrama de arquitectura.
+- Architecture Decision Records.
+- Matriz de capacidades.
+- Reporte de deuda tecnica y riesgos.
+
+B7. Data Governance Officer
+
+Necesita:
+
+- Ownership.
+- Stewardship.
+- Clasificacion.
+- Certificacion.
+- Politicas.
+- Excepciones.
+- Evidencia auditable.
+
+Entregables sugeridos:
+
+- Reporte de cumplimiento.
+- Matriz de responsabilidades.
+- Incumplimientos bloqueantes y no bloqueantes.
+- Historial de excepciones.
+
+B8. Platform Engineer
+
+Necesita:
+
+- Builds reproducibles.
+- CI/CD.
+- Observabilidad.
+- Codigos de salida.
+- Artefactos versionados.
+- Rendimiento del compilador.
+- Compatibilidad de entornos.
+
+Entregables sugeridos:
+
+- Pipeline automatizado.
+- Reporte JSON.
+- Metricas de compilacion.
+- Paquete instalable.
+- Estrategia de releases.
+
+B9. Domain Owner o Data Product Owner
+
+Necesita:
+
+- Definiciones empresariales.
+- Responsables.
+- SLA o expectativas de actualizacion.
+- Metricas certificadas.
+- Calidad y confianza.
+- Impacto de cambios.
+
+Entregables sugeridos:
+
+- Ficha del producto de datos.
+- Catalogo de KPI.
+- Estado de certificacion.
+- Reporte de impacto en lenguaje empresarial.
+
+B10. Auditor o equipo de riesgo
+
+Necesita:
+
+- Trazabilidad de cambios.
+- Evidencia de politicas.
+- Clasificacion.
+- Accesos declarados.
+- Excepciones.
+- Versiones.
+- Reproducibilidad.
+
+Entregables sugeridos:
+
+- Audit bundle.
+- Manifiesto de compilacion.
+- Hashes de entrada y salida.
+- Reglas ejecutadas.
+- Resultados y excepciones.
+
+======================================================================
+4. PRINCIPIOS ARQUITECTONICOS OBLIGATORIOS
+======================================================================
+
+P1. Vendor neutrality in the core
+
+El nucleo no debe depender conceptualmente de Power BI. Los conceptos especificos de Power BI deben modelarse como extensiones o configuraciones del target.
+
+P2. Power BI first, not Power BI only
+
+Power BI seguira siendo la implementacion de referencia y el unico target BI completo durante este plan. La arquitectura debe quedar preparada para otros destinos, sin implementar integraciones prematuras.
+
+P3. Declarative over imperative
+
+Los contratos de entrada deben expresar intencion y semantica. La generacion de artefactos debe ser responsabilidad del compilador.
+
+P4. Determinism
+
+La misma entrada, configuracion y version del compilador deben producir la misma salida.
+
+P5. Explainability
+
+Cada inferencia relevante debe registrar regla, evidencia, confianza y resultado.
+
+P6. Policy as Code
+
+Las reglas de gobierno, seguridad y calidad deben ser configurables, versionables y comprobables.
+
+P7. Compatibility before emission
+
+Cada target debe declarar sus capacidades. El sistema debe detectar incompatibilidades antes de generar archivos.
+
+P8. Backward compatibility
+
+Los contratos actuales deben mantenerse o migrarse mediante adaptadores, versionado y mensajes claros.
+
+P9. Offline-first
+
+La compilacion base debe seguir funcionando localmente y sin servicios cloud.
+
+P10. Small changes with evidence
+
+No realizar refactorizaciones masivas sin checkpoints. Cada cambio debe venir acompañado por pruebas y evidencia.
+
+======================================================================
+5. MODELO DE EJECUCION OBLIGATORIO PARA EL AGENTE ANTIGRAVITY
+======================================================================
+
+Para cada fase y cada tarea, el agente debe seguir exactamente este ciclo:
+
+PASO 1. Inspeccion
+
+- Leer los archivos afectados.
+- Confirmar el comportamiento actual.
+- Identificar contratos publicos.
+- Identificar pruebas existentes.
+- Enumerar riesgos laterales.
+- No escribir codigo todavia.
+
+PASO 2. Plan de cambio
+
+- Explicar objetivo.
+- Enumerar archivos que se crearan o modificaran.
+- Declarar supuestos.
+- Definir criterios de aceptacion.
+- Definir pruebas nuevas y pruebas de regresion.
+- Confirmar que el cambio respeta las restricciones arquitectonicas.
+
+PASO 3. Implementacion minima
+
+- Implementar el incremento mas pequeno que entregue valor verificable.
+- Evitar mezclar refactorizacion, funcionalidad y cambios cosmeticos en una sola tarea.
+- Mantener tipado estricto.
+- Agregar docstrings donde exista logica publica o no obvia.
+
+PASO 4. Pruebas focalizadas
+
+- Ejecutar primero pruebas del modulo afectado.
+- Corregir errores antes de ampliar el alcance.
+- No silenciar pruebas ni reducir aserciones para obtener resultados verdes.
+
+PASO 5. Regresion completa
+
+- Ejecutar la suite completa.
+- Ejecutar stress tests relevantes.
+- Verificar determinismo.
+- Comparar golden files cuando corresponda.
+
+PASO 6. Evidencia
+
+- Informar comandos ejecutados.
+- Informar resultados.
+- Informar archivos modificados.
+- Informar advertencias y deuda pendiente.
+- Registrar decisiones arquitectonicas relevantes.
+
+PASO 7. Gate de cierre
+
+Una tarea solo puede marcarse completada si:
+
+- Compila.
+- Pasan las pruebas focalizadas.
+- Pasa la regresion completa.
+- Se cumplen criterios de aceptacion.
+- Se actualiza documentacion relevante.
+- No se introducen secretos.
+- No se agregan dependencias cloud obligatorias.
+
+Si una validacion falla, el agente debe detener el avance hacia la siguiente tarea, diagnosticar el problema y corregirlo dentro del alcance actual.
+
+======================================================================
+6. ROADMAP DE IMPLEMENTACION PASO A PASO
+======================================================================
+
+------------------------------------------------------------------
+FASE 0. BASELINE, INVENTARIO Y PROTECCION CONTRA REGRESIONES
+------------------------------------------------------------------
+
+Objetivo:
+
+Congelar una linea base verificable antes de modificar la arquitectura.
+
+Tareas:
+
+0.1 Inventariar estructuras, contratos, comandos CLI y emitters actuales.
+0.2 Ejecutar y documentar todas las pruebas existentes.
+0.3 Registrar tiempos basales de compilacion para Tier 1, Tier 2 y Tier 3.
+0.4 Crear fixtures representativos pequenos, medianos y grandes.
+0.5 Crear golden files para la salida TMDL/PBIP actual.
+0.6 Verificar determinismo mediante compilaciones repetidas y hashes.
+0.7 Identificar APIs publicas de Python y CLI.
+0.8 Crear un reporte de deuda tecnica inicial.
+0.9 Crear una carpeta docs/ si no existe.
+0.10 Crear docs/architecture/current-state.md.
+0.11 Crear docs/architecture/target-state.md.
+0.12 Crear docs/architecture/principles.md.
+
+Pruebas obligatorias:
+
+- Suite completa actual.
+- Comparacion byte a byte o normalizada de salidas repetidas.
+- Prueba de que entradas actuales siguen produciendo artefactos validos.
+
+Criterios de aceptacion:
+
+- Existe una linea base documentada.
+- No cambian los artefactos existentes.
+- Los resultados de pruebas quedan registrados.
+- Los benchmarks quedan separados entre escala de metadatos y consideraciones de volumen de datos.
+
+------------------------------------------------------------------
+FASE 1. PROFESIONALIZACION DEL REPOSITORIO Y CI LOCAL
+------------------------------------------------------------------
+
+Objetivo:
+
+Preparar el proyecto para colaboracion, GitHub y automatizacion sin alterar el comportamiento funcional.
+
+Tareas:
+
+1.1 Inicializar estructura Git cuando corresponda.
+1.2 Agregar LICENSE compatible con la estrategia del autor.
+1.3 Agregar CONTRIBUTING.md.
+1.4 Agregar CODE_OF_CONDUCT.md.
+1.5 Agregar SECURITY.md.
+1.6 Agregar SUPPORT.md.
+1.7 Agregar CHANGELOG.md.
+1.8 Agregar plantillas de issues y pull requests.
+1.9 Definir estrategia de versionado semantico.
+1.10 Incorporar linting y formatting.
+1.11 Incorporar type checking.
+1.12 Configurar cobertura.
+1.13 Crear GitHub Actions para pruebas en versiones soportadas de Python.
+1.14 Incorporar escaneo de secretos y dependencias.
+1.15 Validar build del paquete.
+1.16 Mantener todos los controles ejecutables localmente.
+
+Criterios de aceptacion:
+
+- Pull requests pueden validarse automaticamente.
+- El mismo pipeline puede ejecutarse localmente.
+- No se modifica la salida funcional del compilador.
+- No se incorpora ninguna credencial.
+
+------------------------------------------------------------------
+FASE 2. VERSIONADO DE CONTRATOS Y CAPA DE COMPATIBILIDAD
+------------------------------------------------------------------
+
+Objetivo:
+
+Preparar la evolucion del AST sin romper entradas ni APIs actuales.
+
+Tareas:
+
+2.1 Identificar modelos Pydantic publicos existentes.
+2.2 Introducir version explicita del schema de entrada.
+2.3 Introducir version del compiler en manifiestos de salida.
+2.4 Crear politica de deprecacion.
+2.5 Crear adaptadores desde contratos legacy al nuevo modelo.
+2.6 Agregar validaciones con mensajes accionables.
+2.7 Diferenciar errores de sintaxis, contrato, semantica y target.
+2.8 Crear pruebas de compatibilidad hacia atras.
+
+Criterios de aceptacion:
+
+- Entradas actuales siguen compilando.
+- Entradas invalidas producen diagnosticos estructurados.
+- Existe una ruta documentada de migracion entre versiones.
+
+------------------------------------------------------------------
+FASE 3. CANONICAL SEMANTIC MODEL MINIMO
+------------------------------------------------------------------
+
+Objetivo:
+
+Introducir una representacion semantica neutral sin reemplazar de inmediato el AST actual.
+
+Estrategia:
+
+Aplicar patron Strangler. El AST actual sigue funcionando. Se introduce una capa canonica en paralelo y un mapper controlado.
+
+Modelo canonico minimo sugerido:
+
+- SemanticProject
+- DataSource
+- SemanticEntity
+- SemanticAttribute
+- SemanticRelationship
+- SemanticMetric
+- BusinessTerm
+- GovernanceMetadata
+- SecurityMetadata
+- TargetExtension
+- ProvenanceRecord
+- Diagnostic
+
+Propiedades transversales sugeridas:
+
+- id estable.
+- name tecnico.
+- display_name.
+- description.
+- source_reference.
+- declared_or_inferred.
+- inference_evidence.
+- owner.
+- tags.
+- annotations.
+- target_extensions.
+
+Tareas:
+
+3.1 Diseñar contratos antes de escribir emitters nuevos.
+3.2 Escribir ADR sobre la separacion entre core neutral y Power BI.
+3.3 Implementar modelos Pydantic del canonico.
+3.4 Implementar mapper Raw AST -> Canonical Model.
+3.5 Implementar mapper Canonical Model -> representacion Power BI existente.
+3.6 Mantener el pipeline antiguo disponible durante la transicion.
+3.7 Crear comparacion de equivalencia entre pipeline antiguo y nuevo.
+3.8 Agregar serializacion JSON determinista del canonico para inspeccion.
+
+Criterios de aceptacion:
+
+- El mismo input genera salida Power BI equivalente.
+- El canonico no contiene tipos llamados DAX, TMDL o PBIP como requisitos centrales.
+- Las propiedades especificas de Power BI viven en extensiones de target.
+- Se preserva determinismo.
+
+------------------------------------------------------------------
+FASE 4. EXPLICABILIDAD Y PROVENANCE DE INFERENCIAS
+------------------------------------------------------------------
+
+Objetivo:
+
+Hacer auditables las decisiones automaticas.
+
+Tareas:
+
+4.1 Cada inferencia debe registrar rule_id.
+4.2 Registrar evidencia utilizada.
+4.3 Registrar resultado.
+4.4 Registrar nivel de confianza cuando aplique.
+4.5 Registrar alternativas o ambiguedades.
+4.6 Permitir override declarativo.
+4.7 Agregar comando CLI explain.
+4.8 Agregar salida humana y JSON.
+4.9 Explicar clasificacion FACT, DIMENSION o BRIDGE.
+4.10 Explicar cardinalidad inferida.
+4.11 Explicar columnas ocultas.
+4.12 Explicar medidas generadas.
+
+Criterios de aceptacion:
+
+- Ninguna inferencia critica carece de rule_id y evidencia.
+- El usuario puede inspeccionar por que se tomo una decision.
+- Un override no elimina la evidencia original; queda trazabilidad.
+
+------------------------------------------------------------------
+FASE 5. MODELADO DIMENSIONAL ENTERPRISE
+------------------------------------------------------------------
+
+Objetivo:
+
+Ampliar el modelo semantico mas alla de FACT, DIMENSION y BRIDGE.
+
+Tareas:
+
+5.1 Declaracion explicita de grano.
+5.2 Validacion de grano en tablas de hechos.
+5.3 Dimensiones conformadas.
+5.4 Role-playing dimensions.
+5.5 Slowly Changing Dimensions como metadato semantico.
+5.6 Many-to-many explicito.
+5.7 Tablas puente avanzadas.
+5.8 Jerarquias.
+5.9 Calendarios estandar y fiscales.
+5.10 Copo de nieve controlado.
+5.11 Rutas ambiguas y filtros bidireccionales.
+5.12 Validaciones que impidan inferencias peligrosas.
+
+Criterios de aceptacion:
+
+- Cada tabla de hechos puede declarar o inferir grano.
+- Relaciones ambiguas generan diagnosticos.
+- Many-to-many no se crea silenciosamente.
+- Los modelos existentes siguen funcionando.
+
+------------------------------------------------------------------
+FASE 6. METRICAS COMO OBJETOS DE PRIMERA CLASE
+------------------------------------------------------------------
+
+Objetivo:
+
+Separar el significado de una metrica de su expresion DAX final.
+
+Tareas:
+
+6.1 Definir SemanticMetric neutral.
+6.2 Tipos: base, derivada, ratio, acumulada, snapshot y KPI.
+6.3 Unidad de medida.
+6.4 Moneda y estrategia de conversion.
+6.5 Formato.
+6.6 Aditividad.
+6.7 Numerador y denominador.
+6.8 Ventana temporal.
+6.9 Dimensiones compatibles.
+6.10 Filtros predeterminados.
+6.11 Dependencias entre metricas.
+6.12 Owner y steward.
+6.13 Estado draft, reviewed, certified o deprecated.
+6.14 Pruebas semanticas asociadas.
+6.15 Compilacion a DAX mediante adapter Power BI.
+6.16 Deteccion de ciclos entre metricas.
+
+Criterios de aceptacion:
+
+- Una metrica puede inspeccionarse sin conocer DAX.
+- El backend Power BI produce DAX compatible.
+- Se detectan dependencias ciclicas.
+- Una metrica certificada exige descripcion, owner y pruebas.
+
+------------------------------------------------------------------
+FASE 7. GOBIERNO, SEGURIDAD Y POLICY AS CODE
+------------------------------------------------------------------
+
+Objetivo:
+
+Convertir gobierno y seguridad en capacidades comprobables.
+
+Tareas:
+
+7.1 Taxonomia de clasificacion.
+7.2 PII y sensibilidad.
+7.3 Owner y steward.
+7.4 Estado de certificacion.
+7.5 Politicas de nombres.
+7.6 Politicas de documentacion.
+7.7 Politicas de relaciones.
+7.8 Politicas de metricas.
+7.9 Representacion neutral de RLS.
+7.10 Representacion neutral de OLS.
+7.11 Mapeo inicial de seguridad a Power BI.
+7.12 Severidades: error, warning, recommendation e info.
+7.13 Excepciones con justificacion, responsable y expiracion opcional.
+7.14 Audit trail de reglas ejecutadas.
+7.15 Configuracion de perfiles strict, standard y exploratory.
+
+Criterios de aceptacion:
+
+- Las politicas son versionables.
+- Las reglas bloqueantes detienen compilation.
+- Las excepciones quedan auditadas.
+- No se exponen valores sensibles en logs.
+
+------------------------------------------------------------------
+FASE 8. SEMANTIC QUALITY SCORE Y VALIDACION AVANZADA
+------------------------------------------------------------------
+
+Objetivo:
+
+Medir calidad sin reemplazar diagnosticos detallados por un numero opaco.
+
+Dimensiones sugeridas:
+
+- Modelado.
+- Metricas.
+- Gobierno.
+- Seguridad.
+- Documentacion.
+- Rendimiento.
+- Portabilidad.
+- Testabilidad.
+
+Reglas iniciales sugeridas:
+
+- Toda tabla de hechos debe declarar grano.
+- Toda metrica debe tener descripcion.
+- Identificadores no deben resumirse por suma.
+- Ratios deben declarar numerador y denominador.
+- Monedas mezcladas requieren conversion.
+- Relaciones ambiguas requieren resolucion.
+- Many-to-many debe ser explicito.
+- Metricas certificadas requieren owner y pruebas.
+- Campos sensibles deben tener politica.
+- Dimensiones de fecha deben declarar calendario.
+
+Tareas:
+
+8.1 Diseñar scoring transparente.
+8.2 Permitir ponderaciones por perfil.
+8.3 Emitir detalle por regla.
+8.4 Crear comando validate.
+8.5 Crear salida JSON para CI.
+8.6 Definir umbrales de gate.
+8.7 Evitar que el score oculte errores bloqueantes.
+
+Criterios de aceptacion:
+
+- Cada punto perdido puede explicarse.
+- CI puede fallar por reglas o umbrales.
+- El score es reproducible.
+
+------------------------------------------------------------------
+FASE 9. TARGET CAPABILITY PLANNER
+------------------------------------------------------------------
+
+Objetivo:
+
+Evaluar compatibilidad antes de emitir artefactos.
+
+Estados obligatorios:
+
+- SUPPORTED
+- SUPPORTED_WITH_TRANSFORMATION
+- PARTIALLY_SUPPORTED
+- UNSUPPORTED
+- REQUIRES_MANUAL_REVIEW
+
+Tareas:
+
+9.1 Definir interfaz TargetCapabilities.
+9.2 Definir interfaz TargetAdapter.
+9.3 Crear capacidades para Power BI.
+9.4 Evaluar cada objeto canonico.
+9.5 Generar plan de compilacion.
+9.6 Generar reporte de incompatibilidades.
+9.7 Impedir emision silenciosa con perdida de significado.
+9.8 Registrar transformaciones realizadas.
+9.9 Crear extension points documentados para targets futuros.
+
+Criterios de aceptacion:
+
+- Ningun adapter puede ignorar propiedades sin diagnostico.
+- Power BI reporta soporte por objeto.
+- El core no importa modulos del adapter Power BI.
+
+------------------------------------------------------------------
+FASE 10. POWER BI ENTERPRISE HARDENING
+------------------------------------------------------------------
+
+Objetivo:
+
+Consolidar Power BI como backend de referencia completo.
+
+Tareas:
+
+10.1 Jerarquias.
+10.2 Calculation groups.
+10.3 Perspectivas.
+10.4 Display folders.
+10.5 Roles RLS.
+10.6 OLS si el formato y target lo soportan.
+10.7 Particiones configurables.
+10.8 Storage modes.
+10.9 Incremental refresh como contrato y emision.
+10.10 Import, DirectQuery, Direct Lake y composite models segun compatibilidad.
+10.11 Formatos y anotaciones.
+10.12 Localizacion y traducciones del modelo.
+10.13 Validacion TMDL.
+10.14 Validacion de PBIP generado.
+10.15 Golden tests por caracteristica.
+10.16 Matriz de versiones soportadas.
+
+Criterios de aceptacion:
+
+- Cada capacidad tiene fixture y golden test.
+- Caracteristicas no soportadas producen diagnostico.
+- La salida es estable y determinista.
+- Los ejemplos existentes siguen abriendo correctamente.
+
+------------------------------------------------------------------
+FASE 11. DOCUMENTACION, CATALOGO Y LINAJE
+------------------------------------------------------------------
+
+Objetivo:
+
+Generar valor visible incluso sin abrir Power BI.
+
+Tareas:
+
+11.1 Emitter Markdown.
+11.2 Diccionario de datos.
+11.3 Catalogo de metricas.
+11.4 Catalogo de terminos de negocio.
+11.5 Diagramas Mermaid.
+11.6 Grafo de linaje.
+11.7 Analisis de impacto.
+11.8 Reporte de ownership.
+11.9 Reporte de clasificacion.
+11.10 Reporte de compatibilidad.
+11.11 Manifest de compilacion.
+11.12 Audit bundle.
+
+Criterios de aceptacion:
+
+- Documentacion determinista.
+- Links internos validos.
+- Linaje trazable desde origen a metrica y target.
+- Diferenciacion visible entre declaracion e inferencia.
+
+------------------------------------------------------------------
+FASE 12. EXPERIENCIA CLI Y SDK
+------------------------------------------------------------------
+
+Objetivo:
+
+Ofrecer una interfaz estable para humanos, automatizacion y futuros agentes.
+
+Comandos sugeridos:
+
+- semanticflow compile
+- semanticflow inspect
+- semanticflow validate
+- semanticflow explain
+- semanticflow diff
+- semanticflow graph
+- semanticflow docs
+- semanticflow capabilities
+- semanticflow benchmark
+
+Tareas:
+
+12.1 Contrato consistente de exit codes.
+12.2 Salida Rich para humanos.
+12.3 Salida JSON para maquinas.
+12.4 Dry run.
+12.5 Configuracion por archivo.
+12.6 Perfiles de politica.
+12.7 Manejo consistente de paths.
+12.8 SDK Python publico y documentado.
+12.9 Deprecaciones con warnings claros.
+12.10 Pruebas CLI end-to-end.
+
+Criterios de aceptacion:
+
+- Todos los comandos soportan diagnosticos consistentes.
+- CI puede consumir JSON.
+- No se requiere servicio cloud.
+
+------------------------------------------------------------------
+FASE 13. RENDIMIENTO, ESCALA Y COMPILACION INCREMENTAL
+------------------------------------------------------------------
+
+Objetivo:
+
+Demostrar escalabilidad real del compilador y preparar modelos grandes.
+
+Metricas minimas:
+
+- Numero de tablas.
+- Numero de columnas.
+- Numero de relaciones.
+- Numero de metricas.
+- Numero de politicas.
+- Tiempo por fase.
+- Memoria maxima.
+- Tamano de artefactos.
+- Objetos recompilados.
+
+Tareas:
+
+13.1 Instrumentar fases del pipeline.
+13.2 Crear logs estructurados.
+13.3 Separar benchmark de metadatos y volumen de datos.
+13.4 Incorporar cache solo si preserva determinismo.
+13.5 Disenar compilacion incremental.
+13.6 Hash por subgrafo o unidad compilable.
+13.7 Pruebas de invalidez de cache.
+13.8 Limites y budgets configurables.
+13.9 Reporte de performance.
+
+Criterios de aceptacion:
+
+- Benchmarks reproducibles.
+- La cache nunca entrega artefactos desactualizados.
+- Compilacion incremental equivale a compilacion completa.
+- No se presentan datos sinteticos como evidencia de produccion real.
+
+------------------------------------------------------------------
+FASE 14. OBSERVABILIDAD Y OPERACION ENTERPRISE
+------------------------------------------------------------------
+
+Objetivo:
+
+Hacer la compilacion trazable y operable.
+
+Tareas:
+
+14.1 Build ID.
+14.2 Hash de entrada.
+14.3 Hash de salida.
+14.4 Version de schema.
+14.5 Version del compiler.
+14.6 Duracion por fase.
+14.7 Conteo de objetos.
+14.8 Reglas ejecutadas.
+14.9 Errores y warnings.
+14.10 Manifiesto de build.
+14.11 Export opcional de telemetria.
+14.12 Telemetria desactivada por defecto.
+14.13 No registrar datos sensibles.
+
+Criterios de aceptacion:
+
+- Un build puede reproducirse y auditarse.
+- Logs JSON son validables.
+- El modo offline sigue siendo completo.
+
+------------------------------------------------------------------
+FASE 15. VISTAS POR PERSONA
+------------------------------------------------------------------
+
+Objetivo:
+
+Exponer el mismo Canonical Semantic Model mediante artefactos adaptados, sin duplicar motores.
+
+Tareas:
+
+15.1 Definir contratos de PersonaView.
+15.2 Implementar Data Analyst View.
+15.3 Implementar Analytics Engineer View.
+15.4 Implementar Data Engineer View.
+15.5 Implementar Data Scientist View.
+15.6 Implementar BI Developer View.
+15.7 Implementar Data Architect View.
+15.8 Implementar Governance View.
+15.9 Implementar Platform Engineer View.
+15.10 Implementar Domain Owner View.
+15.11 Implementar Audit and Risk View.
+15.12 Permitir filtros de campos por nivel de detalle.
+15.13 Evitar que las vistas modifiquen el canonico.
+
+Criterios de aceptacion:
+
+- Todas las vistas se generan desde el mismo modelo.
+- No existe logica semantica duplicada por persona.
+- Cada vista tiene pruebas de contenido y privacidad.
+
+------------------------------------------------------------------
+FASE 16. RELEASE OPEN SOURCE Y SHOWCASE ENTERPRISE
+------------------------------------------------------------------
+
+Objetivo:
+
+Publicar una version confiable y demostrable.
+
+Tareas:
+
+16.1 README orientado a propuesta de valor.
+16.2 Quickstart reproducible.
+16.3 Arquitectura visual.
+16.4 Tres escenarios de referencia.
+16.5 Ejemplos de small, enterprise domain y hyperscale metadata.
+16.6 Benchmark methodology.
+16.7 Security model.
+16.8 Contribution guide.
+16.9 Roadmap publico.
+16.10 Release notes.
+16.11 Paquete instalable.
+16.12 Demo offline.
+16.13 Presentacion tecnica para empresas.
+16.14 Limitaciones transparentes.
+
+Criterios de aceptacion:
+
+- Un usuario nuevo puede instalar, validar y compilar un ejemplo.
+- La documentacion no exagera capacidades.
+- Los benchmarks son reproducibles.
+- Las limitaciones y targets futuros estan declarados.
+
+======================================================================
+7. FUNCIONALIDAD FUTURA EXPRESAMENTE FUERA DEL ALCANCE ACTUAL
+======================================================================
+
+Las siguientes capacidades deben contemplarse en la arquitectura, pero NO deben implementarse durante las fases iniciales ni introducir dependencias prematuras.
+
+------------------------------------------------------------------
+7.1 LOOKER / LOOKML
+------------------------------------------------------------------
+
+Estado: FUTURO.
+
+Decision:
+
+Looker sera evaluado como segundo backend semantico una vez estabilizados:
+
+- Canonical Semantic Model.
+- SemanticMetric.
+- Target Capability Planner.
+- Plugin SDK.
+- Matriz de compatibilidad.
+- Power BI reference adapter.
+
+Lineamientos futuros:
+
+- Implementar Canonical Model -> LookML.
+- Nunca implementar TMDL -> LookML como arquitectura principal.
+- Evaluar views, dimensions, measures, dimension groups, explores y joins.
+- Declarar diferencias de seguridad y comportamiento.
+- Crear golden tests y ejemplos equivalentes.
+
+No hacer ahora:
+
+- No agregar dependencias de Looker.
+- No crear emitter incompleto en produccion.
+- No afirmar portabilidad completa.
+
+------------------------------------------------------------------
+7.2 QLIK SENSE / QLIK CLOUD
+------------------------------------------------------------------
+
+Estado: FUTURO POSTERIOR A LOOKER.
+
+Decision:
+
+Qlik requiere un adapter consciente de su paradigma asociativo. No debe tratarse como un dialecto de TMDL.
+
+Lineamientos futuros:
+
+- Evaluar load scripts.
+- Master dimensions.
+- Master measures.
+- Calendarios.
+- Deteccion de synthetic keys.
+- Deteccion de referencias circulares.
+- Associations.
+- Section Access.
+- Diferencias entre Qlik Sense, Qlik Cloud y escenarios legacy.
+
+No hacer ahora:
+
+- No traducir relaciones tabulares directamente sin analisis semantico.
+- No agregar QlikView como target prioritario.
+- No prometer equivalencia uno a uno.
+
+------------------------------------------------------------------
+7.3 OTROS HORIZONTES
+------------------------------------------------------------------
+
+Tambien quedan para evaluacion futura:
+
+- dbt Semantic Layer o MetricFlow.
+- MCP Server.
+- Extension visual para IDE.
+- API local opcional.
+- Catalogo web.
+- Integraciones con catalogos externos.
+- Otros targets BI.
+
+Estas ideas no deben retrasar la consolidacion del nucleo.
+
+======================================================================
+8. ESTRATEGIA DE PRUEBAS OBLIGATORIA
+======================================================================
+
+8.1 Piramide de pruebas
+
+- Unitarias para contratos, reglas y mappers.
+- Integracion para pipeline completo.
+- Golden tests para emitters.
+- End-to-end para CLI.
+- Property-based tests para invariantes cuando sea apropiado.
+- Regression tests para bugs corregidos.
+- Stress tests para escala de metadatos.
+- Performance tests con presupuestos claros.
+
+8.2 Invariantes esenciales
+
+- Determinismo.
+- No perdida silenciosa de semantica.
+- IDs estables.
+- Orden estable de emision.
+- Compatibilidad de entradas actuales.
+- Diagnosticos reproducibles.
+- No exposicion de secretos.
+- Core independiente de targets.
+
+8.3 Fixtures minimos
+
+- Modelo estrella simple.
+- Modelo copo de nieve.
+- Dimension de rol.
+- Tabla puente.
+- Many-to-many.
+- Calendario fiscal.
+- Metricas dependientes.
+- Seguridad RLS.
+- Datos sensibles.
+- Modelo ambiguo que debe fallar.
+- Modelo grande sintetico de metadatos.
+
+8.4 Regla de correccion
+
+Cada bug corregido debe agregar una prueba que falle antes de la correccion y pase despues.
+
+8.5 Regla de golden files
+
+Los golden files no pueden actualizarse automaticamente para ocultar diferencias. Cada cambio esperado debe revisarse y justificarse.
+
+======================================================================
+9. DIAGNOSTICOS Y CONTRATOS DE ERROR
+======================================================================
+
+Cada diagnostico debe incluir cuando corresponda:
+
+- code.
+- severity.
+- category.
+- message.
+- object_id.
+- source_location.
+- rule_id.
+- suggested_action.
+- documentation_reference.
+- target.
+- blocking.
+
+Categorias sugeridas:
+
+- PARSE
+- CONTRACT
+- SEMANTIC
+- METRIC
+- GOVERNANCE
+- SECURITY
+- QUALITY
+- TARGET_COMPATIBILITY
+- EMISSION
+- PERFORMANCE
+- INTERNAL
+
+Los mensajes deben ser accionables. Evitar errores genericos sin contexto.
+
+======================================================================
+10. DOCUMENTACION ARQUITECTONICA OBLIGATORIA
+======================================================================
+
+Mantener como minimo:
+
+- docs/architecture/current-state.md
+- docs/architecture/target-state.md
+- docs/architecture/principles.md
+- docs/architecture/canonical-model.md
+- docs/architecture/target-adapters.md
+- docs/architecture/persona-views.md
+- docs/testing/strategy.md
+- docs/governance/policies.md
+- docs/roadmap.md
+- docs/compatibility/power-bi.md
+- docs/compatibility/future-targets.md
+- docs/adr/
+
+ADR iniciales sugeridos:
+
+- ADR-001: Canonical Semantic Model neutral.
+- ADR-002: Power BI como backend de referencia.
+- ADR-003: Target Capability Planner.
+- ADR-004: Policy as Code.
+- ADR-005: Explicabilidad de inferencias.
+- ADR-006: Offline-first.
+- ADR-007: Persona views sobre un unico canonico.
+- ADR-008: Postergacion de Looker y Qlik.
+
+======================================================================
+11. ESTRUCTURA MODULAR OBJETIVO SUGERIDA
+======================================================================
+
+Esta estructura es una orientacion. El agente debe inspeccionar primero el repositorio real y proponer migraciones incrementales. No debe mover todos los archivos en una sola operacion.
+
+src/
+  cli.py
+  core/
+    ast/
+      raw/
+      canonical/
+    contracts/
+    diagnostics/
+    provenance/
+    inference/
+    metrics/
+    governance/
+    security/
+    quality/
+    optimization/
+    lineage/
+    capabilities/
+  parsers/
+  targets/
+    powerbi/
+      emitter/
+      capabilities/
+      validation/
+  docs_generator/
+  personas/
+  sdk/
+
+tests/
+  unit/
+  integration/
+  e2e/
+  golden/
+  fixtures/
+  performance/
+  stress/
+
+Nota:
+
+No ejecutar esta reorganizacion completa al inicio. Primero crear contratos y fronteras; despues migrar modulos de manera compatible.
+
+======================================================================
+12. REGLAS PARA DEPENDENCIAS
+======================================================================
+
+Antes de agregar una dependencia, el agente debe documentar:
+
+- Problema que resuelve.
+- Por que la biblioteca estandar o dependencias actuales no bastan.
+- Licencia.
+- Madurez.
+- Impacto en tamano y seguridad.
+- Si es obligatoria u opcional.
+- Alternativas evaluadas.
+
+Reglas:
+
+- Las dependencias cloud deben ser opcionales.
+- El core no debe depender de SDK de un proveedor.
+- Los adapters pueden tener extras opcionales.
+- No incorporar frameworks pesados para resolver problemas pequenos.
+
+======================================================================
+13. SEGURIDAD Y PRIVACIDAD
+======================================================================
+
+- No almacenar credenciales.
+- No registrar valores de datos de produccion.
+- Usar placeholders para ejemplos sensibles.
+- Sanitizar paths si los logs van a compartirse.
+- Validar entradas antes de procesarlas.
+- Evitar ejecucion arbitraria de expresiones.
+- Revisar riesgos de path traversal al emitir archivos.
+- Evitar sobrescritura fuera del output permitido.
+- Firmar o generar checksums de artefactos cuando corresponda.
+- Documentar modelo de amenazas antes de agregar MCP o servicios.
+
+======================================================================
+14. CRITERIOS DE DEFINICION DE HECHO
+======================================================================
+
+Una historia o tarea esta terminada solamente cuando:
+
+1. El comportamiento esta implementado.
+2. El codigo esta tipado y documentado.
+3. Las pruebas focalizadas pasan.
+4. La suite completa pasa.
+5. Los golden files fueron revisados.
+6. Los criterios de aceptacion se cumplen.
+7. La documentacion fue actualizada.
+8. Los diagnosticos son accionables.
+9. La salida sigue siendo determinista.
+10. Se evaluo compatibilidad hacia atras.
+11. Se informaron riesgos residuales.
+12. No existen secretos ni datos sensibles.
+13. El cambio puede ejecutarse localmente.
+
+======================================================================
+15. FORMATO DE RESPUESTA EXIGIDO AL AGENTE EN CADA ITERACION
+======================================================================
+
+Antes de implementar:
+
+- Fase y tarea.
+- Objetivo.
+- Estado actual observado.
+- Archivos afectados.
+- Riesgos.
+- Plan minimo.
+- Pruebas previstas.
+- Criterios de aceptacion.
+
+Despues de implementar:
+
+- Resumen del cambio.
+- Archivos creados.
+- Archivos modificados.
+- Decisiones tomadas.
+- Comandos ejecutados.
+- Resultados de pruebas.
+- Evidencia de determinismo.
+- Compatibilidad hacia atras.
+- Deuda o riesgos pendientes.
+- Recomendacion para la siguiente tarea.
+
+El agente no debe declarar exito sin mostrar evidencia de pruebas.
+
+======================================================================
+16. PRIMERA SECUENCIA RECOMENDADA DE TRABAJO
+======================================================================
+
+El agente debe comenzar por esta secuencia, una tarea por vez:
+
+ITERACION 1
+
+- Ejecutar Fase 0.1 a 0.3.
+- Inventariar y medir.
+- No cambiar arquitectura.
+
+ITERACION 2
+
+- Crear fixtures y golden baseline.
+- Probar determinismo.
+
+ITERACION 3
+
+- Crear documentacion de estado actual, objetivo y principios.
+
+ITERACION 4
+
+- Profesionalizar pruebas locales y cobertura.
+
+ITERACION 5
+
+- Agregar CI basico sin modificar funcionalidad.
+
+ITERACION 6
+
+- Diseñar ADR-001 del Canonical Semantic Model.
+- Solo diseño y contratos propuestos.
+
+ITERACION 7
+
+- Implementar el canonico minimo en paralelo.
+
+ITERACION 8
+
+- Implementar mapper desde AST actual al canonico.
+
+ITERACION 9
+
+- Implementar equivalencia canonico -> Power BI actual.
+
+ITERACION 10
+
+- Agregar provenance y explain para una sola inferencia, por ejemplo clasificacion de tabla.
+
+Solo despues de estabilizar estas diez iteraciones se debe continuar con metricas, gobierno, quality score y hardening avanzado de Power BI.
+
+======================================================================
+17. INSTRUCCION INICIAL PARA ANTIGRAVITY
+======================================================================
+
+Asimila este plan como especificacion arquitectonica y roadmap de SemanticFlow.
+
+No implementes todo el roadmap de una vez.
+
+Comienza exclusivamente con la Fase 0 y realiza lo siguiente:
+
+1. Inspecciona el repositorio real.
+2. Contrasta el repositorio con el ThinkingSeed Master existente.
+3. Produce un inventario de modulos, contratos publicos, pruebas, comandos y artefactos.
+4. Ejecuta la suite completa sin modificar codigo.
+5. Registra resultados y tiempos basales.
+6. Identifica riesgos de regresion.
+7. Propone los fixtures y golden files necesarios.
+8. Detente al finalizar el informe de baseline.
+
+No avances a refactorizacion, Canonical Semantic Model, nuevos directorios ni nuevas dependencias hasta que la Fase 0 haya sido validada.
+
+Reglas criticas:
+
+- Conserva Parser -> AST -> Compiler -> Emitter.
+- Power BI continua como unico backend BI completo.
+- El core futuro debe ser vendor-neutral.
+- Looker y Qlik quedan expresamente fuera del alcance actual.
+- Toda iteracion requiere pruebas focalizadas y regresion completa.
+- No ocultes fallas.
+- No actualices golden files sin justificar diferencias.
+- No elimines compatibilidad existente sin plan de migracion.
+- No agregues dependencias cloud obligatorias.
+- Entrega evidencia antes de declarar una tarea completada.
+
+======================================================================
+18. RESULTADO ESPERADO DEL PLAN COMPLETO
+======================================================================
+
+Al completar las fases principales, SemanticFlow debera contar con:
+
+- Canonical Semantic Model neutral.
+- Power BI como target enterprise de referencia.
+- Metricas como objetos de primera clase.
+- Gobierno y seguridad mediante Policy as Code.
+- Explicabilidad de inferencias.
+- Validacion y Semantic Quality Score.
+- Target Capability Planner.
+- Documentacion y linaje automaticos.
+- CLI y SDK estables.
+- CI/CD y releases reproducibles.
+- Benchmarks transparentes.
+- Vistas para todas las personas objetivo.
+- Arquitectura preparada para Looker y Qlik, sin implementaciones prematuras.
+- Repositorio apto para GitHub y presentaciones empresariales.
+
+FIN DEL PLAN MAESTRO

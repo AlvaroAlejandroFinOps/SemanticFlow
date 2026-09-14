@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: semanticflow
+Version: 0.1.0
+Summary: Compilador local de modelos semánticos Power BI en formato TMDL/PBIP desde esquemas relacionales
+Author: SemanticFlow Core Team
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: pydantic>=2.5.0
+Requires-Dist: networkx>=3.0
+Requires-Dist: sqlglot>=20.0.0
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: typer>=0.9.0
+Requires-Dist: rich>=13.0.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.1.0; extra == "dev"

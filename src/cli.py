@@ -185,11 +185,17 @@ def explain(
         "human",
         "--format",
         "-f",
-        help="Formato de salida: 'human' (consola) o 'json'.",
+        help="Formato de salida: 'human' (consola), 'json', 'md' (Markdown), o 'mermaid'.",
+    ),
+    persona: Optional[str] = typer.Option(
+        None,
+        "--persona",
+        "-p",
+        help="Proyectar a través de una Persona Lens específica (ej. 'executive', 'data_governance', 'bi_engineer', 'finops', 'ai_systems_engineer', 'compliance_auditor', etc.).",
     ),
 ):
     """
-    Explica la procedencia (provenance) y evidencia de las inferencias del modelo semántico.
+    Explica la procedencia y evidencia del modelo, o proyecta la perspectiva de una Persona Lens.
     """
     from src.core.mappers.raw_to_canonical import raw_to_canonical
     from src.core.engine.explainer import SemanticExplainer
@@ -198,12 +204,214 @@ def explain(
     parser = _get_parser_for_file(input_path)
     raw_schema = parser.parse(input_path)
     canonical_project = raw_to_canonical(raw_schema)
-    explainer = SemanticExplainer(canonical_project)
 
-    if format.lower() == "json":
-        console.print_json(json.dumps(explainer.to_dict()))
+    if persona:
+        from src.core.personas.projector import PersonaProjector
+        from src.core.personas.renderers import (
+            MarkdownPersonaRenderer,
+            JsonPersonaRenderer,
+            MermaidPersonaRenderer,
+        )
+
+        projector = PersonaProjector(canonical_project)
+        projection = projector.project_lens(persona)
+
+        fmt = format.lower()
+        if fmt == "json":
+            console.print_json(JsonPersonaRenderer.render_projection(projection))
+        elif fmt in ("md", "markdown"):
+            console.print(MarkdownPersonaRenderer.render(projection))
+        elif fmt == "mermaid":
+            console.print(MermaidPersonaRenderer.render_erd_subgraph(projection))
+        else:
+            # Human Console Output
+            console.print(
+                Panel.fit(
+                    f"[bold cyan]{projection.title}[/bold cyan]\n"
+                    f"[dim]Persona Role:[/dim] [yellow]{projection.role.value}[/yellow] | [dim]Technical Depth:[/dim] [green]{projection.technical_depth.value}[/green]\n\n"
+                    f"[white]{projection.summary}[/white]",
+                    title="[bold magenta]Persona Lens Projection[/bold magenta]",
+                    box=box.ROUNDED,
+                )
+            )
+            if projection.certified_metrics:
+                console.print(f"[bold green]Certified KPIs:[/bold green] {', '.join(projection.certified_metrics)}")
+            console.print(f"[bold cyan]Primary Entities ({len(projection.primary_entities)}):[/bold cyan] {', '.join(projection.primary_entities)}")
+            if projection.recommendations:
+                rec_table = Table(title="Actionable Recommendations", box=box.SIMPLE, header_style="bold cyan")
+                rec_table.add_column("ID", style="bold")
+                rec_table.add_column("Prioridad", justify="center")
+                rec_table.add_column("Título")
+                rec_table.add_column("Impacto", style="dim")
+                for r in projection.recommendations:
+                    rec_table.add_row(r.id, r.priority.value, r.title, r.impact)
+                console.print(rec_table)
     else:
-        explainer.explain_entity_roles()
+        explainer = SemanticExplainer(canonical_project)
+        if format.lower() == "json":
+            console.print_json(json.dumps(explainer.to_dict()))
+        else:
+            explainer.explain_entity_roles()
+
+
+personas_app = typer.Typer(
+    name="personas",
+    help="Gestión, inspección y exportación de Persona Lenses organizacionales.",
+)
+app.add_typer(personas_app, name="personas")
+
+
+@personas_app.command("list")
+def personas_list():
+    """
+    Lista las 10 Persona Lenses estándar registradas y sus aliases organizacionales.
+    """
+    from src.core.personas.registry import PersonaRegistry
+
+    registry = PersonaRegistry.create_default()
+    table = Table(
+        title="Persona Lenses Registradas (SemanticFlow Enterprise)",
+        box=box.ROUNDED,
+        header_style="bold magenta",
+    )
+    table.add_column("Persona ID", style="bold cyan")
+    table.add_column("Nombre / Rol", style="bold")
+    table.add_column("Nivel Técnico", justify="center")
+    table.add_column("Aliases Soportados", style="dim")
+
+    for defn in registry.list_definitions():
+        aliases_str = ", ".join(defn.aliases) if defn.aliases else "-"
+        table.add_row(
+            defn.persona_id,
+            defn.display_name,
+            defn.technical_depth.value,
+            aliases_str,
+        )
+
+    console.print(table)
+
+
+@personas_app.command("export")
+def personas_export(
+    input_path: Path = typer.Option(
+        ...,
+        "--input",
+        "-i",
+        help="Ruta al archivo del esquema relacional (.md, .yaml, etc.).",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+    ),
+    output_dir: Path = typer.Option(
+        Path("output/personas"),
+        "--output",
+        "-o",
+        help="Directorio de destino para las 10 Lenses y el Leadership Cockpit.",
+    ),
+    formats: str = typer.Option(
+        "md,json",
+        "--formats",
+        "-f",
+        help="Formatos a exportar separados por coma (ej. 'md,json').",
+    ),
+):
+    """
+    Exporta las 10 Persona Lenses individuales y el Data Leadership Cockpit en Markdown y JSON.
+    """
+    from src.core.mappers.raw_to_canonical import raw_to_canonical
+    from src.core.personas.cockpit import DataLeadershipCockpitEngine
+
+    parser = _get_parser_for_file(input_path)
+    raw_schema = parser.parse(input_path)
+    canonical_project = raw_to_canonical(raw_schema)
+
+    format_list = [fmt.strip().lower() for fmt in formats.split(",")]
+    engine = DataLeadershipCockpitEngine(canonical_project)
+    res = engine.export_all(output_dir, include_individual_lenses=True, formats=format_list)
+
+    console.print(
+        Panel(
+            f"[bold green]Exportación de Persona Lenses completada exitosamente![/bold green]\n\n"
+            f"- Data Leadership Cockpit: [bold white]{res.get('cockpit_markdown', res.get('cockpit_json', output_dir))}[/bold white]\n"
+            f"- Lentes Individuales: [bold cyan]{len([k for k in res if k.startswith('lens_')])}[/bold cyan] archivos generados en [bold]{output_dir}/lenses[/bold]",
+            title="[bold cyan]Exportación de Personas & Cockpit[/bold cyan]",
+            box=box.ROUNDED,
+        )
+    )
+
+
+@app.command()
+def cockpit(
+    input_path: Path = typer.Option(
+        ...,
+        "--input",
+        "-i",
+        help="Ruta al archivo del esquema relacional (.md, .yaml, etc.).",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+    ),
+    output_dir: Optional[Path] = typer.Option(
+        None,
+        "--output",
+        "-o",
+        help="Directorio opcional para exportar el Cockpit en Markdown/JSON.",
+    ),
+    format: str = typer.Option(
+        "human",
+        "--format",
+        "-f",
+        help="Formato de salida: 'human' (consola), 'json', o 'md'.",
+    ),
+):
+    """
+    Sintetiza y visualiza el C-Level Data Leadership Cockpit para el proyecto semántico.
+    """
+    from src.core.mappers.raw_to_canonical import raw_to_canonical
+    from src.core.personas.cockpit import DataLeadershipCockpitEngine
+    from src.core.personas.renderers import LeadershipCockpitRenderer, JsonPersonaRenderer
+
+    parser = _get_parser_for_file(input_path)
+    raw_schema = parser.parse(input_path)
+    canonical_project = raw_to_canonical(raw_schema)
+
+    engine = DataLeadershipCockpitEngine(canonical_project)
+    cockpit_model = engine.generate_cockpit()
+
+    if output_dir:
+        res = engine.export_all(output_dir, include_individual_lenses=False, formats=["md", "json"])
+        console.print(f"[bold green][OK][/bold green] Cockpit exportado a: {res.get('cockpit_markdown')}")
+
+    fmt = format.lower()
+    if fmt == "json":
+        console.print_json(JsonPersonaRenderer.render_cockpit(cockpit_model))
+    elif fmt in ("md", "markdown"):
+        console.print(LeadershipCockpitRenderer.render_markdown(cockpit_model))
+    else:
+        # Human Console Display
+        console.print(
+            Panel.fit(
+                f"[bold cyan]Data Leadership Cockpit: {cockpit_model.project_name}[/bold cyan]\n"
+                f"[dim]Versión:[/dim] {cockpit_model.project_version} | [dim]Generado:[/dim] {cockpit_model.generated_at}\n\n"
+                f"[white]{cockpit_model.executive_summary}[/white]",
+                title="[bold magenta]C-Level Leadership Cockpit[/bold magenta]",
+                box=box.ROUNDED,
+            )
+        )
+
+        radar_table = Table(title="Radar de Madurez por Dominio", box=box.SIMPLE, header_style="bold green")
+        radar_table.add_column("Persona / Dominio", style="bold")
+        radar_table.add_column("Puntuación de Madurez", justify="right")
+        radar_table.add_column("Banda de Estado", justify="center")
+
+        for role_name, score in cockpit_model.maturity_radar.items():
+            color = "green" if score >= 80 else ("yellow" if score >= 65 else "red")
+            band = "Óptimo" if score >= 80 else ("Satisfactorio" if score >= 65 else "Atención Requerida")
+            radar_table.add_row(role_name, f"[{color}]{score:.1f}%[/{color}]", f"[{color}]{band}[/{color}]")
+
+        console.print(radar_table)
 
 
 @app.command()

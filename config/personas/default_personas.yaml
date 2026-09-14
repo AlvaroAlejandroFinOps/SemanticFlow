@@ -1,0 +1,208 @@
+# SemanticFlow Default Enterprise Persona Lens Definitions
+version: "1.0"
+personas:
+  analytics_leader:
+    persona_id: "analytics_leader"
+    role: "ANALYTICS_LEADER"
+    display_name: "Analytics Leader"
+    title: "Executive Strategic Analytics & Leadership Cockpit"
+    summary_template: "Executive portfolio view for {project_name} summarizing certified KPIs, domain maturity, and strategic value."
+    technical_depth: "EXECUTIVE"
+    focus_areas:
+      - "STRATEGIC_ALIGNMENT"
+      - "BUSINESS_VALUE"
+      - "PRODUCT_METRICS"
+    visible_object_types:
+      - "FACT"
+      - "KPI"
+    icon: "briefcase"
+    color_theme: "#1A365D"
+    aliases:
+      - "executive"
+      - "cdo"
+      - "head_of_data"
+      - "vp_analytics"
+
+  data_engineer:
+    persona_id: "data_engineer"
+    role: "DATA_ENGINEER"
+    display_name: "Data Engineer"
+    title: "Data Engineering, Ingestion & Pipeline Health Lens"
+    summary_template: "Physical schema, partition grain, upstream sources, and pipeline integrity for {project_name}."
+    technical_depth: "TECHNICAL"
+    focus_areas:
+      - "PIPELINE_HEALTH"
+      - "DATA_MODELING"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+      - "BRIDGE"
+    icon: "server"
+    color_theme: "#2B6CB0"
+    aliases:
+      - "de"
+      - "data_platform_engineer"
+
+  analytics_engineer:
+    persona_id: "analytics_engineer"
+    role: "ANALYTICS_ENGINEER"
+    display_name: "Analytics Engineer"
+    title: "Analytics Engineering, Dimensional Modeling & Transformation Lens"
+    summary_template: "Star-schema topology, semantic metrics, SQL transformations, and grain definitions for {project_name}."
+    technical_depth: "TECHNICAL"
+    focus_areas:
+      - "DATA_MODELING"
+      - "MODELING_QUALITY"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+      - "BRIDGE"
+      - "CALCULATED"
+    icon: "code"
+    color_theme: "#319795"
+    aliases:
+      - "ae"
+      - "dbt_developer"
+
+  bi_developer:
+    persona_id: "bi_developer"
+    role: "BI_DEVELOPER"
+    display_name: "BI Developer"
+    title: "BI Developer, TMDL & Semantic Model Consumption Lens"
+    summary_template: "Power BI / TMDL semantic measures, relationships, DAX formulas, and display folders for {project_name}."
+    technical_depth: "TECHNICAL"
+    focus_areas:
+      - "VISUALIZATION_EFFICIENCY"
+      - "DATA_MODELING"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+      - "CALCULATED"
+    icon: "pie-chart"
+    color_theme: "#D69E2E"
+    aliases:
+      - "bi_engineer"
+      - "powerbi_developer"
+      - "tableau_developer"
+
+  data_governance_officer:
+    persona_id: "data_governance_officer"
+    role: "DATA_GOVERNANCE_OFFICER"
+    display_name: "Data Governance Officer"
+    title: "Data Governance, Quality & Ownership Lens"
+    summary_template: "Asset ownership, PII privacy boundaries, certification lifecycle, and quality scores for {project_name}."
+    technical_depth: "SUMMARY"
+    focus_areas:
+      - "GOVERNANCE_COMPLIANCE"
+      - "MODELING_QUALITY"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+      - "BRIDGE"
+    icon: "shield"
+    color_theme: "#805AD5"
+    aliases:
+      - "data_governance"
+      - "data_steward"
+      - "ciso_data_lead"
+
+  data_product_manager:
+    persona_id: "data_product_manager"
+    role: "DATA_PRODUCT_MANAGER"
+    display_name: "Data Product Manager"
+    title: "Data Product Management, Lifecycle & Consumer Value Lens"
+    summary_template: "Data product SLA, consumer adoption contracts, release maturity, and product telemetry for {project_name}."
+    technical_depth: "SUMMARY"
+    focus_areas:
+      - "PRODUCT_LIFECYCLE"
+      - "PRODUCT_METRICS"
+      - "BUSINESS_VALUE"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+    icon: "layers"
+    color_theme: "#DD6B20"
+    aliases:
+      - "dpm"
+      - "product_owner_data"
+
+  finops_specialist:
+    persona_id: "finops_specialist"
+    role: "FINOPS_SPECIALIST"
+    display_name: "FinOps Specialist"
+    title: "FinOps, Cloud Cost & Capacity Optimization Lens"
+    summary_template: "Analytical query efficiency, cloud resource consumption, and cost attribution for {project_name}."
+    technical_depth: "SUMMARY"
+    focus_areas:
+      - "COST_CAPACITY"
+      - "BUSINESS_VALUE"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+    icon: "dollar-sign"
+    color_theme: "#38A169"
+    aliases:
+      - "finops"
+      - "cloud_economist"
+
+  ai_systems_engineer:
+    persona_id: "ai_systems_engineer"
+    role: "AI_SYSTEMS_ENGINEER"
+    display_name: "AI Systems Engineer"
+    title: "AI Systems, Feature Engineering & ML Readiness Lens"
+    summary_template: "Feature readiness, embeddings/ML attributes, training data provenance, and AI inference latency for {project_name}."
+    technical_depth: "TECHNICAL"
+    focus_areas:
+      - "AI_READINESS"
+      - "DATA_MODELING"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+    icon: "cpu"
+    color_theme: "#E53E3E"
+    aliases:
+      - "ml_engineer"
+      - "ai_engineer"
+      - "feature_store_admin"
+
+  business_consumer:
+    persona_id: "business_consumer"
+    role: "BUSINESS_CONSUMER"
+    display_name: "Business Consumer"
+    title: "Business Consumer & Self-Service Analytics Lens"
+    summary_template: "Certified business terms, plain-language metric glossary, and intuitive report navigation for {project_name}."
+    technical_depth: "EXECUTIVE"
+    focus_areas:
+      - "CONSUMPTION_SIMPLICITY"
+      - "BUSINESS_VALUE"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+    icon: "user-check"
+    color_theme: "#3182CE"
+    aliases:
+      - "analytic_consumer"
+      - "business_analyst"
+      - "business_user"
+
+  compliance_auditor:
+    persona_id: "compliance_auditor"
+    role: "COMPLIANCE_AUDITOR"
+    display_name: "Compliance Auditor"
+    title: "Regulatory Compliance, Privacy & Audit Traceability Lens"
+    summary_template: "Full regulatory audit trace, GDPR/SOX compliance verification, PII lineage, and access boundaries for {project_name}."
+    technical_depth: "EXHAUSTIVE"
+    focus_areas:
+      - "AUDIT_TRACEABILITY"
+      - "GOVERNANCE_COMPLIANCE"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+      - "BRIDGE"
+      - "CALCULATED"
+    icon: "file-text"
+    color_theme: "#4A5568"
+    aliases:
+      - "auditor"
+      - "compliance_officer"
+      - "privacy_auditor"

@@ -9,6 +9,8 @@ from src.core.quality.rules import (
     validate_metric_descriptions,
     validate_certified_metrics,
     validate_ratio_metrics,
+    validate_project_governance,
+    validate_pii_classification,
 )
 
 
@@ -40,6 +42,8 @@ class SemanticQualityScorer:
         all_diagnostics.extend(validate_metric_descriptions(self.project))
         all_diagnostics.extend(validate_certified_metrics(self.project))
         all_diagnostics.extend(validate_ratio_metrics(self.project))
+        all_diagnostics.extend(validate_project_governance(self.project))
+        all_diagnostics.extend(validate_pii_classification(self.project))
 
         deductions = 0.0
         blocking_errors = 0

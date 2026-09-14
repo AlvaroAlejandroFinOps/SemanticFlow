@@ -1,0 +1,2486 @@
+SEMANTICFLOW
+MASTER PLAN: PERSONA LENS FRAMEWORK AND DATA LEADERSHIP COCKPIT
+Implementation specification for Antigravity IDE
+
+Document version: 1.0
+Date: 2026-09-14
+Project: SemanticFlow
+Status: Architecture and implementation plan
+Primary target: Power BI
+Future targets, explicitly out of current scope: Looker and Qlik
+
+======================================================================
+0. PURPOSE AND AUTHORITY OF THIS DOCUMENT
+======================================================================
+
+This document defines the architecture, functional scope, organizational model, implementation sequence, validation gates and acceptance criteria for evolving the current SemanticFlow persona views into a complete Persona Lens Framework.
+
+Antigravity must analyze this specification and convert it into an incremental implementation plan before modifying code. It must not implement the complete framework in a single iteration.
+
+The expected result is not a collection of static reports and not a set of unrelated filters. The expected result is a coherent organizational interpretation layer over the Canonical Semantic Model.
+
+SemanticFlow must become capable of presenting one semantic truth through multiple purpose-specific lenses for analysts, engineers, architects, governance teams, domain owners, risk teams and data leaders.
+
+A special Data Leadership Cockpit must be isolated in its own module and directory, while remaining fully connected to the Canonical Semantic Model, Persona Lens registry, quality engine, lineage, ownership, capability planner, diagnostics and organizational recommendation engine.
+
+This document is normative for the Persona Lens initiative. If the repository conflicts with this document, Antigravity must identify the conflict, document it and propose the smallest safe migration. It must not silently rewrite existing contracts.
+
+======================================================================
+1. STRATEGIC PRODUCT DEFINITION
+======================================================================
+
+SemanticFlow must be positioned as:
+
+An open and deterministic semantic engineering platform that transforms declarative data contracts into governed, testable, explainable and deployable analytical models, and projects the same semantic truth into role-specific decision views for the complete data organization.
+
+Extended value proposition:
+
+SemanticFlow does not only compile semantic models. It creates a shared, traceable and governed interpretation of the business. It adapts that interpretation to each data role and turns semantic metadata into technical artifacts, organizational responsibilities, quality controls, risk evidence, team interactions and leadership decisions.
+
+SemanticFlow should provide three kinds of value simultaneously:
+
+1. Semantic engineering value
+   - Canonical modeling.
+   - Metrics.
+   - relationships.
+   - governance.
+   - target compilation.
+
+2. Persona decision value
+   - Tailored information.
+   - role-specific diagnostics.
+   - recommendations.
+   - approvals and responsibilities.
+   - relevant deliverables.
+
+3. Organizational leadership value
+   - Portfolio health.
+   - ownership coverage.
+   - capability gaps.
+   - cross-team dependencies.
+   - delivery flow.
+   - operational and semantic risk.
+   - investment priorities.
+
+======================================================================
+2. FOUNDATIONAL DEFINITIONS
+======================================================================
+
+2.1 Persona
+
+A Persona is an organizational responsibility profile. It is not necessarily a job title, user account or individual person.
+
+A small organization may assign several Personas to one person. A large organization may assign one Persona to a group, office or multiple teams.
+
+Personas must therefore be:
+
+- Composable.
+- Configurable.
+- Non-exclusive.
+- Assignable to individuals, groups or teams.
+- Independent from a fixed organization chart.
+- Defined by responsibilities, decisions and expected outcomes.
+
+2.2 Persona Lens
+
+A Persona Lens is a deterministic projection of the Canonical Semantic Model that adapts content, technical depth, business context, risk interpretation, diagnostics, recommendations, responsibilities and deliverables to a specific Persona.
+
+A Persona Lens is not:
+
+- A duplicate semantic model.
+- A separate source of truth.
+- A hardcoded dashboard.
+- An authorization system by itself.
+- A copy of inference or quality logic.
+
+A Persona Lens must never mutate the Canonical Semantic Model.
+
+2.3 Persona Projection
+
+A Persona Projection is the generated result of applying a Lens to a Canonical Semantic Project at a specific point in time.
+
+A Projection must contain:
+
+- Project identity.
+- Persona identity.
+- Compiler and schema version.
+- Source build identifier.
+- Relevant semantic objects.
+- Summaries.
+- Diagnostics.
+- Recommendations.
+- Responsibilities.
+- Dependencies.
+- Evidence references.
+- Generation timestamp or deterministic build metadata policy.
+
+2.4 Organizational Recommendation
+
+An Organizational Recommendation is an explainable suggestion about role involvement, team interaction, missing ownership, capability gaps, approval needs or workflow improvements.
+
+It must include:
+
+- recommendation_id.
+- rule_id.
+- title.
+- explanation.
+- evidence.
+- affected assets.
+- affected Personas.
+- recommended interaction mode.
+- urgency.
+- severity.
+- expected outcome.
+- blocking or advisory status.
+
+2.5 Leadership Cockpit
+
+The Data Leadership Cockpit is an aggregate decision module for Team Leads, Tech Leads, Engineering Managers, Heads of Data, Heads of Data and AI, Directors of Analytics, Directors of Data Platform and Chief Data Officers.
+
+It must be isolated from individual Lens implementations, but consume their registered outputs and common services. It must never become a second semantic truth or duplicate core computation.
+
+2.6 Team Interaction
+
+A Team Interaction describes how two or more organizational units should work together for a bounded purpose.
+
+Supported modes:
+
+- COLLABORATION: joint work for a defined period to discover or create a new capability.
+- X_AS_A_SERVICE: one team provides a stable capability consumed by another.
+- FACILITATION: one team helps another overcome a capability gap.
+
+2.7 Responsibility Assignment
+
+A Responsibility Assignment connects a semantic activity or asset with organizational responsibility.
+
+Recommended responsibility types:
+
+- RESPONSIBLE.
+- ACCOUNTABLE.
+- CONSULTED.
+- INFORMED.
+- APPROVER.
+- STEWARD.
+- RISK_OWNER.
+- TECHNICAL_OWNER.
+- BUSINESS_OWNER.
+
+======================================================================
+3. ACADEMIC AND INDUSTRY FOUNDATIONS
+======================================================================
+
+The implementation must document that the framework is inspired by, but not falsely certified by, the following sources:
+
+3.1 DAMA-DMBOK
+
+Use as foundation for the relationships among data governance, data architecture, modeling, metadata, quality, security, integration, operations and business intelligence.
+
+Official reference:
+https://www.dama.org/learning-resources/dama-data-management-body-of-knowledge-dmbok/
+
+3.2 SFIA
+
+Use as foundation for describing responsibility profiles through skills, accountability and levels rather than relying only on inconsistent job titles.
+
+Official reference:
+https://sfia-online.org/en/tools-and-resources/sfia-views/big-data-data-science-skills-in-sfia
+
+3.3 Government Digital and Data Profession Capability Framework
+
+Use as a reference for role descriptions, skills, workforce planning and leadership use of capability frameworks.
+
+Official reference:
+https://ddat-capability-framework.service.gov.uk/
+
+3.4 Team Topologies
+
+Use as foundation for stream-aligned, platform, enabling and complicated-subsystem teams, and the interaction modes Collaboration, X-as-a-Service and Facilitation.
+
+Official reference:
+https://teamtopologies.com/key-concepts
+
+3.5 Data Mesh
+
+Use as foundation for domain-oriented ownership, data as a product, self-service data platforms and federated computational governance.
+
+Reference:
+https://martinfowler.com/articles/data-mesh-principles.html
+
+3.6 NIST AI Risk Management Framework
+
+Use as reference for govern, map, measure and manage functions and for trustworthy considerations such as validity, transparency, explainability, privacy, security and accountability in the Data Scientist and Audit/Risk lenses.
+
+Official reference:
+https://www.nist.gov/itl/ai-risk-management-framework
+
+3.7 FinOps Framework Personas
+
+Use as reference for treating Personas as broad stakeholder groups, allowing one person to perform multiple Personas and encouraging collaboration across engineering, business, finance and leadership.
+
+Official reference:
+https://www.finops.org/framework/personas/
+
+3.8 Microsoft Power BI semantic model guidance
+
+Use as source for the target-specific responsibilities of semantic model design, relationships, measures, calculations, storage modes, performance optimization and row-level security.
+
+Official reference:
+https://learn.microsoft.com/en-us/power-bi/personas/semantic-model-designer/
+
+Source use rules:
+
+- Do not claim formal compliance or certification unless independently verified.
+- Include attribution in project documentation.
+- Distinguish inspiration from implemented requirements.
+- Do not copy protected text verbatim.
+- Convert principles into original SemanticFlow contracts and behavior.
+
+======================================================================
+4. ARCHITECTURAL PRINCIPLES
+======================================================================
+
+P1. One Canonical Semantic Truth
+
+Every Lens and the Leadership Cockpit must derive from the same CanonicalSemanticProject.
+
+P2. Read-only Projection
+
+Persona Lenses must not mutate the Canonical Semantic Model. Recommendations and proposed changes must be separate artifacts.
+
+P3. No Duplicated Domain Logic
+
+Inference, quality scoring, lineage, target compatibility and governance rules remain in their core services. Lenses consume their results.
+
+P4. Vendor Neutrality
+
+All general Persona Lenses must be target-neutral. Target-specific information may be shown through explicit target extensions. BI Developer may consume Power BI-specific projections.
+
+P5. Explainability
+
+Every recommendation, alert and score must reference evidence and a rule.
+
+P6. Configurability
+
+Organizations must be able to rename, combine, deactivate and extend Personas without editing core logic.
+
+P7. Privacy by Projection
+
+Each Lens must expose only the minimum metadata needed for its purpose.
+
+P8. Determinism
+
+The same Canonical Project, configuration and compiler version must generate equivalent projections.
+
+P9. Separation of Decision Support and Authorization
+
+SemanticFlow may recommend roles and approval flows. It must not pretend to be a complete identity, HR or access-management platform.
+
+P10. Leadership Aggregation without Recalculation
+
+The Leadership Cockpit aggregates registered Lens results and core evidence. It must not recalculate independent quality, lineage or risk facts.
+
+P11. Evidence before Maturity Claims
+
+No Lens can be marked complete or enterprise-ready without tests, documented behavior, fixtures and measurable acceptance criteria.
+
+P12. Incremental Migration
+
+Preserve compatibility with current EXECUTIVE, DATA_GOVERNANCE and BI_ENGINEER views through adapters or deprecation paths.
+
+======================================================================
+5. COMMON PERSONA LENS CONTRACT
+======================================================================
+
+Antigravity must first design a common contract before implementing individual Lenses.
+
+Suggested conceptual models:
+
+PersonaDefinition
+- persona_id
+- display_name
+- purpose
+- description
+- aliases
+- organizational_scope
+- decision_scope
+- technical_depth
+- business_depth
+- risk_scope
+- visible_object_types
+- allowed_recommendation_categories
+- default_outputs
+- source_framework_references
+- version
+
+PersonaLens
+- definition
+- projection_policy
+- visibility_policy
+- summarization_policy
+- recommendation_rules
+- output_renderers
+
+PersonaProjection
+- projection_id
+- project_id
+- persona_id
+- build_id
+- semantic_summary
+- visible_entities
+- visible_metrics
+- visible_relationships
+- visible_governance
+- visible_lineage
+- diagnostics
+- recommendations
+- responsibilities
+- team_interactions
+- evidence_refs
+- target_extensions
+
+PersonaRecommendation
+- recommendation_id
+- rule_id
+- category
+- severity
+- title
+- description
+- rationale
+- evidence_refs
+- affected_asset_ids
+- affected_persona_ids
+- recommended_action
+- recommended_interaction_mode
+- expected_outcome
+- blocking
+
+ResponsibilityAssignment
+- subject_asset_id
+- activity
+- persona_id
+- assignment_type
+- domain_id
+- evidence_refs
+- source
+
+TeamInteraction
+- interaction_id
+- source_team_or_persona
+- target_team_or_persona
+- mode
+- purpose
+- start_condition
+- exit_condition
+- expected_artifact
+- evidence_refs
+
+PersonaMaturityAssessment
+- persona_id
+- capability_id
+- maturity_level
+- findings
+- gaps
+- next_action
+- evidence_refs
+
+Every contract must use stable identifiers and deterministic serialization.
+
+======================================================================
+6. PERSONA REGISTRY AND CONFIGURATION
+======================================================================
+
+Create a Persona Registry responsible for:
+
+- Discovering built-in Personas.
+- Loading organization-specific Persona configuration.
+- Resolving aliases.
+- Enabling or disabling Lenses.
+- Combining Personas.
+- Validating duplicate identifiers.
+- Publishing supported Lens capabilities.
+- Providing version information.
+
+Default Persona IDs:
+
+- DATA_ANALYST
+- ANALYTICS_ENGINEER
+- DATA_ENGINEER
+- DATA_SCIENTIST
+- BI_DEVELOPER
+- DATA_ARCHITECT
+- DATA_GOVERNANCE_OFFICER
+- PLATFORM_ENGINEER
+- DOMAIN_OWNER
+- AUDIT_RISK
+
+Additional aggregate Persona:
+
+- DATA_LEADERSHIP
+
+Legacy aliases to assess:
+
+- EXECUTIVE -> DATA_LEADERSHIP, compatibility alias if semantically valid.
+- DATA_GOVERNANCE -> DATA_GOVERNANCE_OFFICER.
+- BI_ENGINEER -> determine whether it maps to BI_DEVELOPER, ANALYTICS_ENGINEER or a configured combination. Do not guess silently.
+
+Organization overrides must be data-driven through a versioned YAML or JSON configuration. They must not require modifying Python source.
+
+======================================================================
+7. COMPLETE PERSONA LENS SPECIFICATIONS
+======================================================================
+
+------------------------------------------------------------------
+7.1 DATA ANALYST LENS
+------------------------------------------------------------------
+
+Purpose:
+
+Enable analysts to discover, understand and safely use trusted metrics and dimensions without interpreting physical schemas, surrogate keys or target serialization internals.
+
+Primary decisions:
+
+- Select the correct metric.
+- Select compatible dimensions.
+- Understand filters, units and time context.
+- Decide whether a metric is certified and suitable.
+- Identify whom to contact for clarification.
+
+Questions answered:
+
+- What metrics are available?
+- What does each metric mean?
+- Which metrics are certified?
+- Which dimensions can be used with a metric?
+- Which filters are implicit or recommended?
+- What calendar and grain apply?
+- When was the underlying information refreshed?
+- Which warnings affect interpretation?
+- Are two similarly named metrics equivalent?
+- Who owns the definition?
+
+Visible information:
+
+- Business metric name and description.
+- Certification status.
+- Business owner and steward.
+- Dimension compatibility.
+- Units, currencies and formats.
+- Time grain and calendar.
+- Default filters.
+- Business synonyms.
+- Freshness status.
+- Simplified lineage.
+- Usage examples.
+- Consumer warnings.
+
+Hidden by default:
+
+- Repository paths.
+- TMDL properties.
+- Surrogate keys.
+- Internal compiler classes.
+- Physical partitions.
+- Sensitive implementation details.
+
+Functional capabilities:
+
+- Metric catalog.
+- Business glossary search index.
+- Certified metric filter.
+- Dimension compatibility matrix.
+- Similar metric comparison.
+- Ambiguous naming warning.
+- Missing description warning.
+- Unit and currency conflict warning.
+- Freshness indicator when metadata exists.
+- Suggested owner contact.
+- Consumer-friendly impact summary.
+
+Recommendations:
+
+- Request certification.
+- Avoid incompatible metric-dimension combinations.
+- Use an approved alternative metric.
+- Clarify an ambiguous definition with Domain Owner.
+- Escalate stale or incomplete metadata.
+
+Inputs received from:
+
+- Analytics Engineer.
+- Domain Owner.
+- Governance Officer.
+- Data Engineer for freshness and availability.
+
+Outputs delivered to:
+
+- Business users.
+- BI Developers.
+- Domain Owners through feedback.
+
+Default artifacts:
+
+- ANALYST_METRICS_CATALOG.md
+- BUSINESS_GLOSSARY.md
+- CERTIFIED_METRICS.md
+- DIMENSION_COMPATIBILITY.md
+- ANALYST_WARNINGS.json
+
+Minimum tests:
+
+- Sensitive technical fields are excluded.
+- Certified and draft metrics are correctly differentiated.
+- Dimension compatibility is deterministic.
+- Ownership is visible when defined.
+- Missing descriptions generate actionable diagnostics.
+- Projection does not mutate the canonical model.
+
+Acceptance criteria:
+
+An analyst can select and interpret a metric without reading DAX, TMDL or physical schema definitions.
+
+------------------------------------------------------------------
+7.2 ANALYTICS ENGINEER LENS
+------------------------------------------------------------------
+
+Purpose:
+
+Design and maintain reusable analytic structures and governed metrics between source contracts and downstream BI consumption.
+
+Primary decisions:
+
+- Define fact grain.
+- Select dimensions and relationships.
+- Define metric behavior.
+- Resolve ambiguous models.
+- Assess semantic breaking changes.
+- Determine test coverage.
+
+Questions answered:
+
+- What is the grain of every fact?
+- Which dimensions are conformed?
+- Are role-playing dimensions correctly represented?
+- Are many-to-many relationships explicit?
+- Which metrics depend on other metrics?
+- Are cycles present?
+- What additivity applies?
+- Which semantic changes break consumers?
+- Which rules are untested?
+
+Visible information:
+
+- Full dimensional model.
+- Entities and semantic roles.
+- Grain declarations and inference evidence.
+- Relationships and filter direction.
+- Bridge tables.
+- Conformed dimensions.
+- Slowly changing dimension metadata.
+- Calendars and fiscal calendars.
+- Metric dependencies.
+- Additivity.
+- Numerator and denominator.
+- Semantic tests.
+- Target compatibility summary.
+
+Functional capabilities:
+
+- Dimensional model inspection.
+- Grain validation.
+- Relationship ambiguity detection.
+- Many-to-many explicitness check.
+- Metric dependency graph.
+- Cycle detection.
+- Additivity validation.
+- Ratio completeness validation.
+- Calendar validation.
+- Semantic diff.
+- Breaking-change classification.
+- Reusable semantic pattern suggestions.
+
+Recommendations:
+
+- Declare missing grain.
+- Introduce a bridge table.
+- Conform duplicate dimensions.
+- Separate overloaded metrics.
+- Add semantic tests.
+- Review bidirectional filters.
+- Move reusable logic into a canonical metric.
+
+Inputs received from:
+
+- Data Engineer source contracts.
+- Domain Owner business definitions.
+- Data Architect guardrails.
+
+Outputs delivered to:
+
+- BI Developer.
+- Data Analyst.
+- Governance Officer.
+- Data Scientist when shared business definitions are required.
+
+Default artifacts:
+
+- DIMENSIONAL_MODEL.md
+- METRIC_DEPENDENCY_GRAPH.mmd
+- SEMANTIC_DIFF.json
+- GRAIN_VALIDATION.md
+- ANALYTICS_ENGINEERING_TESTS.json
+
+Minimum tests:
+
+- Grain findings include evidence.
+- Cyclic metric dependencies are detected.
+- Many-to-many is never silently inferred.
+- Diff identifies breaking versus non-breaking changes.
+- Target details remain extensions, not canonical assumptions.
+
+Acceptance criteria:
+
+An Analytics Engineer can understand structural quality, metric dependencies and semantic change impact from one projection.
+
+------------------------------------------------------------------
+7.3 DATA ENGINEER LENS
+------------------------------------------------------------------
+
+Purpose:
+
+Expose how physical sources, schema contracts, refresh requirements and pipeline dependencies support the semantic model.
+
+Primary decisions:
+
+- Validate source compatibility.
+- Prioritize schema corrections.
+- Design refresh and partition strategies.
+- Assess upstream change impact.
+- Resolve missing keys and type mismatches.
+
+Questions answered:
+
+- Where does each semantic asset originate?
+- What are the source types and canonical types?
+- Which keys support relationships?
+- Which relationships lack physical evidence?
+- What refresh frequency is expected?
+- What volume and cardinality are declared or estimated?
+- Which changes are breaking?
+- Which pipelines and domains are affected?
+
+Visible information:
+
+- Source systems.
+- Source objects.
+- Physical types.
+- Canonical type mappings.
+- Primary, foreign and surrogate keys.
+- Data contracts.
+- Refresh metadata.
+- Volume and cardinality metadata.
+- Partition recommendations.
+- Data quality at ingestion boundary.
+- Technical lineage.
+- Upstream and downstream impact.
+
+Functional capabilities:
+
+- Source-to-canonical mapping.
+- Type compatibility validation.
+- Missing key detection.
+- Relationship evidence check.
+- Schema contract validation.
+- Breaking source change detection.
+- Refresh requirement report.
+- Partition candidate identification.
+- Upstream impact graph.
+- Source ownership lookup.
+
+Recommendations:
+
+- Add or correct a source contract.
+- Align incompatible types.
+- Introduce a stable surrogate key.
+- Add freshness metadata.
+- Review a high-cardinality attribute.
+- Coordinate an upstream change with Analytics Engineering.
+
+Inputs received from:
+
+- Source platform metadata.
+- Data Architect standards.
+- Domain Owner service expectations.
+
+Outputs delivered to:
+
+- Analytics Engineer.
+- Platform Engineer.
+- Data Architect.
+- Governance Officer.
+
+Default artifacts:
+
+- PHYSICAL_SOURCE_MAP.md
+- SOURCE_CONTRACTS.json
+- TYPE_COMPATIBILITY.md
+- PIPELINE_IMPACT.md
+- REFRESH_REQUIREMENTS.json
+
+Minimum tests:
+
+- Type incompatibilities are explicit.
+- Technical lineage references stable source IDs.
+- Missing metadata is labeled unknown, never invented.
+- Recommendations distinguish declared values from estimates.
+
+Acceptance criteria:
+
+A Data Engineer can identify source obligations and the downstream semantic impact of a physical change.
+
+------------------------------------------------------------------
+7.4 DATA SCIENTIST LENS
+------------------------------------------------------------------
+
+Purpose:
+
+Connect governed business meaning with observation entities, candidate features, target variables, temporal windows and analytical-use constraints.
+
+Primary decisions:
+
+- Assess whether data is suitable for an analytical use case.
+- Identify possible leakage.
+- Select observation entity and time window.
+- Reuse governed definitions.
+- Escalate privacy, fairness or quality constraints.
+
+Questions answered:
+
+- What is the observation entity?
+- Which attributes are candidate features?
+- What target variables exist?
+- What temporal window applies?
+- Is there a leakage risk?
+- Which fields are sensitive or restricted?
+- What is the business meaning of each feature?
+- What minimum quality is required?
+- Can training and inference definitions remain consistent?
+
+Visible information:
+
+- Observation entities.
+- Candidate features.
+- Target variables.
+- Temporal availability.
+- Statistical type metadata.
+- Feature business definition.
+- Feature lineage.
+- Sensitivity.
+- Usage restrictions.
+- Quality thresholds.
+- Version metadata.
+- Shared metric definitions.
+
+Functional capabilities:
+
+- Feature candidate inventory.
+- Observation entity projection.
+- Temporal leakage heuristics.
+- Target leakage warnings.
+- Sensitive attribute warning.
+- Training-serving consistency metadata.
+- Data suitability checklist.
+- Feature-to-business-metric traceability.
+- Missing use-purpose warning.
+- Human-review requirement for high-risk uses.
+
+Explicit exclusions:
+
+- No model training.
+- No algorithm selection.
+- No notebook execution.
+- No automated use approval.
+- No claim of being a feature store.
+- No autonomous fairness conclusion without evidence.
+
+Recommendations:
+
+- Request temporal availability metadata.
+- Exclude a post-outcome attribute.
+- Obtain governance review.
+- Define the observation entity.
+- Reuse a certified business metric.
+- Add a quality threshold.
+
+Inputs received from:
+
+- Data Engineer.
+- Analytics Engineer.
+- Domain Owner.
+- Governance Officer.
+
+Outputs delivered to:
+
+- Data and AI teams.
+- Audit/Risk.
+- Platform Engineer when operationalization is planned.
+
+Default artifacts:
+
+- FEATURE_CATALOG.md
+- ML_DATA_CONTRACT.json
+- LEAKAGE_RISK_REPORT.md
+- OBSERVATION_ENTITIES.md
+- FEATURE_LINEAGE.mmd
+
+Minimum tests:
+
+- No feature suitability is asserted without metadata.
+- Leakage warnings include evidence.
+- Sensitive data is not displayed beyond configured policy.
+- Unknown temporal availability produces an explicit gap.
+- Lens remains useful even when no ML metadata exists.
+
+Acceptance criteria:
+
+A Data Scientist can assess semantic and governance readiness without SemanticFlow pretending to perform data science automatically.
+
+------------------------------------------------------------------
+7.5 BI DEVELOPER LENS
+------------------------------------------------------------------
+
+Purpose:
+
+Show how the canonical model will be materialized, validated and optimized for the Power BI target.
+
+Primary decisions:
+
+- Review generated DAX and TMDL.
+- Resolve target incompatibility.
+- Configure display, security, partitions and storage modes.
+- Assess PBIP changes.
+- Validate target-specific correctness.
+
+Questions answered:
+
+- Which objects will be emitted?
+- Which canonical properties require transformation?
+- What DAX is generated?
+- Which features are unsupported?
+- Which columns are hidden?
+- What storage mode and partition behavior apply?
+- What security objects are generated?
+- What changed in PBIP/TMDL output?
+
+Visible information:
+
+- Power BI target projection.
+- Tables, columns and relationships.
+- DAX expressions.
+- Display folders.
+- Hierarchies.
+- Calculation groups.
+- Perspectives.
+- RLS and OLS metadata.
+- Partitions.
+- Storage modes.
+- Incremental refresh metadata.
+- Formats and translations.
+- TMDL diagnostics.
+- Capability states.
+- Artifact diff.
+
+Functional capabilities:
+
+- Power BI target preview.
+- Capability report.
+- DAX validation status.
+- TMDL validation status.
+- Hidden technical field review.
+- Relationship configuration review.
+- Partition and storage projection.
+- Golden-file comparison.
+- Target-specific diff.
+- Unsupported property detection.
+
+Recommendations:
+
+- Resolve unsupported target behavior.
+- Add a display folder.
+- Review expensive relationships.
+- Correct storage mode incompatibility.
+- Add RLS policy metadata.
+- Validate generated DAX manually when required.
+
+Inputs received from:
+
+- Analytics Engineer.
+- Governance Officer.
+- Data Architect.
+- Platform Engineer target constraints.
+
+Outputs delivered to:
+
+- Power BI artifacts.
+- Data Analyst consumption layer.
+- Platform Engineer publication pipeline.
+
+Default artifacts:
+
+- PBIP bundle.
+- TMDL tree.
+- POWERBI_CAPABILITY_REPORT.md
+- DAX_VALIDATION.json
+- PBIP_DIFF.md
+- EMISSION_MANIFEST.json
+
+Minimum tests:
+
+- Target-specific fields do not leak into the canonical core.
+- Unsupported features always produce diagnostics.
+- Golden output remains deterministic.
+- Security and storage properties are explicitly tested.
+
+Acceptance criteria:
+
+A BI Developer can inspect target intent, compatibility, transformation and generated artifacts before publication.
+
+------------------------------------------------------------------
+7.6 DATA ARCHITECT LENS
+------------------------------------------------------------------
+
+Purpose:
+
+Provide an end-to-end view of semantic architecture, domain boundaries, shared entities, interoperability, target coupling, scalability and change impact.
+
+Primary decisions:
+
+- Define architecture guardrails.
+- Approve domain boundaries and shared concepts.
+- Identify coupling and debt.
+- Plan platform evolution.
+- Evaluate target portability.
+- Assess enterprise-wide impact.
+
+Questions answered:
+
+- Which domains exist?
+- Which assets cross boundaries?
+- Where is coupling concentrated?
+- Which systems are authoritative?
+- Which dimensions are conformed?
+- Which target-specific decisions reduce portability?
+- Where are circular or fragile dependencies?
+- What technical debt blocks scale?
+- What is the impact of a proposed change?
+
+Visible information:
+
+- Domain map.
+- Bounded contexts.
+- Shared entities.
+- Systems of record.
+- Conformed dimensions.
+- End-to-end lineage.
+- Cross-domain dependencies.
+- Target capability matrix.
+- Vendor coupling indicators.
+- Architecture decisions.
+- Technical debt.
+- Scalability metadata.
+- Current and target state.
+- Capability maturity.
+
+Functional capabilities:
+
+- Domain topology projection.
+- Shared entity detection.
+- Cross-domain coupling analysis.
+- Portability assessment.
+- Architecture risk register.
+- Change impact analysis.
+- Current-versus-target comparison.
+- ADR references.
+- Technical debt classification.
+- Architecture fitness findings.
+
+Recommendations:
+
+- Create a conformed dimension.
+- Clarify authoritative source.
+- Reduce cross-domain coupling.
+- Move target-specific logic into an adapter.
+- Establish a domain contract.
+- Prioritize a high-impact debt item.
+
+Inputs received from:
+
+- Domain Owners.
+- Data Engineers.
+- Analytics Engineers.
+- Platform Engineers.
+
+Outputs delivered to:
+
+- Data Leadership.
+- Technical teams.
+- Governance and Audit/Risk.
+
+Default artifacts:
+
+- ENTERPRISE_SEMANTIC_ARCHITECTURE.md
+- DOMAIN_MAP.mmd
+- TARGET_CAPABILITY_MATRIX.md
+- ARCHITECTURE_RISKS.md
+- TECHNICAL_DEBT_REGISTER.json
+- IMPACT_ANALYSIS.md
+
+Minimum tests:
+
+- Cross-domain findings use explicit domain metadata.
+- Missing domain metadata is reported, not guessed.
+- Target coupling is measurable and explained.
+- Impact traversal is deterministic and cycle-safe.
+
+Acceptance criteria:
+
+A Data Architect can trace business concepts through domains, dependencies, targets and change impact.
+
+------------------------------------------------------------------
+7.7 DATA GOVERNANCE OFFICER LENS
+------------------------------------------------------------------
+
+Purpose:
+
+Ensure semantic assets have clear ownership, definitions, policies, classifications, certification states, quality evidence and controlled exceptions.
+
+Primary decisions:
+
+- Approve or reject certification.
+- Prioritize remediation.
+- Define or apply policy profiles.
+- Review exceptions.
+- Escalate ownership and sensitivity gaps.
+
+Questions answered:
+
+- Who owns each asset?
+- Which assets are sensitive?
+- Which metrics are certified?
+- Which policies fail?
+- Which exceptions are active or expired?
+- Which assets lack a steward?
+- Which definitions conflict?
+- Which assets may be published?
+
+Visible information:
+
+- Business and technical ownership.
+- Stewardship.
+- Glossary terms.
+- Classification.
+- PII tags.
+- Policy results.
+- Quality findings.
+- Certification status.
+- Exception register.
+- Evidence.
+- Remediation owner.
+- Policy profile.
+
+Functional capabilities:
+
+- Ownership completeness report.
+- Stewardship coverage.
+- Classification inventory.
+- Policy evaluation summary.
+- Certification workflow projection.
+- Exception lifecycle tracking.
+- Expiration alerts.
+- Semantic Quality Score details.
+- Conflicting definition detection.
+- Remediation recommendations.
+
+Recommendations:
+
+- Assign an owner or steward.
+- Classify an unclassified asset.
+- Reject certification until tests exist.
+- Expire or renew an exception.
+- Resolve conflicting terminology.
+- Increase a rule severity for critical domains.
+
+Inputs received from:
+
+- Domain Owner.
+- Analytics Engineer.
+- Data Engineer.
+- Policy engine.
+
+Outputs delivered to:
+
+- Data Analyst certified catalog.
+- Audit/Risk evidence.
+- Data Leadership governance health.
+- Platform Engineer automation requirements.
+
+Default artifacts:
+
+- GOVERNANCE_REPORT.md
+- OWNERSHIP_MATRIX.md
+- POLICY_RESULTS.json
+- CERTIFICATION_REGISTER.json
+- EXCEPTION_REGISTER.json
+- SENSITIVITY_CATALOG.md
+
+Minimum tests:
+
+- Critical policy failure cannot be hidden by a high aggregate score.
+- Exceptions require justification and owner.
+- Expired exceptions are visible.
+- Sensitive metadata follows visibility policy.
+- Certification requirements are configurable and deterministic.
+
+Acceptance criteria:
+
+A Governance Officer can identify ownership, policy, classification and certification gaps with traceable evidence.
+
+------------------------------------------------------------------
+7.8 PLATFORM ENGINEER LENS
+------------------------------------------------------------------
+
+Purpose:
+
+Operate SemanticFlow and semantic model delivery as a reproducible, observable and self-service internal platform.
+
+Primary decisions:
+
+- Assess build health.
+- Maintain CI/CD gates.
+- Prioritize platform capabilities.
+- Manage performance and reliability.
+- Identify opportunities for self-service.
+- Support consumer teams.
+
+Questions answered:
+
+- Is the build reproducible?
+- Which compiler and schema versions were used?
+- How long does each phase take?
+- Which artifacts were generated?
+- What failed and why?
+- Which teams depend on the platform?
+- Which repeated patterns should become self-service?
+- What capacity or cost concerns exist?
+
+Visible information:
+
+- Build manifests.
+- Compiler and schema versions.
+- Input and output hashes.
+- Duration by pipeline phase.
+- Resource usage.
+- Artifact inventory.
+- CI status.
+- Dependency status.
+- Cache and incremental compilation metadata.
+- Structured diagnostics.
+- Consumer teams.
+- Platform capabilities.
+- Service indicators.
+
+Functional capabilities:
+
+- Build health projection.
+- Reproducibility report.
+- Artifact integrity report.
+- Performance trend inputs.
+- CI gate summary.
+- Dependency risk summary.
+- Self-service candidate detection.
+- Repeated-pattern analysis.
+- Consumer dependency map.
+- Operational alert suggestions.
+
+Recommendations:
+
+- Convert repeated implementation into a platform capability.
+- Add a missing CI gate.
+- Investigate performance regression.
+- Introduce a template.
+- Improve artifact retention.
+- Facilitate a domain team with low adoption maturity.
+
+Inputs received from:
+
+- Compiler telemetry.
+- CI/CD.
+- Data Architect guardrails.
+- Governance policy requirements.
+- Consumer team metadata.
+
+Outputs delivered to:
+
+- Domain and stream-aligned teams.
+- Data Leadership.
+- Audit/Risk.
+- Technical leads.
+
+Default artifacts:
+
+- BUILD_MANIFEST.json
+- PLATFORM_HEALTH.md
+- CI_VALIDATION.json
+- COMPILATION_METRICS.json
+- CONSUMER_TEAMS.md
+- PLATFORM_CAPABILITY_CATALOG.md
+
+Minimum tests:
+
+- Builds with the same inputs have matching stable hashes.
+- Failed builds do not replace valid artifacts.
+- Telemetry is optional and disabled by default.
+- No sensitive data appears in operational outputs.
+- Missing usage or cost data is labeled unknown.
+
+Acceptance criteria:
+
+A Platform Engineer can operate and improve SemanticFlow as a safe internal platform without inspecting every domain model manually.
+
+------------------------------------------------------------------
+7.9 DOMAIN OWNER / DATA PRODUCT OWNER LENS
+------------------------------------------------------------------
+
+Purpose:
+
+Represent semantic assets as domain-owned data products connected to business value, consumers, service expectations, quality and change commitments.
+
+Primary decisions:
+
+- Approve business definitions.
+- Prioritize semantic roadmap.
+- Accept or reject business impact.
+- Define service expectations.
+- Coordinate contracts with other domains.
+- Approve metric certification from the business side.
+
+Questions answered:
+
+- Which data products and assets belong to the domain?
+- Which KPIs are official?
+- Who consumes them?
+- What quality and freshness were promised?
+- Which changes are pending?
+- What is the business impact?
+- Which other domains depend on this domain?
+- What debt affects value delivery?
+
+Visible information:
+
+- Domain identity.
+- Business glossary.
+- Data products.
+- Official KPIs.
+- Consumers.
+- SLA and SLO metadata.
+- Quality and freshness.
+- Roadmap items.
+- Change impact.
+- Inter-domain contracts.
+- Certification status.
+- Incidents and feedback metadata.
+- Business value indicators.
+
+Functional capabilities:
+
+- Data product card.
+- Official KPI registry.
+- Consumer map.
+- Domain quality summary.
+- Contract dependency view.
+- Business impact summary.
+- Change approval recommendation.
+- Ownership completeness.
+- Roadmap and debt prioritization inputs.
+- Consumer feedback references.
+
+Recommendations:
+
+- Approve or redefine a KPI.
+- Assign a business owner.
+- Negotiate an inter-domain contract.
+- Prioritize a high-impact quality issue.
+- Deprecate a duplicate metric.
+- Improve service expectation metadata.
+
+Inputs received from:
+
+- Business stakeholders.
+- Data Analyst feedback.
+- Analytics Engineer design.
+- Governance rules.
+- Data Architect domain structure.
+
+Outputs delivered to:
+
+- Data Leadership.
+- Analytics and engineering teams.
+- Governance Officer.
+- Other Domain Owners.
+
+Default artifacts:
+
+- DATA_PRODUCT_CARD.md
+- DOMAIN_GLOSSARY.md
+- CERTIFIED_KPIS.md
+- CONSUMER_CONTRACTS.md
+- DOMAIN_QUALITY.md
+- BUSINESS_IMPACT.md
+
+Minimum tests:
+
+- Domain boundary is explicit.
+- Official and proposed KPIs are differentiated.
+- Missing consumer or SLA data is not fabricated.
+- Cross-domain dependencies include both directions.
+- A Domain Owner cannot silently override critical governance findings.
+
+Acceptance criteria:
+
+A Domain Owner can understand value, commitments, consumers, ownership and business impact without reading implementation code.
+
+------------------------------------------------------------------
+7.10 AUDIT AND RISK LENS
+------------------------------------------------------------------
+
+Purpose:
+
+Provide independent evidence for traceability, controls, changes, exceptions, reproducibility, sensitive assets and risk acceptance.
+
+Primary decisions:
+
+- Determine whether evidence is sufficient.
+- Identify control gaps.
+- Escalate critical risk.
+- Review exceptions and risk acceptance.
+- Validate reproducibility and segregation of duties metadata.
+
+Questions answered:
+
+- Who changed a definition?
+- Which policy ran and what was its result?
+- Which exception allowed progression?
+- Can the build be reproduced?
+- Which sensitive assets were affected?
+- Who accepted the risk?
+- Which artifacts depend on the change?
+- Are control records complete?
+
+Visible information:
+
+- Audit trail.
+- Build manifest.
+- Versions and hashes.
+- Provenance.
+- Policy history.
+- Exceptions.
+- Approval evidence.
+- Risk ownership.
+- Compensating controls.
+- Change traceability.
+- Sensitive asset impact.
+- Reproducibility evidence.
+
+Functional capabilities:
+
+- Audit bundle generation.
+- Control evidence index.
+- Risk register projection.
+- Exception history.
+- Change traceability graph.
+- Reproducibility report.
+- Missing evidence detection.
+- Segregation-of-duties warning based on configured responsibility policy.
+- Critical control gate summary.
+
+Recommendations:
+
+- Block publication due to missing critical evidence.
+- Assign a risk owner.
+- Review an expired exception.
+- Add an approval record.
+- Reproduce a build independently.
+- Apply a compensating control.
+
+Inputs received from:
+
+- Governance Officer.
+- Platform Engineer.
+- Domain Owner.
+- Data Architect.
+- Build and policy evidence.
+
+Outputs delivered to:
+
+- Risk owners.
+- Data Leadership.
+- Governance.
+- Independent review functions.
+
+Default artifacts:
+
+- AUDIT_BUNDLE/
+- CONTROL_EVIDENCE.json
+- RISK_REGISTER.md
+- EXCEPTION_HISTORY.json
+- CHANGE_TRACEABILITY.md
+- REPRODUCIBILITY_REPORT.md
+
+Minimum tests:
+
+- Evidence references are immutable or content-addressed where possible.
+- Missing evidence is explicit.
+- Audit projection does not expose unnecessary secret values.
+- Risk acceptance requires an accountable role.
+- Critical failures cannot be downgraded through a presentation setting.
+
+Acceptance criteria:
+
+An auditor or risk reviewer can trace a semantic change from source evidence to generated artifact and organizational decision.
+
+======================================================================
+8. DATA LEADERSHIP COCKPIT
+======================================================================
+
+8.1 Architectural status
+
+The Data Leadership Cockpit is a special aggregate Lens. It must be isolated in its own package and output directory while remaining fully linked to the common framework.
+
+Suggested source structure:
+
+src/core/leadership/
+  __init__.py
+  models.py
+  cockpit.py
+  portfolio.py
+  health.py
+  ownership.py
+  capability_gaps.py
+  team_dependencies.py
+  delivery_flow.py
+  value.py
+  risk.py
+  recommendations.py
+  renderers/
+
+Suggested output structure:
+
+output/leadership/
+  LEADERSHIP_SUMMARY.md
+  PORTFOLIO_HEALTH.json
+  OWNERSHIP_COVERAGE.json
+  CAPABILITY_GAPS.json
+  TEAM_DEPENDENCIES.mmd
+  DELIVERY_FLOW.json
+  VALUE_INDICATORS.json
+  RISK_OVERVIEW.json
+  RECOMMENDED_ACTIONS.md
+
+Isolation rules:
+
+- The leadership package may import public contracts from personas, quality, lineage, governance, capabilities and diagnostics.
+- Individual Lens modules must not import leadership modules.
+- Leadership must not modify CanonicalSemanticProject.
+- Leadership must not duplicate scoring algorithms.
+- Leadership consumes stable Lens projections through interfaces or registered services.
+- Leadership outputs must be generated separately from technical artifacts.
+- Leadership access policies must be configurable due to sensitive organizational metadata.
+
+8.2 Intended audience
+
+- Team Lead.
+- Tech Lead.
+- Engineering Manager.
+- Head of Data.
+- Head of Data and AI.
+- Director of Analytics.
+- Director of Data Platform.
+- Chief Data Officer.
+
+8.3 Purpose
+
+Provide a holistic, evidence-based view of the semantic portfolio, organizational ownership, quality, risks, team flow, capability maturity and business value.
+
+8.4 Questions answered
+
+- Which domains are healthy or at risk?
+- Which models are critical?
+- Where is ownership missing?
+- Which teams are overloaded or bottlenecked?
+- Which capabilities are underdeveloped?
+- Which debt items block value?
+- Which metrics have conflicting definitions?
+- Which dependencies create delivery delays?
+- Where is collaboration required?
+- Which repeated needs should become platform self-service?
+- What is the highest-value next action?
+- Which risks need executive attention?
+
+8.5 Portfolio module
+
+Metrics and findings:
+
+- Number of semantic projects.
+- Number of domains.
+- Number of entities and metrics.
+- Certified versus draft metrics.
+- Models without owner.
+- Critical assets.
+- Deprecated assets.
+- Target distribution.
+- Reuse levels.
+- Duplicate semantic assets.
+
+Required behavior:
+
+- Support project, domain and organization aggregation.
+- Avoid misleading totals when metadata is incomplete.
+- Show coverage percentage.
+- Link every aggregate to underlying assets.
+
+8.6 Health module
+
+Metrics and findings:
+
+- Canonical Quality Score distribution.
+- Blocking diagnostics.
+- Policy violations.
+- Freshness gaps.
+- Compilation failures.
+- Regression findings.
+- Technical debt concentration.
+- Documentation completeness.
+- Lineage completeness.
+- Target compatibility health.
+
+Required behavior:
+
+- Never reduce critical errors to an average score.
+- Show trend only if comparable historical data exists.
+- Separate semantic, operational, security and governance health.
+
+8.7 Ownership module
+
+Metrics and findings:
+
+- Business owner coverage.
+- Technical owner coverage.
+- Steward coverage.
+- Risk owner coverage.
+- Unowned critical assets.
+- Ownership concentration.
+- Single approver concentration.
+- Domain accountability gaps.
+- Expired responsibilities.
+
+Potential indicator:
+
+Semantic Bus Factor, defined carefully as the concentration of critical semantic knowledge or approval responsibility in too few accountable assignments. Do not infer employee knowledge without explicit metadata. Measure assignment concentration, not human capability.
+
+8.8 Capability gap module
+
+Assess maturity by Persona and product capability.
+
+Suggested maturity levels:
+
+- VISIBLE: relevant objects can be shown.
+- DESCRIBED: context, ownership and definitions exist.
+- GOVERNED: policies and controls are applied.
+- OPERATIONAL: repeatable workflows and alerts exist.
+- OPTIMIZED: evidence-based recommendations and measured improvement exist.
+
+Capabilities to assess:
+
+- Metadata ingestion.
+- Semantic modeling.
+- Metrics.
+- Governance and security.
+- Optimization.
+- Validation and testing.
+- Target compilation.
+- Documentation and lineage.
+- Deployment and operations.
+- Persona adoption.
+
+Required behavior:
+
+- Maturity must be evidence-based.
+- Missing evidence means not assessed, not zero by default.
+- Each gap must have a recommended next action.
+
+8.9 Team dependency module
+
+Display:
+
+- Persona-to-Persona dependencies.
+- Team-to-domain dependencies when configured.
+- Approval bottlenecks.
+- Repeated handoffs.
+- Shared asset dependencies.
+- Cross-domain contracts.
+- Platform dependencies.
+- Governance review dependencies.
+
+Required behavior:
+
+- Distinguish declared organizational assignments from inferred recommendations.
+- Avoid identifying individuals unless explicitly configured and authorized.
+- Detect cycles in approval or dependency flows.
+
+8.10 Delivery flow module
+
+Potential metrics when source metadata exists:
+
+- Request-to-definition lead time.
+- Definition-to-implementation time.
+- Validation time.
+- Approval time.
+- Publication lead time.
+- Rework count.
+- Failed compilation count.
+- Time to remediate blocking findings.
+- Metrics awaiting certification.
+
+Rules:
+
+- Do not fabricate process timestamps.
+- Accept integration metadata through optional adapters.
+- Clearly mark unavailable metrics.
+- Do not evaluate individual worker productivity.
+- Focus on system flow and bottlenecks.
+
+8.11 Value module
+
+Potential indicators:
+
+- Certified metric reuse.
+- Duplicate definitions retired.
+- Consumer coverage.
+- Domains enabled.
+- Reports or products consuming certified metrics.
+- Improvement in documentation coverage.
+- Reduction in blocking quality findings.
+- Self-service adoption.
+- Business decision coverage.
+
+Rules:
+
+- Value claims require explicit measurement sources.
+- Time saved must not be invented.
+- Separate proxy indicators from verified financial value.
+
+8.12 Risk module
+
+Risk categories:
+
+- Semantic ambiguity.
+- Missing ownership.
+- Sensitive-data policy gaps.
+- Critical exceptions.
+- Target incompatibility.
+- Build reproducibility.
+- Architectural coupling.
+- Single assignment concentration.
+- Data freshness uncertainty.
+- Missing evidence.
+- Uncertified critical metrics.
+
+Every risk must include:
+
+- risk_id.
+- category.
+- severity.
+- likelihood if evidence exists.
+- impact.
+- evidence.
+- affected assets.
+- accountable Persona.
+- response recommendation.
+- status.
+
+8.13 Leadership recommendations
+
+Examples:
+
+- Collaboration required between Analytics Engineer and Domain Owner because multiple conflicting Net Revenue definitions exist.
+- Platform Engineering intervention recommended because calendar logic is repeated across many models.
+- Governance review required because sensitive attributes lack access policy metadata.
+- Architecture review required because a shared entity couples several domains without an authoritative owner.
+- Facilitation recommended for a domain with recurring grain and relationship errors.
+
+Every recommendation must be traceable and must not assign blame.
+
+8.14 Leadership acceptance criteria
+
+- Each aggregate links to underlying evidence.
+- No critical issue is hidden by averaging.
+- Missing data is explicit.
+- No individual productivity scoring is implemented.
+- The Cockpit is isolated in src/core/leadership/.
+- The Cockpit remains connected through public Persona and core contracts.
+- Outputs are deterministic.
+- Sensitive organizational metadata follows configured policies.
+- Leadership outputs can be generated without requiring Power BI.
+
+======================================================================
+9. TEAM ORCHESTRATION ENGINE
+======================================================================
+
+SemanticFlow may provide decision support for data-team orchestration. It must not become an HR management or autonomous staffing system.
+
+9.1 Supported team topology classifications
+
+- STREAM_ALIGNED.
+- PLATFORM.
+- ENABLING.
+- COMPLICATED_SUBSYSTEM.
+
+9.2 Suggested SemanticFlow mapping
+
+Stream-aligned teams:
+
+- Own domain data products and semantic assets.
+- Include or access Domain Owner, Data Engineer, Analytics Engineer and analytical consumption capabilities.
+
+Platform team:
+
+- Operates SemanticFlow, CI/CD, templates, diagnostics, artifact delivery and self-service capabilities.
+
+Enabling team:
+
+- Helps domains adopt semantic modeling, governance, testing or analytics practices.
+
+Complicated-subsystem team:
+
+- Owns inference algorithms, compiler internals, complex optimization, advanced validation and target translation.
+
+9.3 Interaction recommendation rules
+
+Recommend COLLABORATION when:
+
+- A new domain or metric family is being designed.
+- Meaning is disputed.
+- A new target capability is experimental.
+- An interface or contract is not yet stable.
+
+Recommend X_AS_A_SERVICE when:
+
+- A platform capability is stable and documented.
+- Inputs and outputs are contractual.
+- Consumer teams should not need implementation expertise.
+
+Recommend FACILITATION when:
+
+- A domain repeatedly fails the same quality rules.
+- A team lacks a temporary capability.
+- Governance or testing practices are being adopted.
+
+Each recommendation needs start conditions, exit conditions and expected artifacts.
+
+9.4 RACI-style generation
+
+SemanticFlow should generate a configurable responsibility matrix by asset type, domain, sensitivity, criticality, certification state and target.
+
+Example activities:
+
+- Define business meaning.
+- Design semantic calculation.
+- Validate source availability.
+- Implement target expression.
+- Classify sensitivity.
+- Approve certification.
+- Publish artifact.
+- Accept risk.
+- Audit evidence.
+
+The matrix must be configurable and never hardcoded as universal truth.
+
+9.5 Organizational safety
+
+- Do not score individuals.
+- Do not infer performance, competence, emotion or intent.
+- Do not recommend termination, discipline or compensation decisions.
+- Do not expose personal data by default.
+- Frame recommendations around system, role and workflow gaps.
+- Require human review for organizational changes.
+
+======================================================================
+10. WORKFLOW MODELS
+======================================================================
+
+10.1 New metric workflow
+
+REQUESTED
+-> BUSINESS_DEFINED
+-> SEMANTICALLY_DESIGNED
+-> SOURCE_VALIDATED
+-> GOVERNANCE_REVIEWED
+-> TARGET_IMPLEMENTED
+-> TECHNICALLY_VALIDATED
+-> DOMAIN_APPROVED
+-> CERTIFIED
+-> PUBLISHED
+
+Possible terminal or additional states:
+
+- REJECTED.
+- DEPRECATED.
+- RETIRED.
+- BLOCKED.
+
+10.2 Structural change workflow
+
+- Source contract changed.
+- Impact analysis generated.
+- Affected assets identified.
+- Data Architect reviews architectural impact.
+- Domain Owner reviews business impact.
+- Engineering teams implement adaptations.
+- Governance and quality gates run.
+- Target artifacts compile.
+- Platform publishes.
+- Audit evidence records the decision.
+
+10.3 Certification lifecycle
+
+- DRAFT.
+- SEMANTICALLY_VALID.
+- TECHNICALLY_VALIDATED.
+- GOVERNANCE_REVIEWED.
+- DOMAIN_APPROVED.
+- CERTIFIED.
+- DEPRECATED.
+- RETIRED.
+
+Rules:
+
+- State transitions must be configurable.
+- Critical policies cannot be bypassed by lowering a score threshold.
+- SemanticFlow initially generates workflow state and recommendations, not a full workflow server.
+
+======================================================================
+11. PROPOSED DIRECTORY STRUCTURE
+======================================================================
+
+The following structure is a target proposal. Antigravity must inspect the real repository and migrate incrementally.
+
+src/core/personas/
+  __init__.py
+  models.py
+  registry.py
+  projector.py
+  configuration.py
+  visibility.py
+  recommendations.py
+  responsibility_matrix.py
+  team_interactions.py
+  maturity.py
+  legacy_adapter.py
+  lenses/
+    __init__.py
+    data_analyst.py
+    analytics_engineer.py
+    data_engineer.py
+    data_scientist.py
+    bi_developer.py
+    data_architect.py
+    governance_officer.py
+    platform_engineer.py
+    domain_owner.py
+    audit_risk.py
+  renderers/
+    markdown.py
+    json.py
+
+src/core/leadership/
+  __init__.py
+  models.py
+  cockpit.py
+  portfolio.py
+  health.py
+  ownership.py
+  capability_gaps.py
+  team_dependencies.py
+  delivery_flow.py
+  value.py
+  risk.py
+  recommendations.py
+  renderers/
+    markdown.py
+    json.py
+
+config/
+  personas.default.yaml
+  responsibilities.default.yaml
+  team_interactions.default.yaml
+  leadership.default.yaml
+
+output/personas/
+  data_analyst/
+  analytics_engineer/
+  data_engineer/
+  data_scientist/
+  bi_developer/
+  data_architect/
+  governance_officer/
+  platform_engineer/
+  domain_owner/
+  audit_risk/
+
+output/leadership/
+
+Important:
+
+Do not create all modules immediately. Establish contracts first, then migrate and implement one Lens at a time.
+
+======================================================================
+12. CLI AND SDK EXPERIENCE
+======================================================================
+
+Suggested commands:
+
+semanticflow personas list
+semanticflow personas describe --persona DATA_ANALYST
+semanticflow personas generate --persona DATA_ANALYST --input <path>
+semanticflow personas generate-all --input <path>
+semanticflow personas capabilities
+semanticflow personas responsibilities --input <path>
+semanticflow personas interactions --input <path>
+semanticflow leadership generate --input <path>
+semanticflow leadership health --input <path>
+semanticflow leadership risks --input <path>
+semanticflow leadership recommendations --input <path>
+
+Requirements:
+
+- Human-readable Rich output.
+- JSON output for automation.
+- Stable exit codes.
+- No cloud requirement.
+- Dry-run support.
+- Output path safety.
+- Persona and Leadership generation independent from PBIP emission.
+- CLI end-to-end tests.
+
+SDK concepts:
+
+- get_persona_registry().
+- project_persona(canonical_project, persona_id, config).
+- generate_responsibility_matrix(...).
+- recommend_team_interactions(...).
+- build_leadership_cockpit(...).
+
+Names are conceptual. Antigravity should align them with repository conventions.
+
+======================================================================
+13. TEST STRATEGY
+======================================================================
+
+13.1 Unit tests
+
+- Persona definitions.
+- Registry behavior.
+- Configuration validation.
+- Visibility rules.
+- Recommendation rules.
+- Responsibility assignment.
+- Team interaction selection.
+- Maturity assessment.
+- Leadership aggregations.
+
+13.2 Contract tests
+
+Every Lens must satisfy the common interface and produce deterministic PersonaProjection output.
+
+13.3 Privacy tests
+
+- Data Analyst does not receive target internals.
+- Leadership does not expose unnecessary personal information.
+- Audit output excludes secrets.
+- Data Scientist respects sensitive metadata policy.
+
+13.4 Mutation safety tests
+
+Generate every Lens and prove the original CanonicalSemanticProject remains unchanged.
+
+13.5 Golden tests
+
+Create representative golden outputs for every Lens and the Leadership Cockpit.
+
+Golden updates must be manually reviewed and justified.
+
+13.6 Cross-lens consistency tests
+
+- The same metric ID means the same metric in every Lens.
+- Certification status is consistent.
+- Ownership is consistent.
+- Critical diagnostics are not hidden where relevant.
+- Aggregates reconcile with underlying projections.
+
+13.7 Organizational recommendation tests
+
+- Recommendations include rule and evidence.
+- Missing data never produces invented assignments.
+- Recommendations remain advisory unless an explicit policy marks them blocking.
+- No individual performance inference occurs.
+
+13.8 Leadership tests
+
+- Average scores do not hide blocking errors.
+- Portfolio totals link to assets.
+- Missing coverage is explicit.
+- Risk summaries reconcile with detailed risks.
+- Cockpit generation does not require Power BI.
+- Leadership package respects import boundaries.
+
+13.9 Architecture boundary tests
+
+- Individual Lenses cannot import leadership modules.
+- Personas cannot import target-specific Power BI modules except through declared extensions in BI Developer.
+- Leadership consumes public contracts only.
+- Canonical core does not import Personas or Leadership.
+
+13.10 End-to-end tests
+
+For one fixture, validate:
+
+- Parse.
+- Canonical compilation.
+- Quality and governance.
+- Persona generation.
+- Leadership generation.
+- Power BI compilation.
+- Documentation.
+- Deterministic repeated output.
+
+======================================================================
+14. IMPLEMENTATION ROADMAP
+======================================================================
+
+PHASE 0. Baseline and discovery
+
+- Inspect current src/core/personas/views.py.
+- Identify existing EXECUTIVE, DATA_GOVERNANCE and BI_ENGINEER behavior.
+- Identify all public imports and tests.
+- Run the complete test suite.
+- Record baseline outputs.
+- Produce a migration impact report.
+- Do not restructure yet.
+
+Gate:
+
+Existing behavior and compatibility obligations are documented.
+
+PHASE 1. Architecture and ADRs
+
+Create or propose:
+
+- ADR: Persona versus job title.
+- ADR: Persona Lens as read-only canonical projection.
+- ADR: Leadership Cockpit isolation.
+- ADR: Team orchestration as decision support.
+- ADR: Legacy view compatibility.
+- ADR: Organizational privacy and safety.
+
+Gate:
+
+Architecture boundaries, contracts and migration path are approved in project documentation.
+
+PHASE 2. Common contracts
+
+Implement:
+
+- PersonaDefinition.
+- PersonaLens interface.
+- PersonaProjection.
+- PersonaRecommendation.
+- ResponsibilityAssignment.
+- TeamInteraction.
+- PersonaMaturityAssessment.
+
+Add deterministic serialization and validation.
+
+Gate:
+
+Contract tests pass. No individual Lens is required yet.
+
+PHASE 3. Registry and configuration
+
+Implement:
+
+- Persona Registry.
+- Built-in IDs.
+- Configuration loader.
+- Alias resolution.
+- Enable/disable behavior.
+- Duplicate validation.
+- Legacy mapping analysis.
+
+Gate:
+
+Registry and configuration tests pass. Existing views still work through compatibility mode.
+
+PHASE 4. Projection engine and renderers
+
+Implement:
+
+- Read-only projector.
+- Visibility policy.
+- Markdown renderer.
+- JSON renderer.
+- Evidence references.
+- No-mutation tests.
+
+Gate:
+
+A generic test Lens can be projected deterministically.
+
+PHASE 5. First business-to-consumption vertical slice
+
+Implement one Lens per iteration in this order:
+
+1. DOMAIN_OWNER.
+2. ANALYTICS_ENGINEER.
+3. BI_DEVELOPER.
+4. DATA_ANALYST.
+
+This proves:
+
+Business meaning -> semantic design -> target implementation -> analytical consumption.
+
+Gate for each Lens:
+
+- Functional specification implemented.
+- Dedicated fixture.
+- Unit and golden tests.
+- Privacy and consistency tests.
+- Documentation.
+- Full regression green.
+
+PHASE 6. Control Lenses
+
+Implement one per iteration:
+
+5. DATA_GOVERNANCE_OFFICER.
+6. AUDIT_RISK.
+7. DATA_ARCHITECT.
+
+Gate:
+
+Governance, evidence and architecture views reconcile with the first vertical slice.
+
+PHASE 7. Engineering and advanced analytics Lenses
+
+Implement one per iteration:
+
+8. DATA_ENGINEER.
+9. PLATFORM_ENGINEER.
+10. DATA_SCIENTIST.
+
+Gate:
+
+All ten default Lenses exist, satisfy the common contract and pass cross-lens consistency tests.
+
+PHASE 8. Responsibility and team interaction framework
+
+Implement:
+
+- Configurable responsibility matrix.
+- Team topology metadata.
+- Interaction rules.
+- Collaboration, X-as-a-Service and Facilitation outputs.
+- Human-review requirement.
+- Organizational safety tests.
+
+Gate:
+
+Recommendations are explainable, configurable and never based on invented staff data.
+
+PHASE 9. Leadership Cockpit foundation
+
+Create isolated src/core/leadership package.
+
+Implement:
+
+- Leadership contracts.
+- Cockpit facade.
+- Portfolio aggregation.
+- Health aggregation.
+- Ownership coverage.
+- JSON and Markdown renderers.
+
+Gate:
+
+Cockpit consumes registered projections and core evidence without duplicated computations.
+
+PHASE 10. Leadership Cockpit advanced modules
+
+Implement incrementally:
+
+- Capability gaps.
+- Team dependencies.
+- Delivery flow when metadata exists.
+- Value indicators with source qualification.
+- Risk overview.
+- Leadership recommendations.
+
+Gate:
+
+All aggregate findings link to underlying evidence and missing data remains explicit.
+
+PHASE 11. CLI and SDK
+
+- Add Persona commands.
+- Add Leadership commands.
+- Add JSON output.
+- Add dry-run.
+- Add capabilities listing.
+- Document SDK entry points.
+
+Gate:
+
+End-to-end CLI tests pass on all supported Python versions.
+
+PHASE 12. Documentation and showcase
+
+Create:
+
+- Persona architecture guide.
+- One guide per Lens.
+- Leadership Cockpit guide.
+- Team orchestration guide.
+- Configuration examples.
+- Small-company example with combined Personas.
+- Enterprise example with separate teams.
+- GitHub screenshots or text samples generated from deterministic fixtures.
+
+Gate:
+
+A new user can understand the framework, generate a Lens and trace its evidence.
+
+======================================================================
+15. REQUIRED DOCUMENTATION
+======================================================================
+
+Suggested documents:
+
+- docs/architecture/persona-lens-framework.md
+- docs/architecture/data-leadership-cockpit.md
+- docs/architecture/team-orchestration.md
+- docs/personas/data-analyst.md
+- docs/personas/analytics-engineer.md
+- docs/personas/data-engineer.md
+- docs/personas/data-scientist.md
+- docs/personas/bi-developer.md
+- docs/personas/data-architect.md
+- docs/personas/governance-officer.md
+- docs/personas/platform-engineer.md
+- docs/personas/domain-owner.md
+- docs/personas/audit-risk.md
+- docs/leadership/cockpit-metrics.md
+- docs/leadership/organizational-safety.md
+- docs/configuration/personas.md
+- docs/configuration/responsibilities.md
+- docs/references/persona-framework-foundations.md
+
+Every Lens guide must include:
+
+- Purpose.
+- Target audience.
+- Decisions supported.
+- Questions answered.
+- Inputs.
+- Visible and hidden data.
+- Functional capabilities.
+- Recommendations.
+- Interactions.
+- Outputs.
+- Limitations.
+- Tests.
+- Examples.
+- Source-framework references.
+
+======================================================================
+16. NON-FUNCTIONAL REQUIREMENTS
+======================================================================
+
+- Python 3.10 or later, aligned with current project support.
+- Pydantic v2 contracts.
+- Type annotations.
+- Ruff formatting and linting.
+- Deterministic output.
+- Offline-first operation.
+- No mandatory cloud SDK.
+- Stable identifiers.
+- Output path safety.
+- Atomic output replacement when possible.
+- Structured diagnostics.
+- No secrets in outputs.
+- Configurable organizational metadata handling.
+- Performance suitable for large metadata graphs.
+- Cycle-safe graph traversal.
+- Backward-compatible migration.
+
+======================================================================
+17. DEFINITION OF DONE
+======================================================================
+
+A Lens is complete only when:
+
+1. It implements the common contract.
+2. Its purpose and decisions are documented.
+3. Visible and hidden fields are tested.
+4. It generates Markdown and JSON.
+5. It has a dedicated fixture.
+6. Unit tests pass.
+7. Golden tests pass.
+8. Cross-lens consistency passes.
+9. No-mutation tests pass.
+10. Recommendations include evidence.
+11. Privacy behavior is tested.
+12. Full regression passes.
+13. The ThinkingSeed is updated with evidence.
+
+The Leadership Cockpit is complete only when:
+
+1. It resides in an isolated leadership package.
+2. It consumes public framework contracts.
+3. It does not duplicate core scoring or lineage logic.
+4. Aggregates reconcile with detailed evidence.
+5. Missing data is explicit.
+6. No individual productivity scoring exists.
+7. All modules have dedicated tests.
+8. Outputs are deterministic.
+9. CLI and SDK entry points are documented.
+10. Full regression and architecture-boundary tests pass.
+
+======================================================================
+18. OUT OF SCOPE
+======================================================================
+
+Do not implement in this initiative:
+
+- Looker emitter.
+- Qlik emitter.
+- A full HR system.
+- Employee performance scoring.
+- Automated staffing decisions.
+- Authentication or enterprise identity management.
+- A complete workflow server.
+- Model training.
+- Feature store behavior.
+- Cloud tenant deployment.
+- Financial value estimates without explicit source data.
+
+Looker and Qlik remain future target adapters after the Canonical Model, Persona Framework, Capability Planner and Power BI adapter are fully hardened.
+
+======================================================================
+19. REQUIRED ANTIGRAVITY RESPONSE FORMAT
+======================================================================
+
+Before implementation, Antigravity must return:
+
+- Repository state observed.
+- Current Persona implementation inventory.
+- Conflicts with this specification.
+- Proposed target contracts.
+- Proposed directory migration.
+- Backward compatibility plan.
+- Test plan.
+- Risks.
+- Iteration breakdown.
+- Files proposed for the first iteration.
+
+After each implementation iteration, Antigravity must return:
+
+- Phase and iteration.
+- Goal.
+- Files inspected.
+- Files created.
+- Files modified.
+- Decisions made.
+- Tests executed.
+- Exact results.
+- Coverage impact if available.
+- Determinism evidence.
+- Compatibility result.
+- Remaining risks.
+- Documentation updated.
+- Recommended next iteration.
+
+It must not declare completion without evidence.
+
+======================================================================
+20. INITIAL INSTRUCTION TO ANTIGRAVITY
+======================================================================
+
+Analyze this specification as the target architecture for SemanticFlow Persona Lenses and the Data Leadership Cockpit.
+
+Do not implement the entire plan.
+
+Start only with PHASE 0 and PHASE 1 planning activities:
+
+1. Inspect the real repository.
+2. Read the current ThinkingSeed Master.
+3. Inspect src/core/personas/views.py and all related tests.
+4. Identify the behavior of EXECUTIVE, DATA_GOVERNANCE and BI_ENGINEER.
+5. Run the complete test suite without modifying functional code.
+6. Document public imports and compatibility obligations.
+7. Compare the current implementation against the ten Lens specifications and the Leadership Cockpit requirements.
+8. Produce a gap matrix.
+9. Propose ADRs, common contracts and an incremental migration.
+10. Stop after delivering the implementation plan and first-iteration file list.
+
+Critical rules:
+
+- Preserve CanonicalSemanticProject as the single semantic truth.
+- Lenses are read-only projections.
+- Leadership is isolated but fully linked through public contracts.
+- Do not duplicate inference, quality, lineage or target logic.
+- Do not remove current views without a compatibility plan.
+- Do not implement Looker or Qlik.
+- Do not invent organizational data.
+- Do not score individuals.
+- Do not advance if tests fail.
+- Present evidence before claiming success.
+
+======================================================================
+21. EXPECTED FINAL PRODUCT EXPERIENCE
+======================================================================
+
+For a Data Analyst, SemanticFlow is a trusted metric and business-context catalog.
+
+For an Analytics Engineer, it is a dimensional and metric engineering framework.
+
+For a Data Engineer, it is a source contract, type and lineage map.
+
+For a Data Scientist, it is a semantic, temporal and governance readiness view for analytical use.
+
+For a BI Developer, it is a Power BI compilation and target validation environment.
+
+For a Data Architect, it is an end-to-end architecture and impact viewer.
+
+For a Governance Officer, it is a policy, ownership and certification engine.
+
+For a Platform Engineer, it is an operable internal semantic platform.
+
+For a Domain Owner, it is a data product and business-value view.
+
+For Audit and Risk, it is an evidence and traceability package.
+
+For Data Leadership, it is a holistic cockpit connecting portfolio health, ownership, capabilities, dependencies, delivery flow, value and risk.
+
+The final differentiator is:
+
+SemanticFlow compiles a semantic model once, explains it consistently to every role, and turns the same governed truth into technical artifacts, organizational responsibilities and leadership decisions.
+
+END OF MASTER PLAN

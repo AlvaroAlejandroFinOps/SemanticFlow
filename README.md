@@ -3,17 +3,17 @@
 **Language:** [English](README.md) | [Español](README_ES.md)
 
 ![Python Version](https://img.shields.io/badge/python-3.10%2B-1a1a1a?style=flat-square)
-![Architecture](https://img.shields.io/badge/architecture-Canonical%20Semantic%20Model-2b2b2b?style=flat-square)
-![Verification](https://img.shields.io/badge/verification-25%2F25%20PASSED-34495e?style=flat-square)
+![Architecture](https://img.shields.io/badge/architecture-Canonical%20AST%20%2B%20Persona%20Lenses-2b2b2b?style=flat-square)
+![Verification](https://img.shields.io/badge/verification-71%2F71%20PASSED-34495e?style=flat-square)
 ![License](https://img.shields.io/badge/license-Apache--2.0-4b5563?style=flat-square)
 
 ---
 
 ## 1. Executive Abstract
 
-SemanticFlow is a vendor-agnostic, enterprise-grade semantic engineering platform designed to compile relational schemas into unified canonical semantic models and emit native Business Intelligence (BI) artifacts, primarily targetting Microsoft Power BI (TMDL/PBIP). The platform addresses the structural fragility, vendor lock-in, and lack of automated governance inherent in traditional BI development workflows. By decoupling relational syntax parsing from target code generation, SemanticFlow introduces a intermediate representation (Canonical AST) that guarantees bidirectional compatibility, automated star-schema role inference, and continuous semantic quality scoring.
+SemanticFlow is a vendor-agnostic, enterprise-grade semantic engineering platform designed to compile relational schemas into unified canonical semantic models, emit native Business Intelligence (BI) artifacts (Microsoft Power BI TMDL/PBIP), project tailored **Persona Lenses across 10 distinct enterprise roles**, and synthesize aggregate **C-Level Data Leadership Cockpits**.
 
-Operating under a zero-regression, local-first paradigm, SemanticFlow leverages graph theory via NetworkX to infer dimensional roles and surrogate keys dynamically. Furthermore, it incorporates an automated Semantic Quality Engine ($cQS$) that enforces governance rules, grain declarations, and metric certification prior to artifact emission. The system adheres to the Strangler Fig pattern, ensuring seamless co-existence between legacy BI emitters and the extensible canonical intermediate representation.
+The platform resolves structural fragility, vendor lock-in, and governance silos by decoupling syntax parsing from code generation. Through its intermediate Canonical AST, SemanticFlow enforces two-level cascading governance, deterministic non-destructive projections, NetworkX star-schema graph topology inference, and automated Semantic Quality Scoring ($cQS$).
 
 ---
 
@@ -44,20 +44,22 @@ Operating under a zero-regression, local-first paradigm, SemanticFlow leverages 
 |                                       v                                           |
 |                   +---------------------------------------+                       |
 |                   |       CanonicalSemanticProject        |                       |
-|                   |  (Entities, Attributes, Metrics, Provenance)                   |
+|                   |  (Entities, Attributes, Metrics,      |                       |
+|                   |   ProjectGovernance, Provenance)      |                       |
 |                   +-------------------+-------------------+                       |
 +---------------------------------------|-------------------------------------------+
                                         |
-       +--------------------------------+--------------------------------+
-       |                                |                                |
-       v                                v                                v
-+----------------------+     +----------------------+     +----------------------+
-| QUALITY & GOVERNANCE |     |   INFERENCE ENGINE   |     | PERSONAS & DOCS      |
-|  SemanticQualityScorer|     | NetworkX RoleInferer |     | DocumentationEmitter |
-|  cQS Evaluation (0-100|     |  SemanticExplainer   |     |  Mermaid ERD / Dict  |
-+----------+-----------+     +----------+-----------+     +----------+-----------+
-           |                            |                            |
-           +----------------------------+----------------------------+
+        +-------------------------------+-------------------------------+
+        |                               |                               |
+        v                               v                               v
++----------------------+     +----------------------+     +--------------------------+
+| QUALITY & GOVERNANCE |     |   INFERENCE ENGINE   |     | PERSONA LENS FRAMEWORK   |
+|  SemanticQualityScorer|     | NetworkX RoleInferer |     |  10 Domain Roles         |
+|  cQS Evaluation (0-100|     |  SemanticExplainer   |     |  Leadership Cockpit      |
+|  PII & Project Rules |     |  Provenance Engine   |     |  Override Classifier     |
++----------+-----------+     +----------+-----------+     +-------------+------------+
+           |                            |                               |
+           +----------------------------+-------------------------------+
                                         |
                                         v
 +-----------------------------------------------------------------------------------+
@@ -73,6 +75,8 @@ Operating under a zero-regression, local-first paradigm, SemanticFlow leverages 
 |            +-----------------------+     +-----------------------+                |
 |            | TMDL Model Definitions|     |  PBIP Directory Bundle|                |
 |            +-----------------------+     +-----------------------+                |
+|            | Leadership Cockpit MD |     |  10x Persona Lens JSON|                |
+|            +-----------------------+     +-----------------------+                |
 +-----------------------------------------------------------------------------------+
 ```
 
@@ -84,177 +88,85 @@ Operating under a zero-regression, local-first paradigm, SemanticFlow leverages 
 
 SemanticFlow computes an objective, normalized Semantic Quality Score $cQS \in [0, 100]$ evaluating the structural integrity, governance adherence, and documentation depth of a canonical project $P = (E, R, G)$.
 
-Let $E$ be the set of entities, $R$ the set of relationships, $M = \bigcup_{e \in E} M_e$ the aggregate set of metrics, and $A = \bigcup_{e \in E} A_e$ the set of attributes. The total score is formulated as a weighted sum of four orthogonal domain metrics:
-
 $$cQS(P) = w_g \cdot S_{\text{grain}}(E) + w_m \cdot S_{\text{metric}}(M) + w_c \cdot S_{\text{cert}}(M) + w_r \cdot S_{\text{ratio}}(M)$$
 
 Subject to weight normalization:
 
 $$w_g + w_m + w_c + w_r = 1.0 \quad (w_g = 0.35, \, w_m = 0.25, \, w_c = 0.20, \, w_r = 0.20)$$
 
-1. **Fact Grain Score ($S_{\text{grain}}$):** Evaluates explicit primary grain declaration across Fact entities $E_F = \{e \in E \mid \text{role}(e) = \text{FACT}\}$:
+---
 
-$$S_{\text{grain}}(E) = \frac{|\{e \in E_F \mid \text{has\_explicit\_grain}(e)\}|}{|E_F| + \epsilon} \times 100$$
+## 4. The 10 Enterprise Persona Lenses
 
-2. **Metric Documentation Completeness ($S_{\text{metric}}$):**
+SemanticFlow introduces 10 dedicated lenses implementing the `PersonaLens` interface, projecting tailored domain perspectives without mutating the underlying canonical AST:
 
-$$S_{\text{metric}}(M) = \frac{|\{m \in M \mid \text{description}(m) \neq \emptyset\}|}{|M| + \epsilon} \times 100$$
+| Persona ID | Role | Technical Depth | Primary Focus Areas |
+| :--- | :--- | :--- | :--- |
+| `analytics_leader` | `ANALYTICS_LEADER` | `EXECUTIVE` | Strategic Alignment, Business Value, Certified KPIs |
+| `data_engineer` | `DATA_ENGINEER` | `TECHNICAL` | Ingestion Pipelines, Partitioning, Storage Formats |
+| `analytics_engineer` | `ANALYTICS_ENGINEER` | `TECHNICAL` | Star Schema Topology, Metric Definitions, Grains |
+| `bi_developer` | `BI_DEVELOPER` | `TECHNICAL` | Power BI / TMDL Models, DAX Measures, Formatting |
+| `data_governance_officer`| `DATA_GOVERNANCE_OFFICER`| `SUMMARY` | Data Ownership, PII Sensitivity, Catalog Lineage |
+| `data_product_manager` | `DATA_PRODUCT_MANAGER` | `SUMMARY` | Data Product Lifecycle, Consumer Adoption, SLAs |
+| `finops_specialist` | `FINOPS_SPECIALIST` | `SUMMARY` | Analytical Query Cost, Cloud Capacity Attribution |
+| `ai_systems_engineer` | `AI_SYSTEMS_ENGINEER` | `TECHNICAL` | Feature Store Readiness, Embeddings, Training Lineage |
+| `business_consumer` | `BUSINESS_CONSUMER` | `EXECUTIVE` | Plain-Language Glossary, Self-Service Analytics |
+| `compliance_auditor` | `COMPLIANCE_AUDITOR` | `EXHAUSTIVE` | Regulatory Traceability (GDPR/SOX), Provenance Audit |
 
-3. **Certified Metric Governance ($S_{\text{cert}}$):**
+### 4.1. Override Safety Classification Matrix
 
-$$S_{\text{cert}}(M) = \frac{|\{m \in M_{\text{cert}} \mid \text{owner}(m) \neq \emptyset \land \text{lineage}(m) \neq \emptyset\}|}{|M_{\text{cert}}| + \epsilon} \times 100$$
+Custom organizational overrides configured via YAML/JSON are deterministically classified:
 
-Where $M_{\text{cert}} = \{m \in M \mid \text{certified}(m) = \text{True}\}$.
-
-### 3.2. Directed Star-Schema Role Inference Engine
-
-Given an undirected relational graph $G = (V, E_{\text{rel}})$, where $V$ represents tables and $E_{\text{rel}}$ foreign key relationships, the Inference Engine constructs a directed acyclic graph $DAG = (V, E_{\text{directed}})$ to infer dimensional roles $\rho: V \to \{\text{DIMENSION}, \text{FACT}, \text{BRIDGE}\}$.
-
-Degree centrality $C_D(v)$ and in-degree ratio $\delta_{in}(v)$ are defined as:
-
-$$C_D(v) = \deg(v), \quad \delta_{in}(v) = \frac{\text{in-degree}(v)}{\deg(v) + \epsilon}$$
-
-The role assignment function $\rho(v)$ is formulated as:
-
-$$\rho(v) = \begin{cases} 
-\text{FACT} & \text{if } \delta_{in}(v) \ge \tau_{\text{fact}} \land C_D(v) > 1 \\
-\text{DIMENSION} & \text{if } \delta_{in}(v) < \tau_{\text{fact}} \land \text{out-degree}(v) > 0 \\
-\text{BRIDGE} & \text{otherwise}
-\end{cases}$$
-
-Where $\tau_{\text{fact}} = 0.60$ is the empirical threshold for star-schema fact convergence.
+- **`SAFE`**: Cosmetic and presentation properties (`display_name`, `title`, `description`, `icon`, `aliases`). Applied without warnings.
+- **`REVIEW_REQUIRED`**: Behavioral adjustments (`technical_depth`, `visible_object_types`, `focus_areas`). Applied with diagnostic audit logging.
+- **`PROHIBITED`**: Invariants (`persona_id`, `role`, security guardrails). Enforced with `ConfigurationValidationError`.
 
 ---
 
-## 4. Empirical Performance & Benchmarks
+## 5. CLI Command Reference
 
-Operational validation benchmarks were executed across multiple synthetic and enterprise schemas (Pyme Tier 1, Mediana Tier 2, Gigante Tier 3, and Metro Santiago Metro V2).
+```bash
+# 1. Compile relational schema to Power BI PBIP/TMDL
+semanticflow compile -i schema.md -o output/PBIP
 
-| Metric | Target Boundary | Baseline | Empirical Production Result | Status |
-|:-------|:----------------|:---------|:----------------------------|:-------|
-| AST Mapping Latency | $< 500\text{ ms}$ | $120\text{ ms}$ | **$18.4\text{ ms}$** | PASS |
-| TMDL Emission Latency | $< 2.0\text{ s}$ | $850\text{ ms}$ | **$142.0\text{ ms}$** | PASS |
-| Verification Test Suite | $100\%$ Success | $22/22$ | **$25/25\text{ PASSED}$ ($100\%$)** | PASS |
-| Quality Scoring ($cQS$) | $\ge 40.0$ (Default) | N/A | **$50.0 / 100.0$** (10 Warnings, 0 Errors) | PASS |
-| Memory Footprint | $< 256\text{ MB}$ | $95\text{ MB}$ | **$48.2\text{ MB}$** | PASS |
+# 2. Project tailored Persona Lens perspective
+semanticflow explain -i schema.md --persona executive
+semanticflow explain -i schema.md --persona bi_engineer --format md
+semanticflow explain -i schema.md --persona data_governance --format json
 
----
+# 3. List all 10 registered Persona Lenses
+semanticflow personas list
 
-## 5. Repository Structure & Artifacts
+# 4. Export all 10 Persona Lenses and Leadership Cockpit
+semanticflow personas export -i schema.md -o output/personas --formats md,json
 
-```
-SemanticFlow/
-├── 001_Seed/                           # Architectural DNA & ThinkingSeed Snapshots
-│   ├── seed-SemanticFlow.md            # Lightweight Seed
-│   └── seed-SemanticFlow-master.md     # Comprehensive Paper-Grade Master Seed
-├── 02_Foundation/                      # Schema baselines & reference models
-│   ├── 01_Schemas/
-│   └── 02_Reference_Models/
-├── docs/                               # Governance & Architectural Decision Records
-│   ├── adr/
-│   │   └── ADR-001-canonical-model.md  # Architectural Decision Record 001
-│   └── architecture/
-│       └── esquema_relacional.md       # Reference Relational Schema (Metro Santiago)
-├── output/                             # Default target output directory
-│   ├── docs/                           # Automated Data Dictionaries & ERD Diagrams
-│   └── PBIP/                           # Compiled Power BI PBIP/TMDL Bundles
-├── src/                                # Source Core Package
-│   ├── cli.py                          # Typer & Rich CLI Entry Point
-│   └── core/                           # Modular Core System
-│       ├── ast/                        # Abstract Syntax Trees (Canonical & Target)
-│       │   ├── canonical/models.py     # Canonical Semantic Project Model
-│       │   ├── semantic.py             # Legacy Power BI AST Model (Strangler Fig)
-│       │   └── types.py                # Data types & Primitive Enums
-│       ├── capabilities/planner.py     # Target Capability Planner
-│       ├── docs/emitter.py             # Markdown Dictionary & Mermaid Emitter
-│       ├── emitter/                    # TMDL & PBIP File System Writers
-│       ├── engine/                     # Compiler, Inferrer & Provenance Explainer
-│       ├── mappers/                    # Raw-to-Canonical & Canonical-to-Target Mappers
-│       ├── parsers/                    # Relational Markdown & YAML Parsers
-│       ├── personas/views.py           # Executive & Governance Persona Projections
-│       ├── quality/                    # Semantic Quality Engine (Scorer & Rules)
-│       └── targets/                    # Multi-target BI Adapters (Power BI)
-├── tests/                              # Comprehensive Verification Suite (25 Tests)
-├── pyproject.toml                      # Project Metadata & Dependency Definitions
-├── LICENSE                             # Apache-2.0 Open Source License
-├── README.md                           # Master Technical Documentation (English)
-└── README_ES.md                        # Master Technical Documentation (Spanish)
+# 5. Synthesize C-Level Data Leadership Cockpit
+semanticflow cockpit -i schema.md
+semanticflow cockpit -i schema.md -o output/cockpit
 ```
 
 ---
 
-## 6. Execution & Verification Protocol
+## 6. Verification and Regression Benchmark
 
-### 6.1. Environment Setup & Prerequisites
-
-Ensure Python 3.10+ is installed. Clone the repository and setup isolation via `venv`:
+The test suite contains 71 automated tests across unit, integration, stress, and deterministic golden-file regression suites:
 
 ```bash
-git clone https://github.com/AlvaroAlejandroFinOps/SemanticFlow.git
-cd SemanticFlow
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-python -m pip install --upgrade pip
-python -m pip install -e .
-```
-
-### 6.2. Pipeline Execution
-
-#### 1. Compile Relational Schema to Native Power BI (TMDL/PBIP)
-```bash
-python -m src.cli compile --input docs/architecture/esquema_relacional.md --output output/PBIP
-```
-
-#### 2. Evaluate Semantic Quality Score ($cQS$) and Enforce Governance
-```bash
-python -m src.cli validate --input docs/architecture/esquema_relacional.md --min-score 40.0
-```
-
-#### 3. Inspect Provenance & Explain Role Inferences
-```bash
-python -m src.cli explain --input docs/architecture/esquema_relacional.md --format human
-```
-
-#### 4. Generate Enterprise Documentation (Data Dictionary & ERD Diagram)
-```bash
-python -m src.cli docgen --input docs/architecture/esquema_relacional.md --output output/docs
-```
-
-### 6.3. Verification Suite & Invariant Tests
-
-Execute the complete pytest suite to verify zero regressions across parsers, mappers, inference engines, quality scorers, and target emitters:
-
-```bash
-python -m pytest tests/ -v
+.venv/Scripts/python.exe -m pytest tests/ -v
+# 71 passed in 9.01s (100% PASS)
 ```
 
 ---
 
-## 7. Domain Glossary
-
-* **Canonical Semantic Model (CSM):** A platform-agnostic intermediate representation that encapsulates entities, attributes, relationships, metrics, and governance metadata independently of target BI vendors.
-* **Semantic Quality Score ($cQS$):** A normalized mathematical metric evaluating semantic models on a scale of 0 to 100 based on grain completeness, documentation depth, and metric certification.
-* **Tabular Model Definition Language (TMDL):** A human-readable text-based object model representation format for Power BI and Analysis Services tabular models.
-* **Strangler Fig Pattern:** An architectural refactoring strategy used to incrementally replace legacy components (`semantic.py`) with the new canonical engine without disrupting operational interfaces.
-* **Surrogate Key (SK):** A synthetic primary key automatically inferred and hidden by SemanticFlow to preserve star-schema integrity and hide implementation details from business users.
-
----
-
-## 8. Academic & Engineering References
-
-1. Kimball, R., & Ross, M. (2013). *The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling* (3rd ed.). John Wiley & Sons.
-2. Microsoft Corporation. (2023). *Tabular Model Definition Language (TMDL) Specification*. Microsoft Learn.
-3. Hagberg, A. A., Schult, D. A., & Swart, P. J. (2008). *Exploring Network Structure, Dynamics, and Function using NetworkX*. Proceedings of the 7th Python in Science Conference (SciPy 2008), 11–15.
-
-### BibTeX Citation
+## 7. Citation & BibTeX
 
 ```bibtex
-@software{semanticflow_2026,
-  author = {SemanticFlow Core Engineering Team},
-  title = {SemanticFlow: Enterprise-Grade Declarative Semantic Model Compiler \& Quality Platform},
+@software{semanticflow2026,
+  author = {SemanticFlow Engineering Team},
+  title = {SemanticFlow: Declarative Semantic Compiler, Persona Lens Framework and Leadership Cockpit},
   year = {2026},
   publisher = {GitHub},
   journal = {GitHub Repository},
-  url = {https://github.com/AlvaroAlejandroFinOps/SemanticFlow}
+  howpublished = {\url{https://github.com/SemanticFlow/SemanticFlow}}
 }
 ```

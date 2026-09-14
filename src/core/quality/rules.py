@@ -51,8 +51,9 @@ def validate_certified_metrics(project: CanonicalSemanticProject) -> List[Diagno
     diagnostics = []
     for entity in project.entities:
         for metric in entity.metrics:
-            if metric.governance.certification_status == "CERTIFIED":
-                if not metric.governance.owner:
+            eff_gov = project.resolve_asset_governance(metric)
+            if eff_gov.certification_status == "CERTIFIED":
+                if not eff_gov.owner:
                     diagnostics.append(
                         Diagnostic(
                             code="GOV_CERT_001",
@@ -80,6 +81,44 @@ def validate_ratio_metrics(project: CanonicalSemanticProject) -> List[Diagnostic
                             message=f"Ratio metric '{metric.name}' must declare numerator_metric_id and denominator_metric_id.",
                             object_id=metric.id,
                             suggested_action="Specify numerator and denominator metric IDs for auditability.",
+                        )
+                    )
+    return diagnostics
+
+
+def validate_project_governance(project: CanonicalSemanticProject) -> List[Diagnostic]:
+    """Validates that the project has explicit domain governance and ownership metadata."""
+    diagnostics = []
+    if not project.governance or not project.governance.owner:
+        diagnostics.append(
+            Diagnostic(
+                code="GOV_PROJ_001",
+                severity=DiagnosticSeverity.RECOMMENDATION,
+                category=DiagnosticCategory.GOVERNANCE,
+                message=f"Project '{project.name}' has no assigned executive owner.",
+                object_id=project.id,
+                suggested_action="Declare project-level governance with owner in ProjectGovernance.",
+            )
+        )
+    return diagnostics
+
+
+def validate_pii_classification(project: CanonicalSemanticProject) -> List[Diagnostic]:
+    """Validates that PII attributes are flagged with Restricted or Confidential classification."""
+    diagnostics = []
+    for entity in project.entities:
+        for attr in entity.attributes:
+            eff_gov = project.resolve_asset_governance(attr)
+            if eff_gov.is_pii:
+                if eff_gov.sensitivity_classification not in ("Restricted", "Confidential"):
+                    diagnostics.append(
+                        Diagnostic(
+                            code="GOV_PII_001",
+                            severity=DiagnosticSeverity.WARNING,
+                            category=DiagnosticCategory.SECURITY,
+                            message=f"PII attribute '{entity.name}.{attr.name}' must have 'Restricted' or 'Confidential' classification.",
+                            object_id=attr.id,
+                            suggested_action="Set sensitivity_classification to Restricted in attribute or project governance.",
                         )
                     )
     return diagnostics

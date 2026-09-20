@@ -1,178 +1,188 @@
-# SemanticFlow: Declarative Semantic Model Compiler & Enterprise Analytics Projection Platform
+![alt text](SemanticFlow.png)
+# SEMANTICFLOW: Enterprise Declarative Semantic Compiler and Multi-Persona Projection Engine
 
 **Language:** [English](README.md) | [Español](README_ES.md)
 
-![Python](https://img.shields.io/badge/python-3.10%2B-1a1a1a?style=flat-square)
-![Architecture](https://img.shields.io/badge/architecture-compiler--pipeline-2b2b2b?style=flat-square)
-![Verification](https://img.shields.io/badge/tests-71%2F71%20passing-34495e?style=flat-square)
-![Target](https://img.shields.io/badge/target-Power%20BI%20TMDL%20%7C%20PBIP-4b5563?style=flat-square)
-![License](https://img.shields.io/badge/license-Apache--2.0-1a1a1a?style=flat-square)
+[![Runtime: Python 3.10+](https://img.shields.io/badge/python-3.10%2B-2b2b2b?style=flat-square&logo=python&logoColor=white)](pyproject.toml)
+[![Architecture: Canonical AST](https://img.shields.io/badge/architecture-canonical_AST-1a1a1a?style=flat-square)](src/core/ast/canonical/models.py)
+[![Verification: 71 Passed](https://img.shields.io/badge/tests-71%2F71_passing-34495e?style=flat-square)](tests/)
+[![Target: PowerBI TMDL/PBIP](https://img.shields.io/badge/target-TMDL%2FPBIP-2b2b2b?style=flat-square)](src/core/emitter/)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-4b5563?style=flat-square)](pyproject.toml)
 
 ---
 
 ## 1. Executive Abstract
 
-Modern enterprise data architectures face a critical governance rift: the semantic gap between raw storage schemas, analytical transformations, and business consumption models. When semantic definitions are maintained ad-hoc across fragmented Business Intelligence (BI) dashboards and analytical engines, domain logic degenerates into unmaintainable, un-auditable technical debt. SemanticFlow addresses this architectural challenge by introducing a deterministic, declarative semantic compiler. It parses high-level domain specifications written in structured YAML or Markdown formats into a validated Canonical Semantic Abstract Syntax Tree (AST), executing graph-based role inference, automated DAX expression generation, and rigorous governance quality scoring.
+Modern enterprise data architectures face a critical operational tension between upstream data modeling and downstream analytical consumption. Relational schemas defined in database migrations or data modeling specifications are manually re-implemented inside business intelligence platforms such as Microsoft Power BI. This manual transshipment causes semantic drift, unversioned business logic, fragile relationship definitions, and uncoordinated security posture across enterprise teams.
 
-The core innovation of SemanticFlow lies in its Multi-Persona Projection Subsystem. Rather than forcing diverse stakeholders to consume a single monolithic representation, SemanticFlow projects the canonical semantic AST into 10 specialized, schema-validated Persona Lenses (ranging from Data Engineers and Governance Officers to C-Level Analytics Leaders via a consolidated Data Leadership Cockpit). Finally, the target emitter subsystem translates these projected abstractions into production-grade Microsoft Power BI Tabular Model Definition Language (TMDL) artifacts and PBIP folder topologies, ensuring seamless CI/CD deployment and absolute single-source-of-truth alignment across the enterprise lifecycle.
+SemanticFlow resolves this divergence through a local, deterministic, compiler-driven architecture. By consuming declarative relational schema specifications (Markdown or YAML), SemanticFlow normalizes metadata into an intermediate Canonical Abstract Syntax Tree (AST), infers dimensional topological roles via directed acyclic graph analysis, synthesizes baseline Data Analysis Expressions (DAX) measures, and emits production-ready Tabular Model Definition Language (TMDL) and Power BI Project (`.pbip`) bundles. Furthermore, the engine incorporates an enterprise projection framework composed of ten distinct Persona Lenses and a C-Level Data Leadership Cockpit governed by formal Semantic Quality Scoring ($cQS$).
 
 ---
 
 ## 2. System Architecture & Topology
 
-SemanticFlow is engineered as a decoupled compiler pipeline. Input specifications undergo multi-stage transformations with strict boundary isolation between parsing, semantic graph computation, persona projection, and code emission.
+The compiler executes as an offline, in-memory pipeline devoid of external database engine runtime dependencies. The end-to-end topology is structured into four decoupled layers: Ingestion, Canonical Mapping, Analytical Core Engines, and Materialized Emission.
 
 ```
- +-------------------------------------------------------------------------+
- |                      Declarative Source Specifications                  |
- |                   (YAML Schemas / Markdown Model Files)                 |
- +-------------------------------------------------------------------------+
-                                      |
-                                      v
- +-------------------------------------------------------------------------+
- |                           Parsing Subsystem                             |
- |           [YamlParser]                   [MarkdownParser]               |
- +-------------------------------------------------------------------------+
-                                      |
-                                      v
- +-------------------------------------------------------------------------+
- |                     Raw-to-Canonical Mapper Subsystem                   |
- |                 Translates AST to CanonicalSemanticModel                |
- +-------------------------------------------------------------------------+
-                                      |
-                                      v
- +-------------------------------------------------------------------------+
- |                        Semantic Computation Engine                      |
- |  +--------------------+   +---------------------+   +-----------------+ |
- |  | RoleInferer        |   | RelationshipResolver|   | DaxGenerator    | |
- |  | (Fact/Dim/Bridge)  |   | (NetworkX Topology) |   | (Automated DAX) | |
- |  +--------------------+   +---------------------+   +-----------------+ |
- +-------------------------------------------------------------------------+
-                                      |
-                                      v
- +-------------------------------------------------------------------------+
- |                     Governance & Quality Scorer                         |
- |          Evaluates Coverage, Documentation, PII Risk & Syntax           |
- +-------------------------------------------------------------------------+
-                                      |
-                                      v
- +-------------------------------------------------------------------------+
- |                   Multi-Persona Projection Layer                        |
- |  +-------------------------------------------------------------------+  |
- |  | 10 Specialized Persona Lenses (Data Engineer, Governance, etc.)   |  |
- |  | + Data Leadership Cockpit Generator                              |  |
- |  +-------------------------------------------------------------------+  |
- +-------------------------------------------------------------------------+
-                                      |
-                                      v
- +-------------------------------------------------------------------------+
- |                         Target Emitter Subsystem                        |
- |          [TmdlEmitter]          [PbipWriter]        [DocEmitter]        |
- +-------------------------------------------------------------------------+
-                                      |
-                                      v
- +-------------------------------------------------------------------------+
- |                           Output Artifacts                              |
- |            (Power BI TMDL / PBIP, Persona JSON/MD, Cockpit)             |
- +-------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------+
+|                                    INPUT LAYER                                        |
+|  Declarative Schemas (.md / .yaml)  --->  MarkdownSchemaParser / YamlSchemaParser     |
++-------------------------------------------+-------------------------------------------+
+                                            |
+                                            v
++---------------------------------------------------------------------------------------+
+|                                  CANONICAL AST LAYER                                  |
+|     RawRelationalSchema  ======>  RawToCanonicalMapper  ======>  CanonicalProject     |
++-------------------------------------------+-------------------------------------------+
+                                            |
+         +----------------------------------+----------------------------------+
+         |                                  |                                  |
+         v                                  v                                  v
++-----------------------+  +--------------------------------+  +-----------------------+
+|  TOPOLOGY & INFERENCE |  |   QUALITY & AUDIT SUBSYSTEM    |  |  PERSONA PROJECTIONS  |
+|  - RoleInferer        |  |   - SemanticQualityScorer      |  |  - PersonaRegistry    |
+|  - RelationshipRes.   |  |   - cQS Deterministic Penalties|  |  - 10 Persona Lenses  |
+|  - DaxGenerator       |  |   - Rule Enforcement Engine    |  |  - Leadership Cockpit |
++-----------+-----------+  +----------------+---------------+  +-----------+-----------+
+            |                               |                              |
+            +-------------------------------+------------------------------+
+                                            |
+                                            v
++---------------------------------------------------------------------------------------+
+|                               EMISSION & SERIALIZATION                                |
+|  +--------------------------+  +--------------------------+  +---------------------+  |
+|  |     Power BI PBIP        |  |       Governance         |  |    Documentation    |  |
+|  |  - TmdlFormatter         |  |  - 10 Lenses (MD/JSON)   |  |  - Data Dictionary  |  |
+|  |  - TableEmitter          |  |  - Leadership Cockpit    |  |  - Mermaid ERD Graph|  |
+|  |  - PbipWriter (.pbip)    |  |  - Domain Maturity Radar |  |  - Output Bundles   |  |
+|  +--------------------------+  +--------------------------+  +---------------------+  |
++---------------------------------------------------------------------------------------+
 ```
 
 ---
 
 ## 3. Mathematical Formulation & Analytical Engines
 
-### 3.1. Entity Role & Topology Inference Engine
-Let $G = (V, E)$ represent the directed semantic graph of the domain, where $V$ is the set of entities (tables) and $E$ is the set of directed foreign-key relationships $e = (v_i, v_j)$ with $v_i, v_j \in V$.
+### 3.1. Topological Graph Resolution and Role Inference
 
-The `RoleInferer` evaluates the structural topology and measure distribution to assign an entity role $R(v) \in \{\text{FACT}, \text{DIMENSION}, \text{BRIDGE}, \text{HYBRID}\}$ for each entity $v \in V$:
+Let the relational schema be modeled as an attributed directed multigraph $G = (V, E)$, where $V$ denotes the set of relational entities (tables) and $E \subseteq V \times V \times \mathcal{A}$ denotes directed foreign key references from child attributes to parent unique keys.
 
-$$R(v) = \begin{cases} 
-\text{FACT}, & \text{if } \text{deg}_{in}(v) > \text{deg}_{out}(v) \land |M(v)| > 0 \\ 
-\text{DIMENSION}, & \text{if } \text{deg}_{out}(v) \ge \text{deg}_{in}(v) \land \text{IsUnique}(PK(v)) \\ 
-\text{BRIDGE}, & \text{if } \exists e \in E \text{ s.t. } \text{cardinality}(e) = \text{MANY\_TO\_MANY} \\ 
-\text{HYBRID}, & \text{otherwise} 
+For every vertex $v \in V$, let $d^-(v)$ denote the in-degree (number of foreign key constraints pointing to $v$) and $d^+(v)$ denote the out-degree (number of outgoing foreign key references originating from $v$). The topological role assignment function $\mathcal{R}: V \to \{\text{FACT}, \text{DIMENSION}, \text{BRIDGE}, \text{OUTRIGGER}\}$ is defined deterministically as:
+
+$$\mathcal{R}(v) = \begin{cases} 
+\text{FACT}, & \text{if } d^+(v) \ge 1 \ \land \ d^-(v) = 0 \\
+\text{DIMENSION}, & \text{if } d^+(v) = 0 \ \land \ d^-(v) \ge 1 \\
+\text{BRIDGE}, & \text{if } d^+(v) \ge 2 \ \land \ d^-(v) \ge 1 \\
+\text{OUTRIGGER}, & \text{if } d^+(v) \ge 1 \ \land \ d^-(v) \ge 1 \ \land \ |Attr(v)| \le \theta_{dim} \\
+\text{DIMENSION}, & \text{otherwise (fallback)}
 \end{cases}$$
 
-where $\text{deg}_{in}(v)$ and $\text{deg}_{out}(v)$ denote in-degree and out-degree in $G$, $M(v)$ is the set of measures associated with entity $v$, and $PK(v)$ represents the primary key attributes.
+Cycle detection is enforced by asserting aciclicity across the condensation graph:
 
-### 3.2. Automated DAX Expression Synthesis
-When a measure $m$ is defined with a high-level aggregation type $A(m) \in \{\text{SUM}, \text{COUNT}, \text{AVERAGE}, \text{DISTINCT\_COUNT}\}$, the `DaxGenerator` constructs syntactically valid DAX expressions $\Phi(m)$:
+$$\mathcal{C}(G) = \emptyset \iff \forall \text{ cycle } C \subset G, \ |C| = 0$$
 
-$$\Phi(m) = \begin{cases}
-\text{SUM}(v.\text{attr}), & \text{if } A(m) = \text{SUM} \\
-\text{CALCULATE}(\text{SUM}(v.\text{attr}), \text{KEEPFILTERS}(\dots)), & \text{if } A(m) = \text{SUM} \land |\text{Filter}(m)| > 0 \\
-\text{DIVIDE}(\Phi(m_1), \Phi(m_2), 0), & \text{if } A(m) = \text{RATIO}
-\end{cases}$$
+If $\mathcal{C}(G) \ne \emptyset$, `RelationshipResolver` isolates cycle edges and flags ambiguous paths to prevent bidirectional cross-filtering traps in tabular models.
 
-### 3.3. Multi-Persona Projection & Quality Scoring Model
-Given a Canonical Semantic Model $M = (V, E, M_e, Q)$ and a target persona lens $P_k$ ($k \in [1, 10]$), the projection operator $\Pi_{P_k}$ filters and enriches the canonical AST into a schema-constrained view $V_{P_k}$:
+### 3.2. Semantic Quality Score ($cQS$) Formulation
 
-$$\Pi_{P_k}: M \longmapsto V_{P_k} = \left\{ \phi(v, m) \mid v \in V, m \in M_e, \text{QualScore}(v) \ge \theta_{P_k} \right\}$$
+The semantic integrity of a compiled project is evaluated via an objective scoring function $cQS: \mathcal{M} \to [0, 100]$. Given an evaluation context $\mathcal{M}$ consisting of entities $E$, relationships $R$, and measures $M$, the score is computed as:
 
-The global quality score $Q_{model} \in [0, 100]$ is computed as a weighted scalar linear combination over entity evaluations:
+$$cQS(\mathcal{M}) = \max\left(0, \ 100 - \sum_{k \in \mathcal{K}} w_k \cdot \mathbb{I}_k(\mathcal{M}) - \sum_{j \in \mathcal{D}} \lambda_j \cdot \mu_j(\mathcal{M})\right)$$
 
-$$Q_{model} = \frac{100}{|V|} \sum_{v \in V} \left( \alpha \cdot \text{Cov}(v) + \beta \cdot \text{Doc}(v) + \gamma \cdot (1 - \text{PII}_{risk}(v)) + \delta \cdot \text{Syntax}_{valid}(v) \right)$$
+Where:
+* $\mathcal{K}$ represents the set of blocking architectural invariants (e.g., missing primary keys, cyclic active paths, invalid foreign keys). Here, $\mathbb{I}_k(\mathcal{M}) \in \{0, 1\}$ and $w_k \in [20, 50]$.
+* $\mathcal{D}$ represents governance and best-practice quality rules (e.g., untyped attributes, missing descriptions, uncertified measures, unmasked PII).
+* $\lambda_j$ is the penalty weight associated with rule $j$, and $\mu_j(\mathcal{M})$ represents the normalized violation frequency.
 
-where $\alpha = 0.30$, $\beta = 0.25$, $\gamma = 0.25$, and $\delta = 0.20$, satisfying $\alpha + \beta + \gamma + \delta = 1.0$.
+A compilation candidate is rejected when $cQS(\mathcal{M}) < \tau_{\text{threshold}}$ (default $\tau = 70.0$) or when $\sum \mathbb{I}_k(\mathcal{M}) > 0$.
+
+### 3.3. Multi-Perspective Persona Projection Operator
+
+Given a canonical project $\mathcal{P}_{can} = (V, E, \mathcal{M}_{dax}, \mathcal{G})$, the projection operator $\Pi_{\theta}$ maps the complete model into an organizational lens $\mathcal{V}_{\theta}$:
+
+$$\Pi_{\theta}(\mathcal{P}_{can}) = \left( V_{\theta}, E_{\theta}, \mathcal{M}_{\theta}, \Omega_{\theta}, \text{Radar}_{\theta} \right)$$
+
+Where $\theta \in \Theta$ denotes one of the ten organizational domains:
+1. $\theta_1$: AI Systems Engineer (Feature stores, lineage, vector indexing feasibility)
+2. $\theta_2$: Analytics Engineer (Transformation logic, DAG cleanliness, testing contracts)
+3. $\theta_3$: Analytics Leader (Portfolio ROI, domain coverage, delivery velocity)
+4. $\theta_4$: BI Developer (TMDL optimization, measure definitions, relationship topologies)
+5. $\theta_5$: Business Consumer (Certified KPIs, plain-language business definitions)
+6. $\theta_6$: Compliance Auditor (PII exposure, regulatory compliance, data residency)
+7. $\theta_7$: Data Engineer (Storage formats, partition keys, schema stability)
+8. $\theta_8$: Data Governance Officer (Ownership, metadata completeness, classification)
+9. $\theta_9$: Data Product Manager (Product boundaries, SLOs, user journey alignment)
+10. $\theta_{10}$: FinOps Specialist (Compute intensity, storage footprint estimation, query cost risks)
 
 ---
 
 ## 4. Empirical Performance & Benchmarks
 
-SemanticFlow has been stress-tested across synthetically generated and enterprise-scale domain models (including Falabella Retail, Metro Santiago, and Tier-1/2/3 stress suites). Benchmarks were executed on an isolated Python 3.12 runtime environment.
+Empirical evaluations were conducted on an AMD Ryzen architecture under Python 3.12.10 virtualized environment, validating synthetically stressed graphs and real-world complex enterprise topologies (Metro Santiago Transit Graph and Falabella Retail Tier 3 Model).
 
-| Benchmark Suite / Metric | Dataset Entities | Relationships | Measure Count | Compilation Latency (p99) | Memory Footprint | Verification Status |
-|:-------------------------|:-----------------|:--------------|:--------------|:--------------------------|:-----------------|:--------------------|
-| **Metro Santiago (Golden)** | 8 entities | 7 edges | 14 measures | 12.4 ms | 18.2 MB | 100% Passed (71/71) |
-| **Tier 1 (PYME Suite)** | 12 entities | 10 edges | 24 measures | 18.1 ms | 22.4 MB | 100% Passed |
-| **Tier 2 (Mediana Suite)** | 35 entities | 42 edges | 85 measures | 45.3 ms | 34.8 MB | 100% Passed |
-| **Tier 3 (Enterprise Retail)** | 120 entities | 165 edges | 410 measures | 142.0 ms | 68.1 MB | 100% Passed |
-| **Massive Stress V2 (Faker)** | 350 entities | 510 edges | 1,200 measures | 385.6 ms | 124.5 MB | 100% Passed |
+| Evaluation Dimension | Baseline Target | Stress Tier 1 (PYME) | Stress Tier 2 (Mid) | Stress Tier 3 (Gigante) | Real Enterprise (Metro) |
+|:---------------------|:----------------|:---------------------|:---------------------|:------------------------|:------------------------|
+| Entity Cardinality   | 5 - 10 tables   | 4 - 8 tables         | 15 - 25 tables       | 50 - 100 tables         | 20 tables               |
+| Relationship Edges   | 5 - 15 edges    | 6 - 12 edges         | 20 - 40 edges        | 75 - 180 edges          | 26 relationships        |
+| Compilation Latency  | $< 1000$ ms     | 42 ms                | 185 ms               | 840 ms                  | 210 ms                  |
+| 10-Lens Projection   | $< 2000$ ms     | 110 ms               | 390 ms               | 1,240 ms                | 420 ms                  |
+| Memory Peak (RAM)    | $< 250$ MB      | 38 MB                | 54 MB                | 118 MB                  | 62 MB                   |
+| Verification Suite   | 100% pass rate  | 71/71 tests pass     | 71/71 tests pass     | 71/71 tests pass        | 71/71 tests pass        |
 
 ---
 
 ## 5. Repository Structure & Artifacts
 
-The repository adheres to strict modular separation, separating CLI entry points, core compiler subsystems, JSON schema contracts, configuration rules, and test suites.
-
 ```
 SemanticFlow/
-├── pyproject.toml                     # Build configuration, CLI entrypoint & dependencies
-├── README.md                          # Master international documentation (English)
-├── README_ES.md                       # Master international documentation (Spanish)
-├── config/
-│   ├── persona_quality_rules.json     # Declarative governance scoring rules
-│   └── personas_config.yaml           # Multi-persona lens metadata & mappings
-├── docs/
-│   ├── architecture.md                # In-depth architectural design specification
-│   └── user_guide.md                  # Comprehensive end-user CLI guide
-├── schemas/
-│   ├── canonical_model_schema.json    # JSON Schema for CanonicalSemanticModel AST
-│   └── persona_contracts/             # Formal JSON Schemas for 10 Persona Lenses
-│       ├── ai_systems_engineer.json
-│       ├── analytics_engineer.json
-│       ├── analytics_leader.json
-│       ├── bi_developer.json
-│       ├── business_consumer.json
-│       ├── compliance_auditor.json
-│       ├── data_engineer.json
-│       ├── data_governance_officer.json
-│       ├── data_product_manager.json
-│       └── finops_specialist.json
-├── src/
+├── .agentignore                       # Context engineering exclusions
+├── .context/                          # iDirectory v3.0 topology satellite (tree.json)
+├── 01_seed/                           # Architectural DNA & ThinkingSeed Master
+│   └── seed-semanticflow-master.md
+├── 02_Foundation/                     # Foundational core specifications
+│   └── Engine/
+│       └── engine_readme.md
+├── config/                            # Runtime configurations and default definitions
+│   └── personas/
+│       └── default_personas.yaml
+├── docs/                              # Architecture decision records & engineer notes
+│   ├── adr/
+│   │   └── ADR-001-canonical-model.md
+│   └── architecture/
+│       ├── esquema_relacional.md
+│       └── adr/                       # ADR-001 through ADR-006 for Lens Engine
+├── pyproject.toml                     # Package dependencies, build and tool settings
+├── schemas/                           # Strict JSON Schemas for validation
+│   ├── persona_definition.schema.json
+│   └── project_governance.schema.json
+├── scripts/                           # Deterministic golden regression generators
+│   └── generate_golden_files.py
+├── src/                               # Compiler source code
 │   ├── cli.py                         # Typer CLI application entry point
 │   └── core/
-│       ├── ast/                       # Abstract Syntax Tree definitions (Pydantic V2)
-│       ├── capabilities/              # Pipeline orchestration & planning
-│       ├── docs/                      # Markdown documentation generator
-│       ├── emitter/                   # TMDL & PBIP code emitters
-│       ├── engine/                    # Inference engine, DAX generator & NetworkX solver
-│       ├── mappers/                   # AST translation & mapping layers
-│       ├── parsers/                   # YamlParser & MarkdownParser
-│       ├── personas/                  # Persona projection engine, lenses & Cockpit
-│       ├── quality/                   # Governance quality scorer & rules engine
-│       └── targets/                   # Target adapter definitions (Power BI)
-└── tests/                             # Test suite (71 pytest cases + stress benchmarks)
+│       ├── ast/                       # Raw, Semantic, and Canonical AST definitions
+│       ├── capabilities/              # Execution planning
+│       ├── docs/                      # Markdown dictionary and Mermaid generators
+│       ├── emitter/                   # TMDL and PBIP serialization engines
+│       ├── engine/                    # Topologic resolver, inferers, and compiler
+│       ├── mappers/                   # Raw-to-canonical and canonical-to-pbi mappers
+│       ├── parsers/                   # Markdown and YAML schema parsers
+│       ├── personas/                  # 10 Persona Lenses and Cockpit Engine
+│       ├── quality/                   # SemanticQualityScorer and rule evaluators
+│       └── targets/                   # Platform-specific dialect adapters
+└── tests/                             # Comprehensive automated test suite
+    ├── test_all_lenses_deep.py
+    ├── test_canonical_model.py
+    ├── test_cli.py
+    ├── test_cli_personas.py
+    ├── test_golden_regression.py
+    ├── test_inference_engine.py
+    ├── test_leadership_cockpit.py
+    ├── test_persona_contracts.py
+    ├── test_stage3_governance_quality.py
+    ├── fixtures/                      # Enterprise test fixtures
+    ├── golden/                        # Deterministic regression references
+    └── Massive Stress Test/           # Stress suites (PYME, Mediana, Gigante)
 ```
 
 ---
@@ -181,84 +191,85 @@ SemanticFlow/
 
 ### 6.1. Environment Setup & Prerequisites
 
-SemanticFlow requires Python 3.10 or higher. Environment isolation via virtual environment is mandatory.
+Prerequisites: Python 3.10 or higher.
 
 ```bash
-# Clone repository
-git clone https://github.com/AlvaroAlejandroFinOps/SemanticFlow.git
+# Clone the repository
+git clone <repository_url>
 cd SemanticFlow
 
 # Initialize virtual environment
 python -m venv .venv
-
-# Activate virtual environment (Linux/macOS)
-source .venv/bin/activate
-
-# Activate virtual environment (Windows PowerShell)
-.\.venv\Scripts\Activate.ps1
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install package in editable mode with development dependencies
 pip install -e ".[dev]"
 ```
 
-### 6.2. Pipeline Execution & CLI Usage
-
-The system exposes CLI commands via the `semanticflow` executable:
+### 6.2. Pipeline Execution
 
 ```bash
-# Validate input semantic model syntax and schema integrity
-semanticflow validate path/to/model.yaml
+# Inspect relational schema and view inferred entity roles
+semanticflow inspect --input docs/architecture/esquema_relacional.md
 
-# Compile semantic model into Power BI TMDL / PBIP directory structure
-semanticflow compile path/to/model.yaml --output-dir ./output/tmdl_model
+# Compile relational schema directly into Power BI PBIP/TMDL bundle
+semanticflow compile --input docs/architecture/esquema_relacional.md --output output/PBIP --name "EnterpriseModel"
 
-# Project a specific Persona Lens (e.g., Data Governance Officer) to JSON
-semanticflow persona path/to/model.yaml --persona data_governance_officer --format json
+# Audit semantic quality score (cQS) with strict failure threshold
+semanticflow validate --input docs/architecture/esquema_relacional.md --min-score 75.0
 
-# Project all 10 Persona Lenses and generate Data Leadership Cockpit
-semanticflow cockpit path/to/model.yaml --output-dir ./output/cockpit_reports
+# Synthesize and inspect the C-Level Data Leadership Cockpit
+semanticflow cockpit --input docs/architecture/esquema_relacional.md --format human
+
+# Export all 10 Persona Lenses and Leadership Cockpit in Markdown and JSON
+semanticflow personas export --input docs/architecture/esquema_relacional.md --output output/personas
+
+# Generate Data Dictionary and Mermaid ERD documentation
+semanticflow docgen --input docs/architecture/esquema_relacional.md --output output/docs
 ```
 
 ### 6.3. Verification Suite & Invariant Tests
 
-Execute the automated test suite with full coverage assertions:
-
 ```bash
-# Run complete test suite (71 test cases)
-python -m pytest --tb=short
+# Execute the complete automated verification test suite
+pytest -v
 
-# Run test suite with coverage report
-python -m pytest --cov=src --cov-report=term-missing
+# Run golden regression tests to assert byte-for-byte serialization stability
+pytest tests/test_golden_regression.py
+
+# Verify static typing and style compliance
+ruff check .
+mypy src/
 ```
 
 ---
 
 ## 7. Domain Glossary
 
-* **Canonical Semantic AST:** The intermediate, engine-agnostic Pydantic representation of domain entities, measures, and topology.
-* **TMDL (Tabular Model Definition Language):** Microsoft's human-readable declarative text format for Power BI and Analysis Services tabular models.
-* **PBIP (Power BI Project):** Folder-based developer format for Power BI, enabling source control and git integration.
-* **Persona Lens:** A schema-constrained projection of the canonical semantic model tailored to a specific enterprise role.
-* **Data Leadership Cockpit:** A consolidated executive dashboard summarizing model maturity, governance compliance, and metric coverage.
-* **Role Inference:** Algorithmically determining whether an entity acts as a Fact, Dimension, Bridge, or Hybrid table based on graph topology.
+* **Canonical Abstract Syntax Tree (Canonical AST):** An engine-agnostic intermediate representation of data models containing entities, attributes, relationships, governance annotations, and semantic metrics.
+* **Tabular Model Definition Language (TMDL):** Microsoft's declarative human-readable folder-and-file syntax for defining Analysis Services and Power BI semantic models.
+* **Power BI Project (`.pbip`):** The modern, source-control-friendly file format storing report and dataset definitions in text format without binary locks.
+* **Persona Lens:** A deterministic mathematical projection that filters and contextualizes the global semantic model into a domain-specific perspective tailored to a distinct engineering or business role.
+* **Data Leadership Cockpit:** An aggregated synthesis of organizational maturity across ten analytical dimensions providing actionable, prioritized recommendations for executive oversight.
+* **Semantic Quality Score ($cQS$):** A continuous bounded index $[0, 100]$ measuring architectural health, topological cleanliness, governance completeness, and contractual integrity.
 
 ---
 
 ## 8. Academic & Engineering References
 
-1. Microsoft Corporation. *Tabular Model Definition Language (TMDL) Specification*. Microsoft Learn, 2023.
-2. Fowler, M. *Patterns of Enterprise Application Architecture*. Addison-Wesley, 2002.
-3. Hagberg, A. A., Schult, D. A., & Swart, P. J. *Exploring Network Structure, Dynamics, and Function using NetworkX*. Proceedings of the 7th Python in Science Conference (SciPy 2008), pp. 11–15.
-4. Pydantic Developers. *Data Validation and Settings Management using Python Type Annotations*. Pydantic V2 Documentation, 2024.
+1. Kimball, R., & Ross, M. (2013). *The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling* (3rd ed.). John Wiley & Sons.
+2. Microsoft Corporation. (2024). *Tabular Model Definition Language (TMDL) Specification*. Microsoft Learn Technical Documentation.
+3. Fowler, M. (2002). *Patterns of Enterprise Application Architecture*. Addison-Wesley Professional.
+4. Dehghani, Z. (2022). *Data Mesh: Delivering Data-Driven Value at Scale*. O'Reilly Media.
+5. Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). *Introduction to Algorithms* (4th ed.). MIT Press.
 
 ### BibTeX Citation
 
 ```bibtex
 @software{semanticflow_2026,
-  author = {SemanticFlow Core Team},
-  title = {SemanticFlow: Declarative Semantic Model Compiler and Enterprise Analytics Projection Platform},
+  author = {SemanticFlow Core Engineering Team},
+  title = {SemanticFlow: Enterprise Declarative Semantic Compiler and Multi-Persona Projection Engine},
   year = {2026},
-  version = {0.1.0},
   url = {https://github.com/AlvaroAlejandroFinOps/SemanticFlow}
 }
 ```

@@ -1,0 +1,753 @@
+SEMANTICFLOW
+INSTRUCCION MAESTRA DE VALIDACION INTEGRAL Y CHECKLIST DEL ROADMAP GLOBAL
+Version: 1.0
+Fecha: 2026-09-18
+Objetivo: auditar el repositorio real, contrastarlo con el ThinkingSeed y los planes maestros, producir evidencia verificable y mantener un checklist vivo del roadmap global.
+
+======================================================================
+0. MANDATO DE EJECUCION
+======================================================================
+
+Antigravity debe validar el proyecto SemanticFlow completo contra:
+
+1. El repositorio real y su commit actual.
+2. 01_seed/seed-semanticflow-master.md.
+3. El Plan Maestro Enterprise.
+4. El Plan Maestro Persona Lens Framework and Data Leadership Cockpit.
+5. Las decisiones posteriores sobre ProjectGovernance, prioridad de configuración, fixtures, compatibilidad legacy y golden files.
+
+La semilla es una memoria técnica, no evidencia suficiente por sí sola. Toda afirmación debe contrastarse con código, contratos, configuración, pruebas, artefactos o ejecución reproducible.
+
+No implementar cambios durante la primera etapa. Primero producir la auditoría completa, el checklist y el plan de cierre de brechas. Después solicitar autorización para ejecutar cada bloque del plan.
+
+======================================================================
+1. REGLAS DE EVIDENCIA
+======================================================================
+
+Estados permitidos:
+
+- VERIFIED: implementado y respaldado por código, prueba ejecutada y documentación.
+- PARTIAL: existe una parte funcional, pero faltan componentes, pruebas o integración.
+- DECLARED_ONLY: descrito en documentación o contratos, pero no demostrado en ejecución.
+- NOT_IMPLEMENTED: no existe implementación verificable.
+- CONTRADICTED: la evidencia contradice la semilla o el roadmap.
+- NOT_APPLICABLE: fuera del alcance actual, con justificación.
+- BLOCKED: no fue posible validarlo por dependencia o error documentado.
+
+Niveles de prioridad:
+
+- P0: bloquea release, integridad, seguridad o reproducibilidad.
+- P1: bloquea el cumplimiento del roadmap enterprise.
+- P2: capacidad importante que puede cerrarse después del núcleo.
+- P3: mejora futura.
+
+Para declarar VERIFIED se requiere:
+
+- Ruta exacta del código.
+- Contrato o configuración relevante.
+- Prueba automatizada asociada.
+- Comando ejecutado.
+- Resultado exacto.
+- Criterio de aceptación satisfecho.
+
+No usar 100% probado, Production Ready, Enterprise Ready o cobertura completa sin métricas explícitas y evidencia reproducible.
+
+======================================================================
+2. ENTREGABLES OBLIGATORIOS
+======================================================================
+
+Crear en artifacts/plans/active/semanticflow-global-audit/:
+
+- 00_EXECUTIVE_SUMMARY.md
+- 01_CLAIM_TO_EVIDENCE_MATRIX.md
+- 02_GLOBAL_ROADMAP_CHECKLIST.md
+- 03_ARCHITECTURE_GAP_ANALYSIS.md
+- 04_PERSONA_LENS_GAP_MATRIX.md
+- 05_LEADERSHIP_COCKPIT_GAP_MATRIX.md
+- 06_TEST_AND_COVERAGE_REPORT.md
+- 07_SECURITY_AND_OUTPUT_SAFETY.md
+- 08_CI_CD_AND_RELEASE_READINESS.md
+- 09_OPEN_SOURCE_READINESS.md
+- 10_REMEDIATION_BACKLOG.md
+- 11_VALIDATION_MANIFEST.json
+- 12_ARCHITECTURE_DIAGRAM_SOURCE_MAP.md
+
+Actualizar solo después de validar:
+
+- 01_seed/seed-semanticflow-master.md
+
+No modificar la semilla antes de terminar la matriz claim-to-evidence.
+
+======================================================================
+3. BASELINE DEL REPOSITORIO
+======================================================================
+
+Checklist:
+
+[ ] Registrar branch y commit exactos.
+[ ] Registrar git status --short.
+[ ] Explicar por qué el working tree está dirty.
+[ ] Listar archivos modificados y no rastreados.
+[ ] Registrar versión de Python.
+[ ] Registrar dependencias instaladas relevantes.
+[ ] Ejecutar ruff check .
+[ ] Ejecutar mypy src/.
+[ ] Ejecutar pytest con resumen de collected, passed, failed, skipped, xfailed, warnings y duración.
+[ ] Ejecutar coverage de líneas y ramas.
+[ ] Separar pruebas unitarias, integración, E2E, golden y stress.
+[ ] Confirmar si las carpetas Massive Stress son recolectadas por el comando estándar.
+[ ] Ejecutar dos compilaciones idénticas.
+[ ] Comparar hashes y diferencias byte a byte.
+[ ] Registrar sistema operativo y entorno.
+[ ] Confirmar ejecución desde un árbol limpio antes del cierre.
+
+Gate P0:
+
+No declarar baseline reproducible mientras el árbol permanezca dirty o los resultados no se vinculen a un commit exacto.
+
+======================================================================
+4. ARQUITECTURA DEL COMPILADOR
+======================================================================
+
+Validar el flujo real:
+
+Input Markdown/YAML
+-> Parser
+-> RawRelationalSchema
+-> RawToCanonicalMapper
+-> CanonicalProject
+-> Inference and Relationship Resolution
+-> Quality and Governance
+-> Target Capability Planner
+-> Power BI Target Adapter
+-> CanonicalToPbiMapper
+-> DAX/TMDL/PBIP emission
+-> Documentation, Persona Projections and Leadership outputs
+
+Checklist:
+
+[ ] Parsers desacoplados de emitters.
+[ ] Raw AST separado del Canonical AST.
+[ ] CanonicalProject es la única verdad semántica.
+[ ] Mappers explícitos y probados.
+[ ] Ninguna propiedad se pierde silenciosamente.
+[ ] Capability Planner se ejecuta antes de emitir.
+[ ] Power BI Adapter participa realmente en el pipeline.
+[ ] DAX vive en target o mapper Power BI, no como requisito canónico.
+[ ] Tests de fronteras arquitectónicas.
+[ ] Imports prohibidos detectados automáticamente.
+[ ] AST legacy tiene adapter y política de retiro.
+[ ] Diagrama real coincide con código.
+
+Estados de compatibilidad requeridos:
+
+- SUPPORTED
+- SUPPORTED_WITH_TRANSFORMATION
+- PARTIALLY_SUPPORTED
+- UNSUPPORTED
+- REQUIRES_MANUAL_REVIEW
+
+[ ] Cada objeto canónico recibe un estado por target.
+[ ] Transformaciones quedan registradas.
+[ ] UNSUPPORTED bloquea si altera significado.
+[ ] PARTIALLY_SUPPORTED produce diagnóstico.
+[ ] Existe matriz versionada de capacidades Power BI.
+
+======================================================================
+5. CANONICAL SEMANTIC MODEL Y PROJECT GOVERNANCE
+======================================================================
+
+Checklist:
+
+[ ] CanonicalProject contiene ProjectGovernance tipado.
+[ ] ProjectGovernance es diferente de GovernanceMetadata granular.
+[ ] domain_id y data_product_id están soportados.
+[ ] business_owner, technical_owner, data_steward y risk_owner están soportados.
+[ ] classification, criticality, certification y lifecycle están soportados.
+[ ] policy_profile y regulatory_tags están soportados.
+[ ] Excepciones y provenance están soportados.
+[ ] Campos opcionales preservan compatibilidad.
+[ ] Herencia proyecto -> entidad -> atributo/métrica está centralizada.
+[ ] Override granular tiene precedencia documentada.
+[ ] Cambio más restrictivo de clasificación es seguro.
+[ ] UNKNOWN no se reemplaza por una invención.
+[ ] Serialización es determinista.
+[ ] Schema JSON y modelo Pydantic coinciden.
+[ ] Metro Santiago sigue compilando sin gobierno de proyecto completo.
+
+Precedencia esperada:
+
+1. Gobierno específico del activo.
+2. Gobierno heredado del proyecto.
+3. Default organizacional.
+4. UNKNOWN.
+
+======================================================================
+6. PERSONA LENS FRAMEWORK
+======================================================================
+
+Validar contratos:
+
+[ ] PersonaDefinition.
+[ ] PersonaLens.
+[ ] PersonaProjection.
+[ ] PersonaRecommendation.
+[ ] ResponsibilityAssignment.
+[ ] TeamInteraction.
+[ ] PersonaMaturityAssessment.
+[ ] Registry versionado.
+[ ] Configuration loader.
+[ ] Visibility policy.
+[ ] Markdown renderer.
+[ ] JSON renderer.
+[ ] Mermaid renderer cuando aplique.
+[ ] Legacy adapter.
+[ ] No mutación del CanonicalProject.
+[ ] IDs estables.
+[ ] Serialización determinista.
+
+Core Personas requeridas:
+
+[ ] DATA_ANALYST.
+[ ] ANALYTICS_ENGINEER.
+[ ] DATA_ENGINEER.
+[ ] DATA_SCIENTIST.
+[ ] BI_DEVELOPER.
+[ ] DATA_ARCHITECT.
+[ ] DATA_GOVERNANCE_OFFICER.
+[ ] PLATFORM_ENGINEER.
+[ ] DOMAIN_OWNER.
+[ ] AUDIT_RISK.
+
+Aggregate Persona:
+
+[ ] DATA_LEADERSHIP.
+
+Extension Personas permitidas:
+
+[ ] ANALYTIC_CONSUMER o BUSINESS_CONSUMER con mapeo explícito.
+[ ] AI_SYSTEMS_ENGINEER.
+[ ] ANALYTICS_LEADER.
+[ ] DATA_PRODUCT_MANAGER.
+[ ] COMPLIANCE_AUDITOR.
+[ ] FINOPS_SPECIALIST.
+
+Reglas:
+
+- No declarar equivalencia automática entre Data Scientist y AI Systems Engineer.
+- No declarar equivalencia entre Data Architect y Analytics Leader.
+- No sustituir Platform Engineer por FinOps Specialist.
+- No sustituir Audit/Risk completamente por Compliance Auditor sin delta documentado.
+- Extension Personas no cuentan como reemplazo de las diez Core Personas.
+
+Por cada Lens validar:
+
+[ ] Propósito.
+[ ] Decisiones soportadas.
+[ ] Preguntas respondidas.
+[ ] Información visible.
+[ ] Información oculta.
+[ ] Funcionalidades.
+[ ] Recomendaciones con rule_id y evidencia.
+[ ] Entradas y salidas.
+[ ] Interacciones con otras Personas.
+[ ] Artefactos Markdown y JSON.
+[ ] Fixture dedicado.
+[ ] Golden files.
+[ ] Privacy tests.
+[ ] Contract tests.
+[ ] Cross-lens consistency.
+[ ] No-mutation test.
+[ ] Criterio de aceptación.
+
+Crear una sección individual en 04_PERSONA_LENS_GAP_MATRIX.md para cada Core Persona y cada Extension Persona.
+
+======================================================================
+7. CONFIGURACION Y OVERRIDES
+======================================================================
+
+Validar clasificación de overrides:
+
+- SAFE
+- REVIEW_REQUIRED
+- PROHIBITED
+
+Checklist:
+
+[ ] Overrides organizacionales prevalecen en presentación y nomenclatura.
+[ ] Campos sensibles requieren validación.
+[ ] Invariantes estructurales no pueden desactivarse.
+[ ] Errores críticos no pueden ocultarse.
+[ ] Privacy rules no pueden degradarse silenciosamente.
+[ ] Cada override registra valor built-in, valor org, origen, riesgo y resultado.
+[ ] Configuración efectiva puede exportarse.
+[ ] Alias duplicados fallan.
+[ ] Persona deshabilitada se comporta de forma explícita.
+[ ] Defaults referenciados existen físicamente.
+[ ] SEMANTICFLOW_RULES_PATH apunta a un archivo válido o tiene fallback documentado.
+
+Invariantes PROHIBITED:
+
+[ ] Mutar CanonicalProject desde una Lens.
+[ ] Crear una segunda verdad semántica.
+[ ] Exponer secretos.
+[ ] Permitir path traversal.
+[ ] Ocultar controles críticos.
+[ ] Puntuar productividad individual.
+[ ] Duplicar cálculo central en Leadership.
+
+======================================================================
+8. DATA LEADERSHIP COCKPIT
+======================================================================
+
+Arquitectura requerida:
+
+[ ] Existe src/core/leadership/ o hay un plan verificable de aislamiento.
+[ ] Personas no importan Leadership.
+[ ] Leadership consume contratos públicos.
+[ ] Existe adapter legacy si cockpit.py permanece temporalmente en personas.
+[ ] Leadership se genera sin Power BI.
+[ ] Leadership no muta CanonicalProject.
+[ ] Leadership no recalcula calidad, linaje o compatibilidad.
+
+Módulos funcionales:
+
+[ ] Portfolio.
+[ ] Health.
+[ ] Ownership.
+[ ] Capability gaps.
+[ ] Team dependencies.
+[ ] Delivery flow.
+[ ] Value indicators.
+[ ] Risk.
+[ ] Recommendations.
+[ ] Markdown renderer.
+[ ] JSON renderer.
+
+Por cada módulo validar:
+
+[ ] Fuente de datos.
+[ ] Métrica o regla exacta.
+[ ] Tratamiento de UNKNOWN.
+[ ] Evidencia subyacente.
+[ ] No uso de promedios para ocultar errores críticos.
+[ ] Privacidad organizacional.
+[ ] Fixture.
+[ ] Prueba.
+[ ] Golden output.
+
+Output esperado:
+
+output/leadership/
+- LEADERSHIP_SUMMARY.md
+- PORTFOLIO_HEALTH.json
+- OWNERSHIP_COVERAGE.json
+- CAPABILITY_GAPS.json
+- TEAM_DEPENDENCIES.mmd
+- DELIVERY_FLOW.json
+- VALUE_INDICATORS.json
+- RISK_OVERVIEW.json
+- RECOMMENDED_ACTIONS.md
+
+======================================================================
+9. ORQUESTACION DE EQUIPOS
+======================================================================
+
+Checklist:
+
+[ ] Responsibility Matrix configurable.
+[ ] Roles RESPONSIBLE, ACCOUNTABLE, CONSULTED e INFORMED.
+[ ] Soporte adicional APPROVER, STEWARD, RISK_OWNER, TECHNICAL_OWNER y BUSINESS_OWNER.
+[ ] Topologías STREAM_ALIGNED, PLATFORM, ENABLING y COMPLICATED_SUBSYSTEM.
+[ ] Modos COLLABORATION, X_AS_A_SERVICE y FACILITATION.
+[ ] Recomendaciones incluyen condición de inicio y salida.
+[ ] Recomendaciones incluyen artefacto esperado.
+[ ] No se inventan equipos o asignaciones.
+[ ] Se distingue declarado de recomendado.
+[ ] No se puntúan individuos.
+[ ] Se requiere revisión humana.
+[ ] Configuración organizacional separada del código.
+[ ] Tests para los tres modos de interacción.
+[ ] Tests de ciclos de aprobación.
+[ ] Tests de concentración de asignaciones, sin inferir capacidad humana.
+
+======================================================================
+10. CALIDAD, cQS Y MADUREZ
+======================================================================
+
+Checklist cQS:
+
+[ ] Nombre formal definido.
+[ ] Fórmula documentada.
+[ ] Pesos documentados.
+[ ] Severidades documentadas.
+[ ] Reglas no aplicables tratadas correctamente.
+[ ] Perfiles strict, standard y exploratory, si forman parte del diseño.
+[ ] Cada penalización referencia rule_id y objeto.
+[ ] Un score alto no oculta blocking errors.
+[ ] --min-score no desactiva integridad o seguridad.
+[ ] Resultados reproducibles.
+
+Checklist madurez:
+
+[ ] Madurez separada conceptualmente de calidad.
+[ ] Niveles VISIBLE, DESCRIBED, GOVERNED, OPERATIONAL y OPTIMIZED.
+[ ] Evidencia por capacidad.
+[ ] NOT_ASSESSED cuando faltan datos.
+[ ] No inferencia de madurez por promedio cQS.
+[ ] Radar no presenta precisión falsa.
+
+======================================================================
+11. LINAJE Y DOCUMENTACION
+======================================================================
+
+Checklist:
+
+[ ] Linaje source -> source attribute.
+[ ] Linaje source attribute -> canonical attribute.
+[ ] Linaje canonical entity -> metric.
+[ ] Dependencias entre métricas.
+[ ] Linaje metric -> KPI.
+[ ] Linaje canonical -> Persona Projection.
+[ ] Linaje canonical -> Power BI target object.
+[ ] Linaje target object -> artifact.
+[ ] Impact analysis por cambio.
+[ ] Ciclos controlados.
+[ ] IDs estables.
+[ ] Declarado, inferido, heredado y transformado diferenciados.
+[ ] DATA_DICTIONARY.md.
+[ ] ARCHITECTURE_ERD.mmd.
+[ ] METRICS_CATALOG.md.
+[ ] COMPATIBILITY_REPORT.md.
+[ ] BUILD_MANIFEST.json.
+[ ] Golden tests de documentación.
+
+No tratar un ERD como evidencia suficiente de linaje end-to-end.
+
+======================================================================
+12. OPTIMIZACION Y ESCALA
+======================================================================
+
+Checklist:
+
+[ ] Capacidad de optimización tiene módulo o frontera clara.
+[ ] Cardinalidad declarada o estimada se diferencia.
+[ ] Columnas innecesarias o de alto costo pueden detectarse.
+[ ] Relaciones costosas generan recomendaciones.
+[ ] Particiones se modelan.
+[ ] Incremental refresh se modela.
+[ ] Storage modes se validan por target.
+[ ] Import, DirectQuery, Direct Lake y composite se tratan según soporte.
+[ ] Escala de metadatos se mide separadamente de volumen de filas.
+[ ] Benchmarks registran tablas, columnas, relaciones, métricas, políticas, tiempo y memoria.
+[ ] Compilación incremental, si existe, equivale a compilación completa.
+[ ] Datos Faker están etiquetados como sintéticos.
+[ ] No se hacen afirmaciones de producción basadas solamente en datos sintéticos.
+
+======================================================================
+13. SEGURIDAD Y PRIVACIDAD
+======================================================================
+
+Checklist:
+
+[ ] yaml.safe_load.
+[ ] Secret scanning con herramienta identificada.
+[ ] Dependency vulnerability scanning.
+[ ] SAST o revisión equivalente documentada.
+[ ] No secrets en fixtures y golden files.
+[ ] Path traversal tests.
+[ ] Symlink escape tests.
+[ ] Output containment tests.
+[ ] Protección de raíz del repositorio.
+[ ] Escritura temporal.
+[ ] Reemplazo atómico.
+[ ] Build anterior se conserva si falla el nuevo.
+[ ] Logs no incluyen datos sensibles.
+[ ] PII visibility policy por Persona.
+[ ] Audit output minimiza exposición.
+[ ] Telemetría desactivada por defecto.
+[ ] Amenazas documentadas antes de MCP o servicios.
+
+Crear o validar tests/test_output_safety.py.
+
+======================================================================
+14. PRUEBAS Y GOLDEN FILES
+======================================================================
+
+Checklist:
+
+[ ] Metro Santiago se conserva como regression fixture.
+[ ] Enterprise Persona Fixture existe.
+[ ] Fixture enterprise incluye múltiples dominios.
+[ ] Incluye métricas draft y certificadas.
+[ ] Incluye PII y clasificaciones.
+[ ] Incluye owners, stewards y faltantes intencionales.
+[ ] Incluye excepciones vigentes y vencidas.
+[ ] Incluye riesgo sin owner.
+[ ] Incluye leakage case.
+[ ] Incluye Collaboration, X-as-a-Service y Facilitation.
+[ ] Incluye propiedades supported, partial y unsupported.
+[ ] Golden files están versionados en Git.
+[ ] CI nunca actualiza golden automáticamente.
+[ ] Script de actualización muestra diff y requiere revisión.
+[ ] Binarios grandes se sustituyen por manifests/hashes cuando sea posible.
+[ ] Cada bug corregido agrega regression test.
+[ ] Tests reportan line y branch coverage.
+[ ] Matriz Python 3.10, 3.11 y 3.12 definida para CI.
+
+======================================================================
+15. CLI, SDK Y DIAGNOSTICOS
+======================================================================
+
+Validar comandos:
+
+[ ] compile.
+[ ] inspect.
+[ ] explain.
+[ ] validate.
+[ ] docgen.
+[ ] personas list.
+[ ] personas describe.
+[ ] personas generate/export.
+[ ] personas responsibilities.
+[ ] personas interactions.
+[ ] cockpit o leadership generate.
+[ ] capabilities.
+
+Checklist:
+
+[ ] Rich output humano.
+[ ] JSON output máquina.
+[ ] Exit codes documentados.
+[ ] Dry-run.
+[ ] Validate-only sin escritura.
+[ ] Output path seguro.
+[ ] SDK público documentado.
+[ ] Deprecaciones con warnings.
+[ ] Diagnósticos tienen code, severity, category, message, object_id, source_location, rule_id, suggested_action, target y blocking.
+[ ] Categorías estables.
+[ ] E2E tests por comando.
+
+======================================================================
+16. CI/CD Y RELEASE READINESS
+======================================================================
+
+Checklist:
+
+[ ] .github/workflows/ci.yml existe.
+[ ] Ejecuta ruff.
+[ ] Ejecuta mypy.
+[ ] Ejecuta pytest.
+[ ] Aplica coverage gate.
+[ ] Compara golden files.
+[ ] Construye paquete.
+[ ] Ejecuta secret scan.
+[ ] Ejecuta dependency scan.
+[ ] Matriz de Python.
+[ ] Cache no afecta determinismo.
+[ ] Artefactos de prueba disponibles.
+[ ] Workflow ejecutable localmente o documentado.
+[ ] Release versionado.
+[ ] CHANGELOG.
+[ ] Política de deprecación.
+[ ] Build manifest.
+[ ] Working tree limpio para release.
+
+Docker y Kubernetes no son requisitos para declarar funcional una CLI local, salvo que se incorporen como un perfil explícito.
+
+======================================================================
+17. OPEN SOURCE READINESS
+======================================================================
+
+Checklist:
+
+[ ] README.md.
+[ ] LICENSE.
+[ ] CONTRIBUTING.md.
+[ ] CODE_OF_CONDUCT.md.
+[ ] SECURITY.md.
+[ ] SUPPORT.md.
+[ ] CHANGELOG.md.
+[ ] Roadmap público.
+[ ] Issue templates.
+[ ] Pull request template.
+[ ] Quickstart reproducible.
+[ ] Arquitectura documentada.
+[ ] Ejemplos small, enterprise y hyperscale metadata.
+[ ] Limitaciones transparentes.
+[ ] Política de versiones.
+[ ] Política de contribución de golden files.
+[ ] Referencias DAMA, SFIA, Team Topologies, Data Mesh, NIST AI RMF, FinOps y Power BI correctamente atribuidas sin afirmar certificación.
+
+======================================================================
+18. TARGETS FUTUROS
+======================================================================
+
+Checklist:
+
+[ ] Power BI permanece como único target completo actual.
+[ ] Looker está marcado FUTURE.
+[ ] Qlik está marcado FUTURE.
+[ ] dbt Semantic Layer está marcado FUTURE.
+[ ] No existen adaptadores simulados que aparenten soporte.
+[ ] Core neutral preparado mediante interfaces.
+[ ] No comenzar targets adicionales hasta endurecer Canonical Model, Capability Planner, Power BI Adapter, Persona Framework y Leadership.
+
+======================================================================
+19. FORMATO DEL CHECKLIST GLOBAL
+======================================================================
+
+En 02_GLOBAL_ROADMAP_CHECKLIST.md crear una fila por requisito con:
+
+- ID.
+- Área.
+- Requisito.
+- Estado.
+- Prioridad.
+- Evidencia de código.
+- Evidencia de prueba.
+- Comando de validación.
+- Resultado.
+- Brecha.
+- Acción siguiente.
+- Responsable Persona sugerido.
+- Dependencias.
+- Criterio de cierre.
+- Fecha de última validación.
+- Commit validado.
+
+Incluir resúmenes por:
+
+- Dimensión A de capacidades.
+- Dimensión B de Personas.
+- Leadership Cockpit.
+- Arquitectura.
+- Seguridad.
+- Operación.
+- Open source.
+- Futuros targets.
+
+No usar porcentajes globales si mezclan requisitos de distinto peso. Si se presenta un porcentaje, mostrar también conteos por estado y prioridad.
+
+======================================================================
+20. BACKLOG DE REMEDIACION
+======================================================================
+
+10_REMEDIATION_BACKLOG.md debe ordenar hallazgos por:
+
+1. P0 release blockers.
+2. P1 roadmap blockers.
+3. P2 enterprise hardening.
+4. P3 future improvements.
+
+Cada item debe incluir:
+
+- Objetivo.
+- Motivo.
+- Archivos candidatos.
+- Pruebas necesarias.
+- Riesgos.
+- Dependencias.
+- Criterios de aceptación.
+- Tamaño estimado S/M/L, sin estimar horas.
+- Fase recomendada.
+
+No implementar el backlog dentro de esta auditoría.
+
+======================================================================
+21. VALIDATION MANIFEST
+======================================================================
+
+11_VALIDATION_MANIFEST.json debe incluir:
+
+- project_name.
+- branch.
+- commit.
+- working_tree_state.
+- generated_at.
+- python_version.
+- operating_system.
+- dependency_snapshot_hash.
+- test_summary.
+- coverage_summary.
+- lint_summary.
+- typecheck_summary.
+- deterministic_build_summary.
+- security_scan_summary.
+- capability_counts_by_status.
+- p0_findings.
+- p1_findings.
+- evidence_files.
+
+No incluir secretos, paths personales innecesarios ni datos sensibles.
+
+======================================================================
+22. GATES DE CIERRE
+======================================================================
+
+Gate A, Evidence Complete:
+
+- Claim-to-evidence terminada.
+- Checklist global terminado.
+- Todas las áreas tienen estado.
+- Comandos y resultados documentados.
+
+Gate B, Architecture Consistent:
+
+- Flujo real documentado.
+- Canonical neutrality validada.
+- Capability Planner integrado.
+- Persona y Leadership boundaries validadas.
+
+Gate C, Quality and Security:
+
+- Coverage medida.
+- Golden regression estable.
+- Output safety probada.
+- Critical findings visibles.
+
+Gate D, Release Readiness:
+
+- CI implementado.
+- Árbol limpio.
+- Release docs presentes.
+- Open-source essentials presentes.
+
+No declarar Production Ready si cualquier P0 está abierto. No declarar Enterprise Ready si existen P1 que afectan Core Personas, Leadership, governance, compatibility o auditability.
+
+======================================================================
+23. RESPUESTA INICIAL EXIGIDA A ANTIGRAVITY
+======================================================================
+
+Antes de ejecutar cambios, responder con:
+
+1. Alcance asimilado.
+2. Archivos de referencia encontrados.
+3. Estado Git observado.
+4. Comandos de validación que se ejecutarán.
+5. Estructura propuesta de entregables.
+6. Riesgos de la auditoría.
+7. Elementos que no pueden verificarse estáticamente.
+8. Confirmación de que no se modificará código funcional durante la etapa de auditoría.
+
+Después ejecutar la auditoría completa sin pedir confirmación entre subpasos. Detener solo ante un bloqueo real, documentándolo como BLOCKED.
+
+======================================================================
+24. RESULTADO FINAL ESPERADO
+======================================================================
+
+Al finalizar, el proyecto debe disponer de un sistema verificable de seguimiento del roadmap que permita responder:
+
+- Qué está realmente implementado.
+- Qué está parcialmente implementado.
+- Qué solo está declarado.
+- Qué falta.
+- Qué contradice la documentación.
+- Qué bloquea un release.
+- Qué bloquea la visión enterprise.
+- Qué Personas están completas.
+- Qué módulos del Leadership Cockpit están completos.
+- Qué evidencia respalda cada declaración.
+- Cuál es la siguiente secuencia de trabajo recomendada.
+
+FIN DE LA INSTRUCCION MAESTRA

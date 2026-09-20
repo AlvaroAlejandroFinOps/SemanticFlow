@@ -1,16 +1,16 @@
 """
 Mapper: RelationalSchemaRaw -> CanonicalSemanticProject
 """
-from src.core.ast.schema import RelationalSchemaRaw, KeyType
 from src.core.ast.canonical.models import (
     CanonicalSemanticProject,
-    SemanticEntity,
-    SemanticAttribute,
-    SemanticRelationship,
-    EntityRole,
     DataType,
+    EntityRole,
     ProvenanceRecord,
+    SemanticAttribute,
+    SemanticEntity,
+    SemanticRelationship,
 )
+from src.core.ast.schema import RelationalSchemaRaw
 
 RAW_TYPE_MAP = {
     "int64": DataType.INT64,

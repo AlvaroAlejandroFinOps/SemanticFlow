@@ -1,21 +1,21 @@
-from src.core.ast.types import PbiDataType, normalize_data_type
 from src.core.ast.schema import (
-    KeyType,
     ColumnRaw,
-    TableRaw,
-    RelationshipRaw,
+    KeyType,
     RelationalSchemaRaw,
+    RelationshipRaw,
+    TableRaw,
 )
 from src.core.ast.semantic import (
-    TableRole,
     CrossFilteringBehavior,
-    SummarizeBy,
     SemanticColumn,
     SemanticMeasure,
-    SemanticTable,
-    SemanticRelationship,
     SemanticModel,
+    SemanticRelationship,
+    SemanticTable,
+    SummarizeBy,
+    TableRole,
 )
+from src.core.ast.types import PbiDataType, normalize_data_type
 
 __all__ = [
     "PbiDataType",

@@ -26,7 +26,7 @@ SQL_TO_PBI_TYPE_MAP: dict[str, PbiDataType] = {
     "bigint": PbiDataType.INT64,
     "smallint": PbiDataType.INT64,
     "tinyint": PbiDataType.INT64,
-    
+
     # Flotantes y decimales
     "float32": PbiDataType.DOUBLE,
     "float64": PbiDataType.DOUBLE,
@@ -36,20 +36,20 @@ SQL_TO_PBI_TYPE_MAP: dict[str, PbiDataType] = {
     "decimal": PbiDataType.DECIMAL,
     "numeric": PbiDataType.DECIMAL,
     "money": PbiDataType.DECIMAL,
-    
+
     # Texto / Strings
     "string": PbiDataType.STRING,
     "varchar": PbiDataType.STRING,
     "nvarchar": PbiDataType.STRING,
     "text": PbiDataType.STRING,
     "char": PbiDataType.STRING,
-    
+
     # Temporales
     "datetime": PbiDataType.DATETIME,
     "timestamp": PbiDataType.DATETIME,
     "date": PbiDataType.DATETIME,
     "time": PbiDataType.STRING,
-    
+
     # Booleanos
     "bool": PbiDataType.BOOLEAN,
     "boolean": PbiDataType.BOOLEAN,

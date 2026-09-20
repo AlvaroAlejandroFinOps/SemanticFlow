@@ -4,15 +4,16 @@ Especializado en extraer especificaciones analíticas como docs/architecture/esq
 """
 import re
 from pathlib import Path
-from typing import Union, Optional
-from src.core.parsers.base import BaseSchemaParser
+from typing import Union
+
 from src.core.ast.schema import (
-    KeyType,
     ColumnRaw,
-    TableRaw,
-    RelationshipRaw,
+    KeyType,
     RelationalSchemaRaw,
+    RelationshipRaw,
+    TableRaw,
 )
+from src.core.parsers.base import BaseSchemaParser
 
 
 class MarkdownSchemaParser(BaseSchemaParser):
@@ -67,7 +68,6 @@ class MarkdownSchemaParser(BaseSchemaParser):
                 parent_table = next((t for t in tables if t.name.lower() == parent.lower()), None)
                 if child_table and parent_table:
                     # Buscar coincidencia de nombre de clave
-                    matching_col = None
                     parent_pk = parent_table.primary_keys[0].name if parent_table.primary_keys else None
                     if parent_pk:
                         child_fk = child_table.get_column(parent_pk)

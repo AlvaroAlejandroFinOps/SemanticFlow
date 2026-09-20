@@ -4,6 +4,7 @@ Tailored for Power BI Modelers, DAX Authors, and Semantic Report Designers.
 """
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
+
 from src.core.ast.canonical.models import CanonicalSemanticProject, EntityRole
 from src.core.personas.interfaces import PersonaLens
 from src.core.personas.models import (
@@ -59,7 +60,7 @@ class BiDeveloperLens(PersonaLens):
         secondary_entities = [e.name for e in project.entities if not e.metrics and e.role != EntityRole.FACT]
 
         all_metrics = [m.name for e in project.entities for m in e.metrics]
-        
+
         # Recommendations on format strings and display folders
         recommendations: List[PersonaRecommendation] = []
         for e in project.entities:

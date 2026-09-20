@@ -1,5 +1,5 @@
-from src.core.parsers.yaml_parser import YamlSchemaParser
 from src.core.ast.schema import KeyType
+from src.core.parsers.yaml_parser import YamlSchemaParser
 
 
 def test_yaml_parser():

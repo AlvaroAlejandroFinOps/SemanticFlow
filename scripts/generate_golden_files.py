@@ -1,10 +1,11 @@
 """
 Script to generate deterministic golden files for regression testing.
 """
-from pathlib import Path
 import re
-from src.core.parsers.markdown_parser import MarkdownSchemaParser
+from pathlib import Path
+
 from src.core.mappers.raw_to_canonical import raw_to_canonical
+from src.core.parsers.markdown_parser import MarkdownSchemaParser
 from src.core.personas.cockpit import DataLeadershipCockpitEngine
 from tests.fixtures.enterprise_fixture import create_enterprise_project
 

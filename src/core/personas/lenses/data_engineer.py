@@ -4,6 +4,7 @@ Tailored for Data Platform Engineers, Ingestion Specialists, and Pipeline Author
 """
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
+
 from src.core.ast.canonical.models import CanonicalSemanticProject, EntityRole
 from src.core.personas.interfaces import PersonaLens
 from src.core.personas.models import (

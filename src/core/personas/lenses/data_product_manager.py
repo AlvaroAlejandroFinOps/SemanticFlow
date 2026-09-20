@@ -3,7 +3,8 @@ Data Product Manager Persona Lens.
 Tailored for Data Product Owners, Value Stream Leads, and Domain Owners.
 """
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
+
 from src.core.ast.canonical.models import CanonicalSemanticProject, EntityRole, MetricType
 from src.core.personas.interfaces import PersonaLens
 from src.core.personas.models import (

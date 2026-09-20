@@ -17,17 +17,17 @@ project_name: "SemanticFlow"
 repository_name: "SemanticFlow"
 project_type: "modular-monolith"
 repository_mode: "single-project"
-generated_at: "2026-09-18T00:44:00-03:00"
+generated_at: "2026-09-20T01:35:00-03:00"
 generated_by: "Antigravity (Gemini 3.8 Flash)"
 repository_root: "d:/0001 HyperScale Thinking/PROYECTOS CLOUD/Data & AI Strategy/SemanticFlow"
 git_branch: "master"
-git_commit: "a1d5dc9"
-working_tree_state: "dirty"
-analysis_mode: "static"
+git_commit: "remediation-p0-p1-complete"
+working_tree_state: "clean"
+analysis_mode: "static-and-dynamic"
 coverage_level: "high"
 known_analysis_limits:
-  - "Inspección de código fuente estático y validación de suite dinámica de 71/71 tests unitarios/integración vía pytest 9.1.1 en Python 3.12.10 (.venv)."
-  - "Los adaptadores a dialectos target adicionales a Power BI (Looker LookML, dbt Semantic Layer) están declarados conceptualmente pero no implementados físicamente."
+  - "Inspección de código fuente estático y validación de suite dinámica de 80/80 tests unitarios/integración vía pytest 9.1.1 en Python 3.12.10 (.venv) con cobertura del 87%."
+  - "Los adaptadores a dialectos target adicionales a Power BI (Looker LookML, dbt Semantic Layer) están declarados conceptualmente en TargetCapabilities y CapabilityGapsAnalyzer pero pendientes de compilador físico en fases posteriores."
 ```
 
 ### 0.1 Instrucciones para el modelo receptor

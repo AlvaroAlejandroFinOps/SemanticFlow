@@ -2,7 +2,7 @@
 Generador de database.tmdl, model.tmdl y cultures/<culture>.tmdl.
 """
 from src.core.ast.semantic import SemanticModel
-from src.core.emitter.tmdl_formatter import escape_tmdl_identifier, format_tmdl_string_literal
+from src.core.emitter.tmdl_formatter import escape_tmdl_identifier
 
 
 class ModelEmitter:

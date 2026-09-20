@@ -2,11 +2,12 @@
 Tests for Macro-Stage III: Quality, Governance, and Capability Planner.
 """
 from pathlib import Path
-from src.core.parsers.markdown_parser import MarkdownSchemaParser
+
+from src.core.ast.canonical.models import SemanticMetric
+from src.core.capabilities.planner import CompatibilityStatus, TargetCapabilities, TargetCapabilityPlanner
 from src.core.mappers.raw_to_canonical import raw_to_canonical
+from src.core.parsers.markdown_parser import MarkdownSchemaParser
 from src.core.quality.scorer import SemanticQualityScorer
-from src.core.capabilities.planner import TargetCapabilityPlanner, TargetCapabilities, CompatibilityStatus
-from src.core.ast.canonical.models import SemanticMetric, MetricType, DiagnosticSeverity
 
 
 def test_semantic_quality_scorer_evaluation():

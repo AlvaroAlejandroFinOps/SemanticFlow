@@ -3,7 +3,9 @@ Modelos AST canónicos para esquemas relacionales brutos ingeridos.
 """
 from enum import Enum
 from typing import Optional
+
 from pydantic import BaseModel, Field
+
 from src.core.ast.types import PbiDataType, normalize_data_type
 
 

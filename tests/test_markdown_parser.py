@@ -1,6 +1,7 @@
 from pathlib import Path
-from src.core.parsers.markdown_parser import MarkdownSchemaParser
+
 from src.core.ast.schema import KeyType
+from src.core.parsers.markdown_parser import MarkdownSchemaParser
 
 
 def test_parse_metro_santiago_markdown():

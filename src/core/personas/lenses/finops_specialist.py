@@ -3,7 +3,8 @@ FinOps Specialist Persona Lens.
 Tailored for Cloud Economists, Capacity Planners, and Semantic Compute FinOps Leads.
 """
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
+
 from src.core.ast.canonical.models import CanonicalSemanticProject, EntityRole
 from src.core.personas.interfaces import PersonaLens
 from src.core.personas.models import (

@@ -2,7 +2,8 @@
 Enterprise Documentation emitters (Markdown Data Dictionary & Mermaid ERD).
 """
 import os
-from typing import Dict, Any
+from typing import Dict
+
 from src.core.ast.canonical.models import CanonicalSemanticProject
 
 
@@ -24,7 +25,7 @@ class DocumentationEmitter:
         for e in self.project.entities:
             source_tbl = getattr(e, 'source_table', 'N/A')
             md.append(f"| **{e.name}** | `{e.role.value}` | {len(e.attributes)} | {len(e.metrics)} | `{source_tbl}` |")
-        
+
         md.append("\n## Detailed Entities & Attributes\n")
         for e in self.project.entities:
             md.append(f"### {e.name} (`{e.role.value}`)\n")
@@ -36,8 +37,7 @@ class DocumentationEmitter:
                 md.append("| Attribute | Data Type | Key Type | Classification |")
                 md.append("| --- | --- | --- | --- |")
                 for attr in e.attributes:
-                    key_val = getattr(attr, 'key_type', None)
-                    key_str = key_val.value if hasattr(key_val, 'value') else str(key_val or '-')
+                    key_str = "PK" if attr.is_key else ("FK" if attr.is_hidden else "-")
                     class_str = getattr(attr, 'classification', '-') or '-'
                     md.append(f"| `{attr.name}` | `{attr.data_type}` | `{key_str}` | `{class_str}` |")
                 md.append("")
@@ -47,7 +47,7 @@ class DocumentationEmitter:
                 md.append("| Metric | Expression | Certified | Owner |")
                 md.append("| --- | --- | --- | --- |")
                 for m in e.metrics:
-                    cert = "Yes" if m.governance and m.governance.certified else "No"
+                    cert = "Yes" if m.governance and m.governance.certification_status == "CERTIFIED" else "No"
                     owner = m.governance.owner if m.governance and m.governance.owner else "-"
                     md.append(f"| **{m.name}** | `{m.expression}` | {cert} | {owner} |")
                 md.append("")
@@ -69,7 +69,7 @@ class DocumentationEmitter:
     def export_all(self, output_dir: str) -> Dict[str, str]:
         """Writes dictionary and Mermaid diagram to output_dir."""
         os.makedirs(output_dir, exist_ok=True)
-        
+
         dict_path = os.path.join(output_dir, "DATA_DICTIONARY.md")
         dict_content = self.generate_markdown_dictionary()
         with open(dict_path, "w", encoding="utf-8") as f:

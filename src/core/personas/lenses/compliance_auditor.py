@@ -3,7 +3,8 @@ Compliance Auditor Persona Lens.
 Tailored for Regulatory Compliance Officers, Internal Auditors, and Security Assessors.
 """
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
+
 from src.core.ast.canonical.models import CanonicalSemanticProject
 from src.core.personas.interfaces import PersonaLens
 from src.core.personas.models import (

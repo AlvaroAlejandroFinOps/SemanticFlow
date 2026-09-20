@@ -1,9 +1,10 @@
-from pathlib import Path
-import tempfile
 import json
-from src.core.parsers.markdown_parser import MarkdownSchemaParser
-from src.core.engine.compiler import SemanticCompiler
+import tempfile
+from pathlib import Path
+
 from src.core.emitter.pbip_writer import PbipWriter
+from src.core.engine.compiler import SemanticCompiler
+from src.core.parsers.markdown_parser import MarkdownSchemaParser
 
 
 def test_tmdl_pbip_emission_metro_santiago():

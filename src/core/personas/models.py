@@ -3,23 +3,37 @@ Core domain contracts and data models for the Persona Lens Framework and Data Le
 """
 from enum import Enum
 from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
-from src.core.ast.canonical.models import Diagnostic, ProjectGovernance
+
+from src.core.ast.canonical.models import Diagnostic
 
 
 class PersonaRole(str, Enum):
-    """The 10 Standard Organizational Personas plus legacy/custom extensions."""
-    ANALYTICS_LEADER = "ANALYTICS_LEADER"
-    DATA_ENGINEER = "DATA_ENGINEER"
+    """The 10 Core Canonical Organizational Personas, Aggregate, Extensions and Legacy Roles."""
+    # 10 Core Canonical Personas
+    DATA_ANALYST = "DATA_ANALYST"
     ANALYTICS_ENGINEER = "ANALYTICS_ENGINEER"
+    DATA_ENGINEER = "DATA_ENGINEER"
+    DATA_SCIENTIST = "DATA_SCIENTIST"
     BI_DEVELOPER = "BI_DEVELOPER"
+    DATA_ARCHITECT = "DATA_ARCHITECT"
     DATA_GOVERNANCE_OFFICER = "DATA_GOVERNANCE_OFFICER"
-    DATA_PRODUCT_MANAGER = "DATA_PRODUCT_MANAGER"
-    FINOPS_SPECIALIST = "FINOPS_SPECIALIST"
+    PLATFORM_ENGINEER = "PLATFORM_ENGINEER"
+    DOMAIN_OWNER = "DOMAIN_OWNER"
+    AUDIT_RISK = "AUDIT_RISK"
+
+    # Aggregate Persona
+    DATA_LEADERSHIP = "DATA_LEADERSHIP"
+
+    # 6 Extension Personas
     AI_SYSTEMS_ENGINEER = "AI_SYSTEMS_ENGINEER"
+    ANALYTICS_LEADER = "ANALYTICS_LEADER"
     BUSINESS_CONSUMER = "BUSINESS_CONSUMER"
+    DATA_PRODUCT_MANAGER = "DATA_PRODUCT_MANAGER"
     COMPLIANCE_AUDITOR = "COMPLIANCE_AUDITOR"
-    
+    FINOPS_SPECIALIST = "FINOPS_SPECIALIST"
+
     # Backward compatibility and custom roles
     EXECUTIVE = "EXECUTIVE"
     ANALYTIC_CONSUMER = "ANALYTIC_CONSUMER"

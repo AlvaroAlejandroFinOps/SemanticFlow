@@ -4,7 +4,8 @@ Tailored for Dimensional Modelers, dbt Developers, and Semantic Metric Authors.
 """
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
-from src.core.ast.canonical.models import CanonicalSemanticProject, EntityRole, MetricType
+
+from src.core.ast.canonical.models import CanonicalSemanticProject, MetricType
 from src.core.personas.interfaces import PersonaLens
 from src.core.personas.models import (
     LensFocus,
@@ -56,7 +57,7 @@ class AnalyticsEngineerLens(PersonaLens):
         now_iso = datetime.now(timezone.utc).isoformat()
 
         primary_entities = [e.name for e in project.entities]
-        
+
         all_metrics = [m.name for e in project.entities for m in e.metrics]
         certified_metrics = [
             m.name for e in project.entities for m in e.metrics

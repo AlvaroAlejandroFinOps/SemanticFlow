@@ -3,7 +3,8 @@ Analytics Leader Persona Lens.
 Tailored for CDOs, VPs of Analytics, and Executive Leadership.
 """
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
+
 from src.core.ast.canonical.models import CanonicalSemanticProject, EntityRole, MetricType
 from src.core.personas.interfaces import PersonaLens
 from src.core.personas.models import (

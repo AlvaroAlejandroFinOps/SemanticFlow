@@ -2,15 +2,17 @@
 Configuration loader for Persona Lens definitions and organizational overrides.
 """
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
+
 import yaml
+
 from src.core.personas.models import (
+    LensFocus,
     OverrideSafetyLevel,
     OverrideValidationResult,
     PersonaDefinition,
     PersonaRole,
     TechnicalDepth,
-    LensFocus,
 )
 
 

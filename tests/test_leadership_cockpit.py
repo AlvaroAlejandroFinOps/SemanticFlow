@@ -1,11 +1,12 @@
 """
 Tests for DataLeadershipCockpitEngine and multi-format export capabilities.
 """
-from pathlib import Path
 import json
+from pathlib import Path
+
 import pytest
+
 from src.core.personas.cockpit import DataLeadershipCockpitEngine
-from src.core.personas.models import RecommendationPriority
 from tests.fixtures.enterprise_fixture import create_enterprise_project
 
 

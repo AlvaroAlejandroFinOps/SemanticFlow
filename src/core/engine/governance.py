@@ -4,8 +4,8 @@ Reglas de gobernanza de atributos: ocultamiento de claves, tipos de agregación 
 from src.core.ast.schema import ColumnRaw, TableRaw
 from src.core.ast.semantic import (
     SemanticColumn,
-    TableRole,
     SummarizeBy,
+    TableRole,
 )
 from src.core.ast.types import PbiDataType
 

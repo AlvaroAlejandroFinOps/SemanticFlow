@@ -1,54 +1,54 @@
 """
 SemanticFlow Persona Lens Framework and Data Leadership Cockpit.
 """
+from src.core.personas.cockpit import DataLeadershipCockpitEngine
+from src.core.personas.config_loader import (
+    ConfigurationValidationError,
+    PersonaConfigLoader,
+)
+from src.core.personas.interfaces import PersonaLens
+from src.core.personas.legacy_adapter import LegacyPersonaAdapter
+from src.core.personas.lenses import (
+    AiSystemsEngineerLens,
+    AnalyticsEngineerLens,
+    AnalyticsLeaderLens,
+    BiDeveloperLens,
+    BusinessConsumerLens,
+    ComplianceAuditorLens,
+    DataEngineerLens,
+    DataGovernanceOfficerLens,
+    DataProductManagerLens,
+    FinOpsSpecialistLens,
+    register_all_lenses,
+)
 from src.core.personas.models import (
-    PersonaRole,
-    TechnicalDepth,
+    LeadershipCockpit,
     LensFocus,
+    MaturityDimension,
     OverrideSafetyLevel,
+    OverrideValidationResult,
+    PersonaDefinition,
+    PersonaMaturityAssessment,
+    PersonaProjection,
+    PersonaRecommendation,
+    PersonaRole,
     RaciRole,
     RecommendationPriority,
     ResponsibilityAssignment,
     TeamInteraction,
-    PersonaRecommendation,
-    MaturityDimension,
-    PersonaMaturityAssessment,
-    OverrideValidationResult,
-    PersonaDefinition,
-    PersonaProjection,
-    LeadershipCockpit,
-)
-from src.core.personas.interfaces import PersonaLens
-from src.core.personas.config_loader import (
-    PersonaConfigLoader,
-    ConfigurationValidationError,
-)
-from src.core.personas.registry import (
-    PersonaRegistry,
-    PersonaNotFoundError,
+    TechnicalDepth,
 )
 from src.core.personas.projector import PersonaProjector
-from src.core.personas.cockpit import DataLeadershipCockpitEngine
+from src.core.personas.registry import (
+    PersonaNotFoundError,
+    PersonaRegistry,
+)
 from src.core.personas.renderers import (
-    MarkdownPersonaRenderer,
     JsonPersonaRenderer,
-    MermaidPersonaRenderer,
     LeadershipCockpitRenderer,
+    MarkdownPersonaRenderer,
+    MermaidPersonaRenderer,
 )
-from src.core.personas.lenses import (
-    AnalyticsLeaderLens,
-    DataEngineerLens,
-    AnalyticsEngineerLens,
-    BiDeveloperLens,
-    DataGovernanceOfficerLens,
-    DataProductManagerLens,
-    FinOpsSpecialistLens,
-    AiSystemsEngineerLens,
-    BusinessConsumerLens,
-    ComplianceAuditorLens,
-    register_all_lenses,
-)
-from src.core.personas.legacy_adapter import LegacyPersonaAdapter
 from src.core.personas.views import (
     PersonaType,
     PersonaView,

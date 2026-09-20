@@ -1,11 +1,11 @@
 """
 Regression tests verifying compiler output against deterministic golden files.
 """
-from pathlib import Path
 import re
-import pytest
-from src.core.parsers.markdown_parser import MarkdownSchemaParser
+from pathlib import Path
+
 from src.core.mappers.raw_to_canonical import raw_to_canonical
+from src.core.parsers.markdown_parser import MarkdownSchemaParser
 from src.core.personas.cockpit import DataLeadershipCockpitEngine
 from tests.fixtures.enterprise_fixture import create_enterprise_project
 
@@ -27,7 +27,7 @@ def test_golden_regression_metro_santiago(tmp_path):
     metro_proj = raw_to_canonical(raw_metro)
 
     engine = DataLeadershipCockpitEngine(metro_proj)
-    generated = engine.export_all(tmp_path, include_individual_lenses=True, formats=["md", "json"])
+    engine.export_all(tmp_path, include_individual_lenses=True, formats=["md", "json"])
 
     golden_dir = Path("tests/golden/metro_santiago")
     assert golden_dir.exists(), "Metro Santiago golden directory missing"

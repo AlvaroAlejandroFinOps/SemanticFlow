@@ -1,7 +1,7 @@
 """
 Generador del archivo relationships.tmdl en sintaxis nativa TMDL.
 """
-from src.core.ast.semantic import SemanticRelationship, CrossFilteringBehavior
+from src.core.ast.semantic import CrossFilteringBehavior, SemanticRelationship
 from src.core.emitter.tmdl_formatter import escape_tmdl_identifier
 
 

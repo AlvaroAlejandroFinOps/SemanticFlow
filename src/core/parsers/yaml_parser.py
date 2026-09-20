@@ -3,15 +3,17 @@ Parser de esquemas declarativos estructurados en formato YAML o JSON.
 """
 from pathlib import Path
 from typing import Union
+
 import yaml
-from src.core.parsers.base import BaseSchemaParser
+
 from src.core.ast.schema import (
-    KeyType,
     ColumnRaw,
-    TableRaw,
-    RelationshipRaw,
+    KeyType,
     RelationalSchemaRaw,
+    RelationshipRaw,
+    TableRaw,
 )
+from src.core.parsers.base import BaseSchemaParser
 
 
 class YamlSchemaParser(BaseSchemaParser):

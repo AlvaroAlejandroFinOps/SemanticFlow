@@ -2,21 +2,21 @@
 Mapper: CanonicalSemanticProject -> SemanticModel (Power BI AST)
 Bridge for existing TMDL/PBIP emission pipeline.
 """
-from src.core.ast.semantic import (
-    SemanticModel,
-    SemanticTable,
-    SemanticColumn,
-    SemanticRelationship,
-    SemanticMeasure,
-    TableRole,
-    SummarizeBy,
-)
-from src.core.ast.types import PbiDataType
 from src.core.ast.canonical.models import (
     CanonicalSemanticProject,
-    EntityRole,
     DataType,
+    EntityRole,
 )
+from src.core.ast.semantic import (
+    SemanticColumn,
+    SemanticMeasure,
+    SemanticModel,
+    SemanticRelationship,
+    SemanticTable,
+    SummarizeBy,
+    TableRole,
+)
+from src.core.ast.types import PbiDataType
 
 CANONICAL_TO_PBI_TYPE = {
     DataType.STRING: PbiDataType.STRING,

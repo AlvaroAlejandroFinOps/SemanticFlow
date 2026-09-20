@@ -3,16 +3,14 @@ Deterministic, Non-Destructive Persona Projection Engine.
 """
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple, Union
+
 from src.core.ast.canonical.models import (
     CanonicalSemanticProject,
     EntityRole,
     MetricType,
-    SemanticEntity,
-    SemanticMetric,
 )
 from src.core.personas.models import (
     LeadershipCockpit,
-    LensFocus,
     MaturityDimension,
     PersonaDefinition,
     PersonaMaturityAssessment,
@@ -23,7 +21,6 @@ from src.core.personas.models import (
     RecommendationPriority,
     ResponsibilityAssignment,
     TeamInteraction,
-    TechnicalDepth,
 )
 from src.core.personas.registry import PersonaRegistry
 
@@ -75,7 +72,6 @@ class PersonaProjector:
         now_iso = datetime.now(timezone.utc).isoformat()
 
         # Aggregate governance overview
-        certified_metrics_count = sum(len(p.certified_metrics) for p in all_projections.values()) // max(1, len(all_projections))
         total_entities = len(self._project.entities)
         total_relationships = len(self._project.relationships)
 

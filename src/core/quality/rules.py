@@ -2,11 +2,12 @@
 Quality and Validation Rules for Semantic Models.
 """
 from typing import List
+
 from src.core.ast.canonical.models import (
     CanonicalSemanticProject,
     Diagnostic,
-    DiagnosticSeverity,
     DiagnosticCategory,
+    DiagnosticSeverity,
     EntityRole,
     MetricType,
 )
@@ -76,7 +77,7 @@ def validate_ratio_metrics(project: CanonicalSemanticProject) -> List[Diagnostic
                     diagnostics.append(
                         Diagnostic(
                             code="METRIC_RATIO_001",
-                            severity=DiagnosticSeverity.ERROR, 
+                            severity=DiagnosticSeverity.ERROR,
                             category=DiagnosticCategory.METRIC,
                             message=f"Ratio metric '{metric.name}' must declare numerator_metric_id and denominator_metric_id.",
                             object_id=metric.id,

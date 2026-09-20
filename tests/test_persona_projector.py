@@ -1,14 +1,16 @@
 """
 Tests for PersonaProjector, Renderers, Mutation Safety, and Leadership Cockpit.
 """
-from pathlib import Path
 import json
+from pathlib import Path
+
 import pytest
+
 from src.core.ast.canonical.models import CanonicalSemanticProject
-from src.core.parsers.markdown_parser import MarkdownSchemaParser
 from src.core.mappers.raw_to_canonical import raw_to_canonical
+from src.core.parsers.markdown_parser import MarkdownSchemaParser
+from src.core.personas.legacy_adapter import LegacyPersonaAdapter
 from src.core.personas.models import (
-    PersonaRole,
     TechnicalDepth,
 )
 from src.core.personas.projector import PersonaProjector
@@ -16,9 +18,7 @@ from src.core.personas.renderers import (
     JsonPersonaRenderer,
     LeadershipCockpitRenderer,
     MarkdownPersonaRenderer,
-    MermaidPersonaRenderer,
 )
-from src.core.personas.legacy_adapter import LegacyPersonaAdapter
 from src.core.personas.views import PersonaType
 from tests.fixtures.enterprise_fixture import create_enterprise_project
 

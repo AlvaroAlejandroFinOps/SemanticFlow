@@ -4,6 +4,7 @@ Interfaz base para extractores/parsers de esquemas relacionales a AST Canónico.
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Union
+
 from src.core.ast.schema import RelationalSchemaRaw
 
 

@@ -1,16 +1,18 @@
 """
 Semantic Quality Score (cQA) Engine.
 """
-from typing import List, Dict, Any
+from typing import List
+
 from pydantic import BaseModel
+
 from src.core.ast.canonical.models import CanonicalSemanticProject, Diagnostic, DiagnosticSeverity
 from src.core.quality.rules import (
+    validate_certified_metrics,
     validate_grain_declaration,
     validate_metric_descriptions,
-    validate_certified_metrics,
-    validate_ratio_metrics,
-    validate_project_governance,
     validate_pii_classification,
+    validate_project_governance,
+    validate_ratio_metrics,
 )
 
 

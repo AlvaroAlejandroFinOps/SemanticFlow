@@ -3,6 +3,7 @@ Generador del archivo tables/<TableName>.tmdl en sintaxis nativa TMDL.
 """
 from pathlib import Path
 from typing import Optional
+
 from src.core.ast.semantic import SemanticTable
 from src.core.emitter.tmdl_formatter import escape_tmdl_identifier, format_tmdl_string_literal
 
@@ -67,7 +68,7 @@ class TableEmitter:
         lines.append(f"\tpartition {part_id} = m")
         lines.append("\t\tmode: import")
         lines.append("\t\tsource =")
-        
+
         # Generar script M sintéticamente tipado o conectado a CSV real
         if data_file_path and data_file_path.exists():
             m_script = self._generate_m_partition_csv(table, data_file_path)

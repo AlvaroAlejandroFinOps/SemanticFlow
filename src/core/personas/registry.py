@@ -2,16 +2,16 @@
 Persona Registry managing built-in and customized Persona Lenses.
 """
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Dict, List, Optional, Union
+
+from src.core.personas.config_loader import PersonaConfigLoader
 from src.core.personas.interfaces import PersonaLens
 from src.core.personas.models import (
     OverrideValidationResult,
     PersonaDefinition,
     PersonaRole,
     TechnicalDepth,
-    LensFocus,
 )
-from src.core.personas.config_loader import PersonaConfigLoader
 
 
 class PersonaNotFoundError(KeyError):
@@ -116,7 +116,7 @@ class PersonaRegistry:
     def create_default(cls, default_yaml_path: Optional[Union[str, Path]] = None) -> "PersonaRegistry":
         """Factory creating a registry pre-loaded with standard 10 Persona definitions and lenses."""
         registry = cls()
-        
+
         # 1. Register concrete lenses
         from src.core.personas.lenses import register_all_lenses
         register_all_lenses(registry)
@@ -136,16 +136,24 @@ class PersonaRegistry:
     def _bootstrap_fallback_defaults(self) -> None:
         """Internal fallback providing default definitions programmatically."""
         roles_and_titles = [
-            (PersonaRole.ANALYTICS_LEADER, "analytics_leader", "Analytics Leader", TechnicalDepth.EXECUTIVE, ["executive", "cdo"]),
+            # 10 Core
+            (PersonaRole.DATA_ANALYST, "data_analyst", "Data Analyst", TechnicalDepth.SUMMARY, ["analyst", "bi_analyst"]),
+            (PersonaRole.ANALYTICS_ENGINEER, "analytics_engineer", "Analytics Engineer", TechnicalDepth.TECHNICAL, ["ae", "dbt_developer"]),
             (PersonaRole.DATA_ENGINEER, "data_engineer", "Data Engineer", TechnicalDepth.TECHNICAL, ["de"]),
-            (PersonaRole.ANALYTICS_ENGINEER, "analytics_engineer", "Analytics Engineer", TechnicalDepth.TECHNICAL, ["ae", "dbt_dev"]),
-            (PersonaRole.BI_DEVELOPER, "bi_developer", "BI Developer", TechnicalDepth.TECHNICAL, ["bi_engineer", "pbi_dev"]),
-            (PersonaRole.DATA_GOVERNANCE_OFFICER, "data_governance_officer", "Data Governance Officer", TechnicalDepth.SUMMARY, ["data_governance", "steward"]),
-            (PersonaRole.DATA_PRODUCT_MANAGER, "data_product_manager", "Data Product Manager", TechnicalDepth.SUMMARY, ["dpm", "product_owner"]),
+            (PersonaRole.DATA_SCIENTIST, "data_scientist", "Data Scientist", TechnicalDepth.TECHNICAL, ["ds", "ml_scientist"]),
+            (PersonaRole.BI_DEVELOPER, "bi_developer", "BI Developer", TechnicalDepth.TECHNICAL, ["bi_engineer", "powerbi_developer"]),
+            (PersonaRole.DATA_ARCHITECT, "data_architect", "Data Architect", TechnicalDepth.EXHAUSTIVE, ["architect", "enterprise_architect"]),
+            (PersonaRole.DATA_GOVERNANCE_OFFICER, "data_governance_officer", "Data Governance Officer", TechnicalDepth.SUMMARY, ["governance", "steward"]),
+            (PersonaRole.PLATFORM_ENGINEER, "platform_engineer", "Platform Engineer", TechnicalDepth.TECHNICAL, ["pe", "infrastructure_engineer"]),
+            (PersonaRole.DOMAIN_OWNER, "domain_owner", "Domain Owner", TechnicalDepth.SUMMARY, ["business_owner", "domain_lead"]),
+            (PersonaRole.AUDIT_RISK, "audit_risk", "Audit & Risk Officer", TechnicalDepth.EXHAUSTIVE, ["risk_officer", "compliance_officer"]),
+            # 6 Extensions
+            (PersonaRole.ANALYTICS_LEADER, "analytics_leader", "Analytics Leader", TechnicalDepth.EXECUTIVE, ["executive", "cdo"]),
+            (PersonaRole.DATA_PRODUCT_MANAGER, "data_product_manager", "Data Product Manager", TechnicalDepth.SUMMARY, ["dpm", "data_pm"]),
             (PersonaRole.FINOPS_SPECIALIST, "finops_specialist", "FinOps Specialist", TechnicalDepth.SUMMARY, ["finops"]),
-            (PersonaRole.AI_SYSTEMS_ENGINEER, "ai_systems_engineer", "AI Systems Engineer", TechnicalDepth.TECHNICAL, ["ml_engineer", "ai_engineer"]),
-            (PersonaRole.BUSINESS_CONSUMER, "business_consumer", "Business Consumer", TechnicalDepth.EXECUTIVE, ["analytic_consumer", "business_user"]),
-            (PersonaRole.COMPLIANCE_AUDITOR, "compliance_auditor", "Compliance Auditor", TechnicalDepth.EXHAUSTIVE, ["auditor", "compliance_officer"]),
+            (PersonaRole.AI_SYSTEMS_ENGINEER, "ai_systems_engineer", "AI Systems Engineer", TechnicalDepth.TECHNICAL, ["mle", "ai_engineer"]),
+            (PersonaRole.BUSINESS_CONSUMER, "business_consumer", "Business Consumer", TechnicalDepth.SUMMARY, ["consumer", "business_user"]),
+            (PersonaRole.COMPLIANCE_AUDITOR, "compliance_auditor", "Compliance Auditor", TechnicalDepth.EXHAUSTIVE, ["auditor_external"]),
         ]
         for role, pid, dname, depth, aliases in roles_and_titles:
             defn = PersonaDefinition(

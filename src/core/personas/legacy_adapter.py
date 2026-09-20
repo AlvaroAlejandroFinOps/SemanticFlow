@@ -2,6 +2,7 @@
 Legacy Adapter providing 100% backward compatibility with PersonaView and PersonaType.
 """
 from typing import Dict, Optional
+
 from src.core.ast.canonical.models import CanonicalSemanticProject
 from src.core.personas.models import PersonaProjection, PersonaRole
 from src.core.personas.views import PersonaType, PersonaView, PersonaViewGenerator

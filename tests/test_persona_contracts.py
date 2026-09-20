@@ -2,7 +2,9 @@
 Tests for Persona Lens Framework contracts, ProjectGovernance, and interfaces.
 """
 from pathlib import Path
+
 import pytest
+
 from src.core.ast.canonical.models import (
     CanonicalSemanticProject,
     GovernanceMetadata,
@@ -10,14 +12,14 @@ from src.core.ast.canonical.models import (
     SemanticAttribute,
     SemanticEntity,
 )
-from src.core.parsers.markdown_parser import MarkdownSchemaParser
 from src.core.mappers.raw_to_canonical import raw_to_canonical
+from src.core.parsers.markdown_parser import MarkdownSchemaParser
+from src.core.personas.interfaces import PersonaLens
 from src.core.personas.models import (
     LeadershipCockpit,
     LensFocus,
     MaturityDimension,
     OverrideSafetyLevel,
-    OverrideValidationResult,
     PersonaDefinition,
     PersonaMaturityAssessment,
     PersonaProjection,
@@ -29,7 +31,6 @@ from src.core.personas.models import (
     TeamInteraction,
     TechnicalDepth,
 )
-from src.core.personas.interfaces import PersonaLens
 from tests.fixtures.enterprise_fixture import create_enterprise_project
 
 

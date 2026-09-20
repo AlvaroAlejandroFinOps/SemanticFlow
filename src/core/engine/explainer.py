@@ -1,10 +1,11 @@
 """
 Explainer engine for inspecting canonical model inferences and provenance.
 """
-from src.core.ast.canonical.models import CanonicalSemanticProject, EntityRole
+from rich import box
 from rich.console import Console
 from rich.table import Table
-from rich import box
+
+from src.core.ast.canonical.models import CanonicalSemanticProject, EntityRole
 
 
 class SemanticExplainer:

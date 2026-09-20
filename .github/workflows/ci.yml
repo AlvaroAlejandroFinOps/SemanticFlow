@@ -1,0 +1,54 @@
+name: SemanticFlow CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  validate:
+    name: Test & Quality Gate (Python ${{ matrix.python-version }} on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        python-version: [ "3.10", "3.11", "3.12" ]
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pytest pytest-cov ruff mypy types-PyYAML build
+
+      - name: Lint with Ruff
+        run: ruff check .
+
+      - name: Typecheck with Mypy
+        run: mypy src/
+
+      - name: Run Test Suite with Coverage Gate
+        run: |
+          pytest -v --cov=src --cov-branch --cov-report=term-missing --cov-fail-under=80
+
+      - name: Verify Deterministic Golden Regression (Zero Drift)
+        run: |
+          pytest tests/test_golden_regression.py
+
+      - name: Verify Output Safety & Atomic Emitter
+        run: |
+          pytest tests/test_output_safety.py
+
+      - name: Build Package Artifacts (Wheel & Sdist)
+        run: python -m build

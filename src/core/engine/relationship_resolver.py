@@ -3,10 +3,11 @@ Resolución de relaciones analíticas 1:N unidireccionales para Power BI.
 Evita caminos ambiguos (PFE_XL_USERELATIONSHIP_AMBIGUOUS_PATH) en el motor VertiPaq.
 """
 import networkx as nx
+
 from src.core.ast.schema import RelationalSchemaRaw
 from src.core.ast.semantic import (
-    SemanticRelationship,
     CrossFilteringBehavior,
+    SemanticRelationship,
     TableRole,
 )
 
@@ -23,7 +24,7 @@ class RelationshipResolver:
         seen_pairs: set[tuple[str, str, str, str]] = set()
 
         table_cols = {t.name: {c.name for c in t.columns} for t in raw_schema.tables}
-        table_pks = {t.name: (t.primary_keys[0] if t.primary_keys else None) for t in raw_schema.tables}
+        table_pks = {t.name: (t.primary_keys[0].name if t.primary_keys else None) for t in raw_schema.tables}
 
         # Grafo no dirigido para rastrear caminos activos y prevenir ciclos / caminos ambiguos en VertiPaq
         active_graph = nx.Graph()
@@ -44,10 +45,12 @@ class RelationshipResolver:
             if to_c not in table_cols[to_t]:
                 if from_c in table_cols[to_t]:
                     to_c = from_c
-                elif table_pks.get(to_t) and table_pks[to_t] in table_cols[to_t]:
-                    to_c = table_pks[to_t]
                 else:
-                    continue
+                    target_pk = table_pks.get(to_t)
+                    if target_pk is not None and target_pk in table_cols[to_t]:
+                        to_c = target_pk
+                    else:
+                        continue
 
             # Validar from_column
             if from_c not in table_cols[from_t]:

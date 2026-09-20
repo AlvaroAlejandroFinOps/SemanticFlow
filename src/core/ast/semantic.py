@@ -3,7 +3,9 @@ Modelos AST canónicos para el Modelo Semántico enriquecido listo para emitir T
 """
 from enum import Enum
 from typing import Optional
+
 from pydantic import BaseModel, Field
+
 from src.core.ast.types import PbiDataType
 
 

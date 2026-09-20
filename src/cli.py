@@ -4,17 +4,18 @@ Permite inspeccionar esquemas relacionales y compilar modelos PBIP/TMDL nativos.
 """
 from pathlib import Path
 from typing import Optional
-import typer
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
-from rich import box
 
+import typer
+from rich import box
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+
+from src.core.ast.semantic import TableRole
+from src.core.emitter.pbip_writer import PbipWriter
+from src.core.engine.compiler import SemanticCompiler
 from src.core.parsers.markdown_parser import MarkdownSchemaParser
 from src.core.parsers.yaml_parser import YamlSchemaParser
-from src.core.engine.compiler import SemanticCompiler
-from src.core.emitter.pbip_writer import PbipWriter
-from src.core.ast.semantic import TableRole
 
 app = typer.Typer(
     name="semanticflow",
@@ -197,9 +198,10 @@ def explain(
     """
     Explica la procedencia y evidencia del modelo, o proyecta la perspectiva de una Persona Lens.
     """
-    from src.core.mappers.raw_to_canonical import raw_to_canonical
-    from src.core.engine.explainer import SemanticExplainer
     import json
+
+    from src.core.engine.explainer import SemanticExplainer
+    from src.core.mappers.raw_to_canonical import raw_to_canonical
 
     parser = _get_parser_for_file(input_path)
     raw_schema = parser.parse(input_path)
@@ -208,8 +210,8 @@ def explain(
     if persona:
         from src.core.personas.projector import PersonaProjector
         from src.core.personas.renderers import (
-            MarkdownPersonaRenderer,
             JsonPersonaRenderer,
+            MarkdownPersonaRenderer,
             MermaidPersonaRenderer,
         )
 
@@ -371,7 +373,7 @@ def cockpit(
     """
     from src.core.mappers.raw_to_canonical import raw_to_canonical
     from src.core.personas.cockpit import DataLeadershipCockpitEngine
-    from src.core.personas.renderers import LeadershipCockpitRenderer, JsonPersonaRenderer
+    from src.core.personas.renderers import JsonPersonaRenderer, LeadershipCockpitRenderer
 
     parser = _get_parser_for_file(input_path)
     raw_schema = parser.parse(input_path)
@@ -509,8 +511,8 @@ def docgen(
     """
     Genera documentación enterprise automáticamente (Diccionario de Datos Markdown y Diagrama ERD Mermaid).
     """
-    from src.core.mappers.raw_to_canonical import raw_to_canonical
     from src.core.docs.emitter import DocumentationEmitter
+    from src.core.mappers.raw_to_canonical import raw_to_canonical
 
     parser = _get_parser_for_file(input_path)
     raw_schema = parser.parse(input_path)

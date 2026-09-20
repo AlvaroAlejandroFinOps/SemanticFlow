@@ -2,18 +2,15 @@
 Abstract interfaces and base contracts for the Persona Lens Framework.
 """
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
+
 from src.core.ast.canonical.models import CanonicalSemanticProject
 from src.core.personas.models import (
-    PersonaDefinition,
-    PersonaMaturityAssessment,
-    PersonaProjection,
-    PersonaRecommendation,
-    PersonaRole,
-    ResponsibilityAssignment,
-    TeamInteraction,
     OverrideSafetyLevel,
     OverrideValidationResult,
+    PersonaDefinition,
+    PersonaProjection,
+    PersonaRole,
 )
 
 

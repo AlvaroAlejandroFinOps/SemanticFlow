@@ -1,47 +1,29 @@
 # SemanticFlow Default Enterprise Persona Lens Definitions
 version: "1.0"
 personas:
-  analytics_leader:
-    persona_id: "analytics_leader"
-    role: "ANALYTICS_LEADER"
-    display_name: "Analytics Leader"
-    title: "Executive Strategic Analytics & Leadership Cockpit"
-    summary_template: "Executive portfolio view for {project_name} summarizing certified KPIs, domain maturity, and strategic value."
-    technical_depth: "EXECUTIVE"
+  # ==============================================================================
+  # 10 CORE CANONICAL PERSONAS (DIMENSION B)
+  # ==============================================================================
+  data_analyst:
+    persona_id: "data_analyst"
+    role: "DATA_ANALYST"
+    display_name: "Data Analyst"
+    title: "Data Analyst & Self-Service Consumption Lens"
+    summary_template: "Certified KPIs, domain dimensions, and self-service exploration catalog for {project_name}."
+    technical_depth: "SUMMARY"
     focus_areas:
-      - "STRATEGIC_ALIGNMENT"
+      - "CONSUMPTION_SIMPLICITY"
       - "BUSINESS_VALUE"
-      - "PRODUCT_METRICS"
-    visible_object_types:
-      - "FACT"
-      - "KPI"
-    icon: "briefcase"
-    color_theme: "#1A365D"
-    aliases:
-      - "executive"
-      - "cdo"
-      - "head_of_data"
-      - "vp_analytics"
-
-  data_engineer:
-    persona_id: "data_engineer"
-    role: "DATA_ENGINEER"
-    display_name: "Data Engineer"
-    title: "Data Engineering, Ingestion & Pipeline Health Lens"
-    summary_template: "Physical schema, partition grain, upstream sources, and pipeline integrity for {project_name}."
-    technical_depth: "TECHNICAL"
-    focus_areas:
-      - "PIPELINE_HEALTH"
-      - "DATA_MODELING"
     visible_object_types:
       - "FACT"
       - "DIMENSION"
-      - "BRIDGE"
-    icon: "server"
-    color_theme: "#2B6CB0"
+      - "KPI"
+    icon: "bar-chart-2"
+    color_theme: "#38A169"
     aliases:
-      - "de"
-      - "data_platform_engineer"
+      - "analyst"
+      - "business_analyst"
+      - "bi_analyst"
 
   analytics_engineer:
     persona_id: "analytics_engineer"
@@ -63,6 +45,48 @@ personas:
     aliases:
       - "ae"
       - "dbt_developer"
+      - "semantic_modeler"
+
+  data_engineer:
+    persona_id: "data_engineer"
+    role: "DATA_ENGINEER"
+    display_name: "Data Engineer"
+    title: "Data Engineering, Ingestion & Pipeline Health Lens"
+    summary_template: "Physical schema, partition grain, upstream sources, and pipeline integrity for {project_name}."
+    technical_depth: "TECHNICAL"
+    focus_areas:
+      - "PIPELINE_HEALTH"
+      - "DATA_MODELING"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+      - "BRIDGE"
+    icon: "server"
+    color_theme: "#2B6CB0"
+    aliases:
+      - "de"
+      - "data_platform_engineer"
+
+  data_scientist:
+    persona_id: "data_scientist"
+    role: "DATA_SCIENTIST"
+    display_name: "Data Scientist"
+    title: "Data Science, Feature Engineering & Statistical Lens"
+    summary_template: "Analytical features, continuous variables, entity grains, and training dimensions for {project_name}."
+    technical_depth: "TECHNICAL"
+    focus_areas:
+      - "AI_READINESS"
+      - "DATA_MODELING"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+      - "FEATURE"
+    icon: "activity"
+    color_theme: "#805AD5"
+    aliases:
+      - "ds"
+      - "ml_scientist"
+      - "statistician"
 
   bi_developer:
     persona_id: "bi_developer"
@@ -85,6 +109,29 @@ personas:
       - "powerbi_developer"
       - "tableau_developer"
 
+  data_architect:
+    persona_id: "data_architect"
+    role: "DATA_ARCHITECT"
+    display_name: "Data Architect"
+    title: "Enterprise Data Architecture & Domain Modeling Lens"
+    summary_template: "Relational graph topology, domain conformances, entity lifecycle, and architectural standards for {project_name}."
+    technical_depth: "EXHAUSTIVE"
+    focus_areas:
+      - "DATA_MODELING"
+      - "STRATEGIC_ALIGNMENT"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+      - "BRIDGE"
+      - "CALCULATED"
+      - "RELATIONSHIP"
+    icon: "layers"
+    color_theme: "#4A5568"
+    aliases:
+      - "architect"
+      - "enterprise_architect"
+      - "solution_architect"
+
   data_governance_officer:
     persona_id: "data_governance_officer"
     role: "DATA_GOVERNANCE_OFFICER"
@@ -98,59 +145,148 @@ personas:
     visible_object_types:
       - "FACT"
       - "DIMENSION"
-      - "BRIDGE"
     icon: "shield"
     color_theme: "#805AD5"
     aliases:
-      - "data_governance"
+      - "governance"
       - "data_steward"
-      - "ciso_data_lead"
+      - "dgo"
+
+  platform_engineer:
+    persona_id: "platform_engineer"
+    role: "PLATFORM_ENGINEER"
+    display_name: "Platform Engineer"
+    title: "Data Platform Infrastructure & Storage Capacity Lens"
+    summary_template: "Engine compute capacity, storage modes (Import/DirectLake), partitions, and refresh SLAs for {project_name}."
+    technical_depth: "TECHNICAL"
+    focus_areas:
+      - "COST_CAPACITY"
+      - "PIPELINE_HEALTH"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+      - "STORAGE_MODE"
+      - "PARTITION"
+    icon: "hard-drive"
+    color_theme: "#DD6B20"
+    aliases:
+      - "pe"
+      - "infrastructure_engineer"
+      - "systems_engineer"
+
+  domain_owner:
+    persona_id: "domain_owner"
+    role: "DOMAIN_OWNER"
+    display_name: "Domain Owner"
+    title: "Business Domain Ownership & Data Product Lifecycle Lens"
+    summary_template: "Domain data products, certified KPIs, business ownership, and strategic alignment for {project_name}."
+    technical_depth: "SUMMARY"
+    focus_areas:
+      - "BUSINESS_VALUE"
+      - "PRODUCT_LIFECYCLE"
+    visible_object_types:
+      - "FACT"
+      - "KPI"
+      - "DATA_PRODUCT"
+    icon: "briefcase"
+    color_theme: "#2C5282"
+    aliases:
+      - "business_owner"
+      - "domain_lead"
+      - "product_owner"
+
+  audit_risk:
+    persona_id: "audit_risk"
+    role: "AUDIT_RISK"
+    display_name: "Audit & Risk Officer"
+    title: "Regulatory Compliance, Audit Provenance & Risk Lens"
+    summary_template: "Regulatory compliance (GDPR/SOX), provenance audit trail, and risk exceptions for {project_name}."
+    technical_depth: "EXHAUSTIVE"
+    focus_areas:
+      - "AUDIT_TRACEABILITY"
+      - "GOVERNANCE_COMPLIANCE"
+    visible_object_types:
+      - "FACT"
+      - "DIMENSION"
+      - "CLASSIFICATION"
+      - "PROVENANCE"
+      - "EXCEPTION"
+    icon: "shield"
+    color_theme: "#C53030"
+    aliases:
+      - "risk_officer"
+      - "compliance_officer"
+      - "auditor"
+
+  # ==============================================================================
+  # 6 EXTENSION PERSONAS
+  # ==============================================================================
+  analytics_leader:
+    persona_id: "analytics_leader"
+    role: "ANALYTICS_LEADER"
+    display_name: "Analytics Leader"
+    title: "Executive Strategic Analytics & Leadership Cockpit"
+    summary_template: "Executive portfolio view for {project_name} summarizing certified KPIs, domain maturity, and strategic value."
+    technical_depth: "EXECUTIVE"
+    focus_areas:
+      - "STRATEGIC_ALIGNMENT"
+      - "BUSINESS_VALUE"
+      - "PRODUCT_METRICS"
+    visible_object_types:
+      - "FACT"
+      - "KPI"
+    icon: "briefcase"
+    color_theme: "#1A365D"
+    aliases:
+      - "executive"
+      - "cdo"
+      - "head_of_data"
+      - "vp_analytics"
 
   data_product_manager:
     persona_id: "data_product_manager"
     role: "DATA_PRODUCT_MANAGER"
     display_name: "Data Product Manager"
-    title: "Data Product Management, Lifecycle & Consumer Value Lens"
-    summary_template: "Data product SLA, consumer adoption contracts, release maturity, and product telemetry for {project_name}."
+    title: "Data Product Lifecycle, SLOs & Feedback Lens"
+    summary_template: "Data product specifications, consumer feedback loops, SLA telemetry, and product roadmap for {project_name}."
     technical_depth: "SUMMARY"
     focus_areas:
       - "PRODUCT_LIFECYCLE"
       - "PRODUCT_METRICS"
-      - "BUSINESS_VALUE"
     visible_object_types:
       - "FACT"
-      - "DIMENSION"
-    icon: "layers"
-    color_theme: "#DD6B20"
+      - "KPI"
+    icon: "compass"
+    color_theme: "#4C51BF"
     aliases:
       - "dpm"
-      - "product_owner_data"
+      - "data_pm"
 
   finops_specialist:
     persona_id: "finops_specialist"
     role: "FINOPS_SPECIALIST"
     display_name: "FinOps Specialist"
-    title: "FinOps, Cloud Cost & Capacity Optimization Lens"
-    summary_template: "Analytical query efficiency, cloud resource consumption, and cost attribution for {project_name}."
+    title: "FinOps, Query Cost & Cloud Capacity Attribution Lens"
+    summary_template: "Compute consumption, storage capacity footprint, and cost per query telemetry for {project_name}."
     technical_depth: "SUMMARY"
     focus_areas:
       - "COST_CAPACITY"
       - "BUSINESS_VALUE"
     visible_object_types:
       - "FACT"
-      - "DIMENSION"
+      - "CALCULATED"
     icon: "dollar-sign"
     color_theme: "#38A169"
     aliases:
       - "finops"
-      - "cloud_economist"
+      - "cloud_cost_engineer"
 
   ai_systems_engineer:
     persona_id: "ai_systems_engineer"
     role: "AI_SYSTEMS_ENGINEER"
     display_name: "AI Systems Engineer"
-    title: "AI Systems, Feature Engineering & ML Readiness Lens"
-    summary_template: "Feature readiness, embeddings/ML attributes, training data provenance, and AI inference latency for {project_name}."
+    title: "AI Feature Store, Embeddings & Low-Latency Analytics Lens"
+    summary_template: "Feature store compatibility, vector dimensions, and real-time analytical attributes for {project_name}."
     technical_depth: "TECHNICAL"
     focus_areas:
       - "AI_READINESS"
@@ -159,38 +295,38 @@ personas:
       - "FACT"
       - "DIMENSION"
     icon: "cpu"
-    color_theme: "#E53E3E"
+    color_theme: "#6B46C1"
     aliases:
-      - "ml_engineer"
+      - "mle"
       - "ai_engineer"
-      - "feature_store_admin"
+      - "llm_engineer"
 
   business_consumer:
     persona_id: "business_consumer"
     role: "BUSINESS_CONSUMER"
     display_name: "Business Consumer"
-    title: "Business Consumer & Self-Service Analytics Lens"
-    summary_template: "Certified business terms, plain-language metric glossary, and intuitive report navigation for {project_name}."
-    technical_depth: "EXECUTIVE"
+    title: "Business Self-Service & Consumption Simplicity Lens"
+    summary_template: "Intuitive business terminology, certified measures, and simplified self-service exploration for {project_name}."
+    technical_depth: "SUMMARY"
     focus_areas:
       - "CONSUMPTION_SIMPLICITY"
       - "BUSINESS_VALUE"
     visible_object_types:
       - "FACT"
-      - "DIMENSION"
-    icon: "user-check"
+      - "KPI"
+    icon: "users"
     color_theme: "#3182CE"
     aliases:
-      - "analytic_consumer"
-      - "business_analyst"
+      - "consumer"
       - "business_user"
+      - "analytic_consumer"
 
   compliance_auditor:
     persona_id: "compliance_auditor"
     role: "COMPLIANCE_AUDITOR"
     display_name: "Compliance Auditor"
-    title: "Regulatory Compliance, Privacy & Audit Traceability Lens"
-    summary_template: "Full regulatory audit trace, GDPR/SOX compliance verification, PII lineage, and access boundaries for {project_name}."
+    title: "Regulatory Audit, Lineage Provenance & Risk Lens"
+    summary_template: "End-to-end transformation provenance, PII privacy boundaries, and regulatory compliance audit for {project_name}."
     technical_depth: "EXHAUSTIVE"
     focus_areas:
       - "AUDIT_TRACEABILITY"
@@ -198,11 +334,9 @@ personas:
     visible_object_types:
       - "FACT"
       - "DIMENSION"
-      - "BRIDGE"
-      - "CALCULATED"
     icon: "file-text"
-    color_theme: "#4A5568"
+    color_theme: "#E53E3E"
     aliases:
-      - "auditor"
-      - "compliance_officer"
-      - "privacy_auditor"
+      - "auditor_external"
+      - "regulatory_auditor"
+      - "compliance"

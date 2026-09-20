@@ -1,7 +1,7 @@
 """
 Síntesis automática de medidas DAX base para tablas de hechos.
 """
-from src.core.ast.schema import TableRaw, ColumnRaw
+from src.core.ast.schema import ColumnRaw, TableRaw
 from src.core.ast.semantic import SemanticMeasure, TableRole
 from src.core.ast.types import PbiDataType
 

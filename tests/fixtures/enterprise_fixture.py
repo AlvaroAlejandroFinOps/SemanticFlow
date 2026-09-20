@@ -3,6 +3,7 @@ Enterprise-grade test fixture providing a rich CanonicalSemanticProject
 for testing all 10 Persona Lenses and the Leadership Cockpit.
 """
 import pytest
+
 from src.core.ast.canonical.models import (
     CanonicalSemanticProject,
     DataType,
@@ -14,7 +15,6 @@ from src.core.ast.canonical.models import (
     MetricAdditivity,
     MetricType,
     ProjectGovernance,
-    ProvenanceRecord,
     SemanticAttribute,
     SemanticEntity,
     SemanticMetric,

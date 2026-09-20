@@ -1,17 +1,16 @@
 """
 Tests for PersonaRegistry, Configuration Loader, and Override Safety Enforcement.
 """
-from pathlib import Path
 import pytest
+
+from src.core.personas.config_loader import (
+    ConfigurationValidationError,
+)
 from src.core.personas.models import (
+    LensFocus,
     OverrideSafetyLevel,
     PersonaRole,
     TechnicalDepth,
-    LensFocus,
-)
-from src.core.personas.config_loader import (
-    ConfigurationValidationError,
-    PersonaConfigLoader,
 )
 from src.core.personas.registry import (
     PersonaNotFoundError,
@@ -62,19 +61,21 @@ def test_registry_alias_resolution():
 
     # Aliases for FinOps
     assert registry.resolve_persona_id("finops") == "finops_specialist"
-    assert registry.resolve_persona_id("cloud_economist") == "finops_specialist"
+    assert registry.resolve_persona_id("cloud_cost_engineer") == "finops_specialist"
 
-    # Aliases for Business Consumer
+    # Aliases for Business Consumer and Data Analyst
     assert registry.resolve_persona_id("analytic_consumer") == "business_consumer"
-    assert registry.resolve_persona_id("business_analyst") == "business_consumer"
+    assert registry.resolve_persona_id("business_analyst") == "data_analyst"
+    assert registry.resolve_persona_id("analyst") == "data_analyst"
 
     # Aliases for Analytics Engineer & Data Engineer
     assert registry.resolve_persona_id("ae") == "analytics_engineer"
     assert registry.resolve_persona_id("de") == "data_engineer"
 
-    # Aliases for Auditor & AI
-    assert registry.resolve_persona_id("auditor") == "compliance_auditor"
-    assert registry.resolve_persona_id("ml_engineer") == "ai_systems_engineer"
+    # Aliases for Auditor, Risk & AI
+    assert registry.resolve_persona_id("compliance") == "compliance_auditor"
+    assert registry.resolve_persona_id("risk_officer") == "audit_risk"
+    assert registry.resolve_persona_id("mle") == "ai_systems_engineer"
 
 
 def test_registry_unknown_persona_raises_error():
@@ -90,7 +91,7 @@ def test_registry_unknown_persona_raises_error():
 def test_registry_safe_override():
     """Verify SAFE overrides (display_name, aliases, title) are applied cleanly."""
     registry = PersonaRegistry.create_default()
-    
+
     overrides = {
         "personas": {
             "analytics_leader": {
@@ -173,7 +174,7 @@ def test_registry_add_custom_persona():
         }
     }
 
-    audit_trail = registry.load_overrides(custom_persona)
+    registry.load_overrides(custom_persona)
     assert "sustainability_analyst" in registry.list_persona_ids()
     assert registry.resolve_persona_id("green_ops") == "sustainability_analyst"
 

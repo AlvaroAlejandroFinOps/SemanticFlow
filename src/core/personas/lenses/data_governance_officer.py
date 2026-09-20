@@ -4,6 +4,7 @@ Tailored for Data Stewards, Privacy Leads, and CISO Data Governance Officers.
 """
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
+
 from src.core.ast.canonical.models import CanonicalSemanticProject
 from src.core.personas.interfaces import PersonaLens
 from src.core.personas.models import (

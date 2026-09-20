@@ -2,9 +2,11 @@
 Persona Views generator contracts and models.
 """
 from enum import Enum
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List
+
 from pydantic import BaseModel
-from src.core.ast.canonical.models import CanonicalSemanticProject, SemanticEntity, SemanticMetric
+
+from src.core.ast.canonical.models import CanonicalSemanticProject
 
 
 class PersonaType(str, Enum):
@@ -34,7 +36,7 @@ class PersonaViewGenerator:
         # 1. Executive Persona View
         exec_metrics = [
             m.name for e in project.entities for m in e.metrics
-            if m.governance and m.governance.certified
+            if m.governance and m.governance.certification_status == "CERTIFIED"
         ]
         views[PersonaType.EXECUTIVE] = PersonaView(
             persona=PersonaType.EXECUTIVE,
@@ -52,8 +54,8 @@ class PersonaViewGenerator:
             primary_entities=[e.name for e in project.entities],
             certified_metrics=exec_metrics,
             metadata={
-                "project_owner": project.governance.owner if getattr(project, 'governance', None) else "Unassigned",
-                "classification": project.governance.classification if getattr(project, 'governance', None) else "Internal",
+                "project_owner": project.governance.owner if project.governance else "Unassigned",
+                "classification": project.governance.classification if project.governance else "Internal",
             }
         )
 

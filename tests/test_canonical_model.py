@@ -2,11 +2,12 @@
 Tests for Canonical Semantic Model, Mappers, and Explainer.
 """
 from pathlib import Path
-from src.core.parsers.markdown_parser import MarkdownSchemaParser
-from src.core.mappers.raw_to_canonical import raw_to_canonical
-from src.core.mappers.canonical_to_pbi import canonical_to_pbi
+
+from src.core.ast.canonical.models import EntityRole
 from src.core.engine.explainer import SemanticExplainer
-from src.core.ast.canonical.models import EntityRole, DataType
+from src.core.mappers.canonical_to_pbi import canonical_to_pbi
+from src.core.mappers.raw_to_canonical import raw_to_canonical
+from src.core.parsers.markdown_parser import MarkdownSchemaParser
 
 
 def test_raw_to_canonical_mapping():

@@ -2,17 +2,24 @@
 Deep unit tests for each of the 10 concrete Persona Lenses.
 """
 import pytest
+
 from src.core.personas.lenses import (
     AiSystemsEngineerLens,
     AnalyticsEngineerLens,
     AnalyticsLeaderLens,
+    AuditRiskLens,
     BiDeveloperLens,
     BusinessConsumerLens,
     ComplianceAuditorLens,
+    DataAnalystLens,
+    DataArchitectLens,
     DataEngineerLens,
     DataGovernanceOfficerLens,
     DataProductManagerLens,
+    DataScientistLens,
+    DomainOwnerLens,
     FinOpsSpecialistLens,
+    PlatformEngineerLens,
 )
 from src.core.personas.models import (
     PersonaRole,
@@ -118,3 +125,58 @@ def test_compliance_auditor_lens(enterprise_project):
     assert proj.technical_depth == TechnicalDepth.EXHAUSTIVE
     assert len(proj.primary_entities) == len(enterprise_project.entities)
     assert "GDPR" in proj.metadata["compliance_frameworks"]
+
+
+def test_data_analyst_lens(enterprise_project):
+    lens = DataAnalystLens()
+    assert lens.role == PersonaRole.DATA_ANALYST
+    proj = lens.project(enterprise_project)
+    assert proj.technical_depth == TechnicalDepth.SUMMARY
+    assert len(proj.certified_metrics) > 0
+    assert len(proj.primary_entities) + len(proj.secondary_entities) == len(enterprise_project.entities)
+    assert proj.maturity_assessment.overall_score >= 80.0
+
+
+def test_data_scientist_lens(enterprise_project):
+    lens = DataScientistLens()
+    assert lens.role == PersonaRole.DATA_SCIENTIST
+    proj = lens.project(enterprise_project)
+    assert proj.technical_depth == TechnicalDepth.TECHNICAL
+    assert len(proj.primary_entities) == len(enterprise_project.entities)
+    assert proj.responsibilities[0].role == RaciRole.RESPONSIBLE
+
+
+def test_data_architect_lens(enterprise_project):
+    lens = DataArchitectLens()
+    assert lens.role == PersonaRole.DATA_ARCHITECT
+    proj = lens.project(enterprise_project)
+    assert proj.technical_depth == TechnicalDepth.EXHAUSTIVE
+    assert len(proj.primary_entities) == len(enterprise_project.entities)
+    assert proj.responsibilities[0].role == RaciRole.ACCOUNTABLE
+
+
+def test_platform_engineer_lens(enterprise_project):
+    lens = PlatformEngineerLens()
+    assert lens.role == PersonaRole.PLATFORM_ENGINEER
+    proj = lens.project(enterprise_project)
+    assert proj.technical_depth == TechnicalDepth.TECHNICAL
+    assert len(proj.primary_entities) == len(enterprise_project.entities)
+    assert proj.responsibilities[0].role == RaciRole.RESPONSIBLE
+
+
+def test_domain_owner_lens(enterprise_project):
+    lens = DomainOwnerLens()
+    assert lens.role == PersonaRole.DOMAIN_OWNER
+    proj = lens.project(enterprise_project)
+    assert proj.technical_depth == TechnicalDepth.SUMMARY
+    assert len(proj.certified_metrics) > 0
+    assert proj.responsibilities[0].role == RaciRole.ACCOUNTABLE
+
+
+def test_audit_risk_lens(enterprise_project):
+    lens = AuditRiskLens()
+    assert lens.role == PersonaRole.AUDIT_RISK
+    proj = lens.project(enterprise_project)
+    assert proj.technical_depth == TechnicalDepth.EXHAUSTIVE
+    assert len(proj.primary_entities) == len(enterprise_project.entities)
+    assert proj.responsibilities[0].role == RaciRole.ACCOUNTABLE

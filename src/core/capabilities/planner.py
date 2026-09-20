@@ -2,9 +2,11 @@
 Target Capability Planner and Adapter Interfaces.
 """
 from enum import Enum
-from typing import List, Dict, Any, Optional
+from typing import List, Optional
+
 from pydantic import BaseModel
-from src.core.ast.canonical.models import CanonicalSemanticProject, Diagnostic, DiagnosticSeverity, DiagnosticCategory
+
+from src.core.ast.canonical.models import CanonicalSemanticProject
 
 
 class CompatibilityStatus(str, Enum):

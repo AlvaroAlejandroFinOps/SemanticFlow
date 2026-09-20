@@ -2,20 +2,18 @@
 Tests for governance quality rules and PII classification checks.
 """
 import pytest
+
 from src.core.ast.canonical.models import (
     CanonicalSemanticProject,
     GovernanceMetadata,
-    ProjectGovernance,
     SemanticAttribute,
     SemanticEntity,
-    SemanticMetric,
 )
-from src.core.quality.scorer import SemanticQualityScorer
 from src.core.quality.rules import (
-    validate_certified_metrics,
     validate_pii_classification,
     validate_project_governance,
 )
+from src.core.quality.scorer import SemanticQualityScorer
 from tests.fixtures.enterprise_fixture import create_enterprise_project
 
 

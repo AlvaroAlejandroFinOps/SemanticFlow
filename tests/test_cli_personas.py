@@ -1,10 +1,10 @@
 """
 Tests for CLI commands: explain --persona, personas list, personas export, and cockpit.
 """
-from pathlib import Path
 import json
-import pytest
+
 from typer.testing import CliRunner
+
 from src.cli import app
 
 runner = CliRunner()

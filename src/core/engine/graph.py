@@ -2,6 +2,7 @@
 Construcción y análisis topológico del grafo relacional con NetworkX.
 """
 import networkx as nx
+
 from src.core.ast.schema import RelationalSchemaRaw
 
 

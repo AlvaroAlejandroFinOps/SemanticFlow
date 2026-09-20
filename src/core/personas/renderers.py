@@ -2,8 +2,8 @@
 Renderers for Persona Projections and the Data Leadership Cockpit.
 Generates Markdown, JSON, and Mermaid outputs deterministically.
 """
-from typing import Any, Dict, List, Optional
-import json
+from typing import List
+
 from src.core.personas.models import (
     LeadershipCockpit,
     PersonaProjection,
@@ -24,7 +24,7 @@ class MermaidPersonaRenderer:
         else:
             for ent in entities:
                 lines.append(f"    {ent} {{")
-                lines.append(f"        string role \"Primary Asset\"")
+                lines.append("        string role \"Primary Asset\"")
                 lines.append("    }")
         lines.append("```")
         return "\n".join(lines)
@@ -65,7 +65,7 @@ class MarkdownPersonaRenderer:
         # 2. Executive Summary
         lines.append("## Executive Summary")
         lines.append("")
-        lines.append(f"> [!NOTE]")
+        lines.append("> [!NOTE]")
         lines.append(f"> {projection.summary}")
         lines.append("")
 
@@ -210,7 +210,7 @@ class LeadershipCockpitRenderer:
             f"**Version**: `{cockpit.project_version}` | **Generated At**: `{cockpit.generated_at}`",
             "",
             "## Executive Overview",
-            f"> [!IMPORTANT]",
+            "> [!IMPORTANT]",
             f"> {cockpit.executive_summary}",
             "",
             "## Governance & Portfolio Health",

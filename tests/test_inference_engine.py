@@ -1,7 +1,8 @@
 from pathlib import Path
-from src.core.parsers.markdown_parser import MarkdownSchemaParser
+
+from src.core.ast.semantic import CrossFilteringBehavior, TableRole
 from src.core.engine.compiler import SemanticCompiler
-from src.core.ast.semantic import TableRole, CrossFilteringBehavior
+from src.core.parsers.markdown_parser import MarkdownSchemaParser
 
 
 def test_semantic_compiler_metro_santiago():

@@ -18,3 +18,7 @@ logs/
 data/raw/
 data/processed/
 data/sandbox/
+
+# Reglas añadidas automáticamente
+.pytest_cache
+*.log

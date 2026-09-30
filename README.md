@@ -1,204 +1,259 @@
 ![alt text](SemanticFlow.png)
-# SEMANTICFLOW: Enterprise Declarative Semantic Compiler and Multi-Persona Projection Engine
+# SEMANTICFLOW: Enterprise DataOps Platform for Semantic Modeling as Code on Microsoft Fabric and Power BI
 
 **Language:** [English](README.md) | [Español](README_ES.md)
 
 [![Runtime: Python 3.10+](https://img.shields.io/badge/python-3.10%2B-2b2b2b?style=flat-square&logo=python&logoColor=white)](pyproject.toml)
-[![Architecture: Canonical AST](https://img.shields.io/badge/architecture-canonical_AST-1a1a1a?style=flat-square)](src/core/ast/canonical/models.py)
+[![Architecture: Canonical AST](https://img.shields.io/badge/architecture-canonical_AST-1a1a1a?style=flat-square)](src/core/ast/)
 [![Verification: 71 Passed](https://img.shields.io/badge/tests-71%2F71_passing-34495e?style=flat-square)](tests/)
-[![Target: PowerBI TMDL/PBIP](https://img.shields.io/badge/target-TMDL%2FPBIP-2b2b2b?style=flat-square)](src/core/emitter/)
+[![Target: Fabric TMDL/PBIP](https://img.shields.io/badge/target-Fabric%20%7C%20TMDL%2FPBIP-2b2b2b?style=flat-square)](src/core/emitter/)
+[![Quality: cQS Quality Gate](https://img.shields.io/badge/ci%2Fcd-cQS_Quality_Gate-1a1a1a?style=flat-square)](src/core/quality/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-4b5563?style=flat-square)](pyproject.toml)
 
 ---
 
-## 1. Executive Abstract
+## 1. Executive Abstract and Enterprise Positioning
 
-Modern enterprise data architectures face a critical operational tension between upstream data modeling and downstream analytical consumption. Relational schemas defined in database migrations or data modeling specifications are manually re-implemented inside business intelligence platforms such as Microsoft Power BI. This manual transshipment causes semantic drift, unversioned business logic, fragile relationship definitions, and uncoordinated security posture across enterprise teams.
+In large-scale enterprise environments across banking, retail, telecommunications, and mining, analytical modernization on modern Lakehouse architectures (Microsoft Fabric OneLake, Azure Synapse, AWS S3, or GCP BigQuery) encounters a critical operational bottleneck: **the friction between upstream data engineering and downstream semantic consumption**. While transformations within Medallion architectures (Bronze/Silver/Gold) adhere to rigorous CI/CD, version control, and data governance practices, downstream analytical models are still manually constructed within Power BI Desktop, generating opaque binary `.pbix` files that cannot be audited, versioned, or code-reviewed in Git.
 
-SemanticFlow resolves this divergence through a local, deterministic, compiler-driven architecture. By consuming declarative relational schema specifications (Markdown or YAML), SemanticFlow normalizes metadata into an intermediate Canonical Abstract Syntax Tree (AST), infers dimensional topological roles via directed acyclic graph analysis, synthesizes baseline Data Analysis Expressions (DAX) measures, and emits production-ready Tabular Model Definition Language (TMDL) and Power BI Project (`.pbip`) bundles. Furthermore, the engine incorporates an enterprise projection framework composed of ten distinct Persona Lenses and a C-Level Data Leadership Cockpit governed by formal Semantic Quality Scoring ($cQS$).
+This architectural disconnect introduces systemic business risks: duplicate calculation logic, ambiguous tabular relationships that degrade cloud capacity performance, an absence of automated Quality Gates in deployment pipelines, unmanaged Personally Identifiable Information (PII) exposure, and misaligned goals across governance, cloud FinOps, and business teams.
 
----
-
-## 2. System Architecture & Topology
-
-The compiler executes as an offline, in-memory pipeline devoid of external database engine runtime dependencies. The end-to-end topology is structured into four decoupled layers: Ingestion, Canonical Mapping, Analytical Core Engines, and Materialized Emission.
-
-```
-+---------------------------------------------------------------------------------------+
-|                                    INPUT LAYER                                        |
-|  Declarative Schemas (.md / .yaml)  --->  MarkdownSchemaParser / YamlSchemaParser     |
-+-------------------------------------------+-------------------------------------------+
-                                            |
-                                            v
-+---------------------------------------------------------------------------------------+
-|                                  CANONICAL AST LAYER                                  |
-|     RawRelationalSchema  ======>  RawToCanonicalMapper  ======>  CanonicalProject     |
-+-------------------------------------------+-------------------------------------------+
-                                            |
-         +----------------------------------+----------------------------------+
-         |                                  |                                  |
-         v                                  v                                  v
-+-----------------------+  +--------------------------------+  +-----------------------+
-|  TOPOLOGY & INFERENCE |  |   QUALITY & AUDIT SUBSYSTEM    |  |  PERSONA PROJECTIONS  |
-|  - RoleInferer        |  |   - SemanticQualityScorer      |  |  - PersonaRegistry    |
-|  - RelationshipRes.   |  |   - cQS Deterministic Penalties|  |  - 10 Persona Lenses  |
-|  - DaxGenerator       |  |   - Rule Enforcement Engine    |  |  - Leadership Cockpit |
-+-----------+-----------+  +----------------+---------------+  +-----------+-----------+
-            |                               |                              |
-            +-------------------------------+------------------------------+
-                                            |
-                                            v
-+---------------------------------------------------------------------------------------+
-|                               EMISSION & SERIALIZATION                                |
-|  +--------------------------+  +--------------------------+  +---------------------+  |
-|  |     Power BI PBIP        |  |       Governance         |  |    Documentation    |  |
-|  |  - TmdlFormatter         |  |  - 10 Lenses (MD/JSON)   |  |  - Data Dictionary  |  |
-|  |  - TableEmitter          |  |  - Leadership Cockpit    |  |  - Mermaid ERD Graph|  |
-|  |  - PbipWriter (.pbip)    |  |  - Domain Maturity Radar |  |  - Output Bundles   |  |
-|  +--------------------------+  +--------------------------+  +---------------------+  |
-+---------------------------------------------------------------------------------------+
-```
+**SemanticFlow** is an enterprise DataOps platform for **Semantic Modeling as Code (SMaC)** designed to bridge this operational gap. It allows data teams to author declarative semantic models (in Markdown or YAML) directly within Git repositories, compile them locally and headlessly into native Microsoft Fabric and Power BI formats (TMDL and `.pbip` project structures), enforce architectural standards through a deterministic algorithmic Quality Gate ($cQS$), and project the semantic model through a Multi-Stakeholder Architecture Matrix tailored for cross-functional governance committees and C-level data executives.
 
 ---
 
-## 3. Mathematical Formulation & Analytical Engines
+## 2. End-to-End Architecture and DataOps Lifecycle
 
-### 3.1. Topological Graph Resolution and Role Inference
+SemanticFlow integrates natively into enterprise cloud data engineering lifecycles. It functions as an offline, in-memory headless compiler without requiring active database connections or runtime external engine dependencies during compilation.
 
-Let the relational schema be modeled as an attributed directed multigraph $G = (V, E)$, where $V$ denotes the set of relational entities (tables) and $E \subseteq V \times V \times \mathcal{A}$ denotes directed foreign key references from child attributes to parent unique keys.
+```
++---------------------------------------------------------------------------------------------------+
+|                                     GIT-DRIVEN DATAPOPS LIFECYCLE                                 |
+|                                                                                                   |
+|   [ Git Repository ]           [ CI/CD Pipeline ]             [ Headless Compiler ]               |
+|   Declarative Schema   ===>    Azure DevOps / GitHub   ===>   SemanticFlow Engine                 |
+|   (YAML / Markdown)            Runner (Python 3.10+)          - Topological Inference R(v)        |
+|                                                               - Governance Audit & cQS Gate       |
++------------------------------------------+--------------------------------------------------------+
+                                           |
+                    +----------------------+----------------------+
+                    | (Passes cQS Quality Gate)                   | (Fails cQS < Threshold)
+                    v                                             v
++------------------------------------------+    +---------------------------------------------------+
+|       COMPILATION & SERIALIZATION        |    |                 BLOCKED PIPELINE                  |
+|                                          |    |  Pull Request build rejected.                     |
+|  - Tabular Model Def. Lang. (TMDL)       |    |  Detailed diagnostic report emitted               |
+|  - Power BI Project Developer (.pbip)    |    |  highlighting governance or topology violations.  |
+|  - Corporate Dictionary & Mermaid ERD    |    +---------------------------------------------------+
++-------------------+----------------------+
+                    |
+                    v
++---------------------------------------------------------------------------------------------------+
+|                        DEPLOYMENT TO MICROSOFT FABRIC / POWER BI SERVICE                          |
+|                                                                                                   |
+|   Microsoft Fabric Workspace <==== Automated Sync via Fabric Git Integration / REST APIs          |
+|   - Version-Controlled Semantic Models in OneLake                                                 |
+|   - Validated Star and Snowflake Topologies for VertiPaq Engine Efficiency                        |
+|   - Multi-Role Perspectives & Leadership Cockpit for CDO and Enterprise Governance Teams         |
++---------------------------------------------------------------------------------------------------+
+```
 
-For every vertex $v \in V$, let $d^-(v)$ denote the in-degree (number of foreign key constraints pointing to $v$) and $d^+(v)$ denote the out-degree (number of outgoing foreign key references originating from $v$). The topological role assignment function $\mathcal{R}: V \to \{\text{FACT}, \text{DIMENSION}, \text{BRIDGE}, \text{OUTRIGGER}\}$ is defined deterministically as:
+### Compiler Internal Topology
+
+The compilation engine executes through four modular and decoupled layers:
+
+```
++---------------------------------------------------------------------------------------------------+
+| 1. DECLARATIVE INGESTION LAYER                                                                    |
+|    MarkdownSchemaParser / YamlSchemaParser: Ingestion and normalization of relational schema.     |
++-------------------------------------------------+-------------------------------------------------+
+                                                  |
+                                                  v
++---------------------------------------------------------------------------------------------------+
+| 2. INTERMEDIATE REPRESENTATION (CANONICAL AST)                                                    |
+|    CanonicalProject: Neutral relational entities, strict typing, attributes, and governance tags. |
++-------------------------------------------------+-------------------------------------------------+
+                                                  |
+         +----------------------------------------+----------------------------------------+
+         |                                        |                                        |
+         v                                        v                                        v
++-----------------------------+  +--------------------------------+  +------------------------------+
+| TOPOLOGICAL INFERENCE       |  | QUALITY GATE & AUDIT ENGINE    |  | MULTI-STAKEHOLDER MATRIX     |
+| - Role Assignment R(v)      |  | - SemanticQualityScorer        |  | - 10 Operational Views       |
+| - Acyclicity Check C(G)     |  | - Deterministic Penalties      |  | - Governance & FinOps Pillars|
+| - Baseline DAX Synthesis    |  | - Automated CI/CD Deployment   |  | - C-Level Leadership Cockpit |
++--------------+--------------+  +----------------+---------------+  +--------------+---------------+
+               |                                  |                                 |
+               +----------------------------------+---------------------------------+
+                                                  |
+                                                  v
++---------------------------------------------------------------------------------------------------+
+| 3. CLOUD SERIALIZATION & EMISSION LAYER                                                           |
+|    - PbipWriter / TmdlFormatter: Native tabular model files ready for Microsoft Fabric deployment.|
+|    - Multi-Persona Exporters: Formal stakeholder specifications (JSON/MD).                        |
+|    - Automated DocGen: Enterprise Data Dictionary and Mermaid entity-relationship diagrams.       |
++---------------------------------------------------------------------------------------------------+
+```
+
+---
+
+## 3. Production Engines and Mathematical Formalization
+
+SemanticFlow applies rigorous mathematical formulations focused strictly on resolving concrete performance, governance, and stability bottlenecks in production.
+
+### 3.1. Topological Inference and VertiPaq Ambiguity Prevention
+
+The columnar engine of Microsoft Fabric and Power BI (VertiPaq) demands clean star or snowflake schemas. Circular relationship paths or multi-directional cross-filtering configurations create query ambiguity, poor execution plans, and memory exhaustion across enterprise capacities.
+
+The relational schema is represented as a directed graph $G = (V, E)$, where $V$ denotes entities (tables) and $E$ represents foreign key constraints directed from dependent tables toward referenced parent tables. For any table $v \in V$, $d^-(v)$ denotes the in-degree (referenced by foreign keys) and $d^+(v)$ denotes the out-degree (referencing external parents). The deterministic role assignment function $\mathcal{R}(v)$ classifies each entity:
 
 $$\mathcal{R}(v) = \begin{cases} 
 \text{FACT}, & \text{if } d^+(v) \ge 1 \ \land \ d^-(v) = 0 \\
 \text{DIMENSION}, & \text{if } d^+(v) = 0 \ \land \ d^-(v) \ge 1 \\
 \text{BRIDGE}, & \text{if } d^+(v) \ge 2 \ \land \ d^-(v) \ge 1 \\
 \text{OUTRIGGER}, & \text{if } d^+(v) \ge 1 \ \land \ d^-(v) \ge 1 \ \land \ |Attr(v)| \le \theta_{dim} \\
-\text{DIMENSION}, & \text{otherwise (fallback)}
+\text{DIMENSION}, & \text{otherwise (safe fallback)}
 \end{cases}$$
 
-Cycle detection is enforced by asserting aciclicity across the condensation graph:
+To guarantee that the compiled model contains no relationship traps or circular dependencies, acyclicity is validated over the condensation graph:
 
 $$\mathcal{C}(G) = \emptyset \iff \forall \text{ cycle } C \subset G, \ |C| = 0$$
 
-If $\mathcal{C}(G) \ne \emptyset$, `RelationshipResolver` isolates cycle edges and flags ambiguous paths to prevent bidirectional cross-filtering traps in tabular models.
+If $\mathcal{C}(G) \ne \emptyset$, the `RelationshipResolver` component isolates conflicting relationship edges and flags ambiguous paths, configuring inactive relationships to protect query runtime performance.
 
-### 3.2. Semantic Quality Score ($cQS$) Formulation
+### 3.2. Semantic Quality Score ($cQS$) as an Automated CI/CD Quality Gate
 
-The semantic integrity of a compiled project is evaluated via an objective scoring function $cQS: \mathcal{M} \to [0, 100]$. Given an evaluation context $\mathcal{M}$ consisting of entities $E$, relationships $R$, and measures $M$, the score is computed as:
+The $cQS: \mathcal{M} \to [0, 100]$ score functions as an automated deployment gate within continuous integration pipelines (Azure Pipelines, GitHub Actions, or GitLab CI).
 
 $$cQS(\mathcal{M}) = \max\left(0, \ 100 - \sum_{k \in \mathcal{K}} w_k \cdot \mathbb{I}_k(\mathcal{M}) - \sum_{j \in \mathcal{D}} \lambda_j \cdot \mu_j(\mathcal{M})\right)$$
 
 Where:
-* $\mathcal{K}$ represents the set of blocking architectural invariants (e.g., missing primary keys, cyclic active paths, invalid foreign keys). Here, $\mathbb{I}_k(\mathcal{M}) \in \{0, 1\}$ and $w_k \in [20, 50]$.
-* $\mathcal{D}$ represents governance and best-practice quality rules (e.g., untyped attributes, missing descriptions, uncertified measures, unmasked PII).
-* $\lambda_j$ is the penalty weight associated with rule $j$, and $\mu_j(\mathcal{M})$ represents the normalized violation frequency.
+* $\mathcal{K}$ represents **blocking architectural invariants** (missing primary keys, active circular paths in relationships, broken foreign keys). If $\sum \mathbb{I}_k(\mathcal{M}) > 0$, the pipeline exits with a non-zero status code and halts the deployment.
+* $\mathcal{D}$ represents **enterprise governance rules** (untyped attributes, undocumented business columns, uncertified measures, unmasked PII attributes).
+* $\lambda_j$ specifies the penalty weight and $\mu_j(\mathcal{M})$ represents the normalized violation frequency.
 
-A compilation candidate is rejected when $cQS(\mathcal{M}) < \tau_{\text{threshold}}$ (default $\tau = 70.0$) or when $\sum \mathbb{I}_k(\mathcal{M}) > 0$.
-
-### 3.3. Multi-Perspective Persona Projection Operator
-
-Given a canonical project $\mathcal{P}_{can} = (V, E, \mathcal{M}_{dax}, \mathcal{G})$, the projection operator $\Pi_{\theta}$ maps the complete model into an organizational lens $\mathcal{V}_{\theta}$:
-
-$$\Pi_{\theta}(\mathcal{P}_{can}) = \left( V_{\theta}, E_{\theta}, \mathcal{M}_{\theta}, \Omega_{\theta}, \text{Radar}_{\theta} \right)$$
-
-Where $\theta \in \Theta$ denotes one of the ten organizational domains:
-1. $\theta_1$: AI Systems Engineer (Feature stores, lineage, vector indexing feasibility)
-2. $\theta_2$: Analytics Engineer (Transformation logic, DAG cleanliness, testing contracts)
-3. $\theta_3$: Analytics Leader (Portfolio ROI, domain coverage, delivery velocity)
-4. $\theta_4$: BI Developer (TMDL optimization, measure definitions, relationship topologies)
-5. $\theta_5$: Business Consumer (Certified KPIs, plain-language business definitions)
-6. $\theta_6$: Compliance Auditor (PII exposure, regulatory compliance, data residency)
-7. $\theta_7$: Data Engineer (Storage formats, partition keys, schema stability)
-8. $\theta_8$: Data Governance Officer (Ownership, metadata completeness, classification)
-9. $\theta_9$: Data Product Manager (Product boundaries, SLOs, user journey alignment)
-10. $\theta_{10}$: FinOps Specialist (Compute intensity, storage footprint estimation, query cost risks)
+**Operational CI/CD Policy:** Deployment to Microsoft Fabric is rejected if $cQS(\mathcal{M}) < \tau_{\text{threshold}}$ (configurable threshold, default 75.0%) or if any critical blocking invariant is breached.
 
 ---
 
-## 4. Empirical Performance & Benchmarks
+## 4. Multi-Stakeholder Architecture and Governance Matrix
 
-Empirical evaluations were conducted on an AMD Ryzen architecture under Python 3.12.10 virtualized environment, validating synthetically stressed graphs and real-world complex enterprise topologies (Metro Santiago Transit Graph and Falabella Retail Tier 3 Model).
+SemanticFlow projects the compiled canonical model into four enterprise pillars, addressing the specific operational and regulatory needs of key enterprise stakeholders:
 
-| Evaluation Dimension | Baseline Target | Stress Tier 1 (PYME) | Stress Tier 2 (Mid) | Stress Tier 3 (Gigante) | Real Enterprise (Metro) |
-|:---------------------|:----------------|:---------------------|:---------------------|:------------------------|:------------------------|
-| Entity Cardinality   | 5 - 10 tables   | 4 - 8 tables         | 15 - 25 tables       | 50 - 100 tables         | 20 tables               |
-| Relationship Edges   | 5 - 15 edges    | 6 - 12 edges         | 20 - 40 edges        | 75 - 180 edges          | 26 relationships        |
-| Compilation Latency  | $< 1000$ ms     | 42 ms                | 185 ms               | 840 ms                  | 210 ms                  |
-| 10-Lens Projection   | $< 2000$ ms     | 110 ms               | 390 ms               | 1,240 ms                | 420 ms                  |
-| Memory Peak (RAM)    | $< 250$ MB      | 38 MB                | 54 MB                | 118 MB                  | 62 MB                   |
-| Verification Suite   | 100% pass rate  | 71/71 tests pass     | 71/71 tests pass     | 71/71 tests pass        | 71/71 tests pass        |
+```
++---------------------------------------------------------------------------------------------------+
+|                            MULTI-STAKEHOLDER GOVERNANCE MATRIX                                    |
++----------------------------------+----------------------------------------------------------------+
+| CORPORATE PILLAR                 | STAKEHOLDER ROLES & VALUE DELIVERED                            |
++----------------------------------+----------------------------------------------------------------+
+| I. Governance & Regulatory       | • Data Governance Officer: Data ownership, metadata completeness|
+|    Compliance                    |   and enterprise criticality classifications.                  |
+|                                  | • Compliance Auditor: PII detection and masking, regulatory   |
+|                                  |   compliance tracking (GDPR, ISO 27001, local privacy laws).   |
++----------------------------------+----------------------------------------------------------------+
+| II. Cloud Platform               | • Data Engineer: Parquet/Delta file formats and partitioning.  |
+|     & FinOps Optimization        | • FinOps Specialist: Fabric F-SKU capacity usage forecasting,  |
+|                                  |   VertiPaq memory footprint, and query cost optimization.      |
+|                                  | • AI Systems Engineer: Semantic lineaging for vector stores,   |
+|                                  |   analytical agent integration, and RAG index readiness.       |
++----------------------------------+----------------------------------------------------------------+
+| III. Analytics Engineering & BI  | • Analytics Engineer: Data contracts and transformation checks.|
+|                                  | • BI Developer: Star schema layout, TMDL folder organization,  |
+|                                  |   and automated canonical DAX measure generation.              |
++----------------------------------+----------------------------------------------------------------+
+| IV. Business & Strategic         | • Data Product Manager: Data product boundaries and SLOs.     |
+|     Leadership                   | • Business Consumer: Certified metrics and clear definitions.  |
+|                                  | • Data Leadership Cockpit: C-Level executive dashboard for     |
+|                                  |   CDOs and VPs with a 10-dimensional domain maturity radar.   |
++----------------------------------+----------------------------------------------------------------+
+```
 
 ---
 
-## 5. Repository Structure & Artifacts
+## 5. Empirical Performance and Enterprise Benchmarks
+
+The compilation engine was evaluated on standard computing environments (Python 3.12.10 on modern hardware), testing scalability on large synthetic stress topologies as well as high-complexity operational models:
+
+| Performance Dimension   | Design Target | Tier 1 (Small) | Tier 2 (Corporate)   | Tier 3 (Enterprise)  | Real-World (Santiago Metro) |
+|:------------------------|:--------------|:---------------|:---------------------|:---------------------|:----------------------------|
+| Entities (Tables)       | 5 - 10 tables | 4 - 8 tables   | 15 - 25 tables       | 50 - 100 tables      | 20 operational tables       |
+| Relationships Evaluated | 5 - 15 edges  | 6 - 12 edges   | 20 - 40 edges        | 75 - 180 edges       | 26 active relationships     |
+| Compilation Latency     | $< 1000$ ms   | 42 ms          | 185 ms               | 840 ms               | 210 ms                      |
+| 10-View Projection      | $< 2000$ ms   | 110 ms         | 390 ms               | 1,240 ms             | 420 ms                      |
+| Peak Memory Usage       | $< 250$ MB    | 38 MB          | 54 MB                | 118 MB               | 62 MB                       |
+| Verification Suite      | 100% passing  | 71/71 tests    | 71/71 tests          | 71/71 tests          | 71/71 tests passing         |
+
+---
+
+## 6. Repository Structure and Core Components
 
 ```
 SemanticFlow/
-├── .agentignore                       # Context engineering exclusions
-├── .context/                          # iDirectory v3.0 topology satellite (tree.json)
-├── 01_seed/                           # Architectural DNA & ThinkingSeed Master
-│   └── seed-semanticflow-master.md
-├── 02_Foundation/                     # Foundational core specifications
+├── .agentignore                       # Context exclusion filters for AI developer tools
+├── .context/                          # iDirectory v3.0 contextual governance satellite (tree.json)
+├── 01_seed/                           # Architectural DNA and ThinkingSeed Master specifications
+│   ├── seed-semanticflow-master.md
+│   └── seed-semanticflow.md
+├── 02_Foundation/                     # Foundational architecture and engine documentation
 │   └── Engine/
 │       └── engine_readme.md
-├── config/                            # Runtime configurations and default definitions
+├── config/                            # Environment profiles and stakeholder configurations
 │   └── personas/
 │       └── default_personas.yaml
-├── docs/                              # Architecture decision records & engineer notes
-│   ├── adr/
+├── docs/                              # Architecture decision records and technical notes
+│   ├── adr/                           # Architecture Decision Records (ADR-001+)
 │   │   └── ADR-001-canonical-model.md
 │   └── architecture/
-│       ├── esquema_relacional.md
-│       └── adr/                       # ADR-001 through ADR-006 for Lens Engine
-├── pyproject.toml                     # Package dependencies, build and tool settings
-├── schemas/                           # Strict JSON Schemas for validation
+│       ├── esquema_relacional.md      # Reference enterprise relational schema
+│       └── adr/
+├── pyproject.toml                     # Package specification, build configuration, and tooling
+├── schemas/                           # JSON Schema contracts for strict validation
 │   ├── persona_definition.schema.json
 │   └── project_governance.schema.json
 ├── scripts/                           # Deterministic golden regression generators
 │   └── generate_golden_files.py
 ├── src/                               # Compiler source code
-│   ├── cli.py                         # Typer CLI application entry point
+│   ├── cli.py                         # Command-line interface entry point (Typer / Rich)
 │   └── core/
-│       ├── ast/                       # Raw, Semantic, and Canonical AST definitions
-│       ├── capabilities/              # Execution planning
-│       ├── docs/                      # Markdown dictionary and Mermaid generators
-│       ├── emitter/                   # TMDL and PBIP serialization engines
-│       ├── engine/                    # Topologic resolver, inferers, and compiler
-│       ├── mappers/                   # Raw-to-canonical and canonical-to-pbi mappers
-│       ├── parsers/                   # Markdown and YAML schema parsers
-│       ├── personas/                  # 10 Persona Lenses and Cockpit Engine
-│       ├── quality/                   # SemanticQualityScorer and rule evaluators
+│       ├── ast/                       # Canonical Abstract Syntax Tree specifications
+│       ├── capabilities/              # Pipeline execution planners
+│       ├── docs/                      # Data dictionary and Mermaid diagram generators
+│       ├── emitter/                   # Native TMDL and PBIP serialization engines
+│       ├── engine/                    # Topological inference, relationship resolvers, and DAX
+│       ├── mappers/                   # Schema mappers (raw-to-canonical and canonical-to-pbi)
+│       ├── parsers/                   # Declarative schema parsers (Markdown and YAML)
+│       ├── personas/                  # Multi-Stakeholder Matrix and Leadership Cockpit
+│       ├── quality/                   # SemanticQualityScorer and quality rule evaluators
 │       └── targets/                   # Platform-specific dialect adapters
-└── tests/                             # Comprehensive automated test suite
-    ├── test_all_lenses_deep.py
-    ├── test_canonical_model.py
-    ├── test_cli.py
-    ├── test_cli_personas.py
-    ├── test_golden_regression.py
-    ├── test_inference_engine.py
-    ├── test_leadership_cockpit.py
-    ├── test_persona_contracts.py
+└── tests/                             # Automated test suite
+    ├── test_all_lenses_deep.py        # Stakeholder perspective deep tests
+    ├── test_canonical_model.py        # Canonical model unit tests
+    ├── test_cli.py                    # CLI command suite tests
+    ├── test_cli_personas.py           # Stakeholder export tests
+    ├── test_golden_regression.py      # Deterministic golden regression tests
+    ├── test_inference_engine.py       # Topological inference engine tests
+    ├── test_leadership_cockpit.py     # C-Level leadership cockpit tests
+    ├── test_persona_contracts.py      # Governance contract schema validations
     ├── test_stage3_governance_quality.py
-    ├── fixtures/                      # Enterprise test fixtures
-    ├── golden/                        # Deterministic regression references
-    └── Massive Stress Test/           # Stress suites (PYME, Mediana, Gigante)
+    ├── fixtures/                      # Enterprise test fixtures and schemas
+    ├── golden/                        # Deterministic golden reference files
+    └── Massive Stress Test/           # High-volume stress suites
 ```
 
 ---
 
-## 6. Execution & Verification Protocol
+## 7. Execution Protocol and CI/CD Automation
 
-### 6.1. Environment Setup & Prerequisites
+### 7.1. Prerequisites and Installation
 
-Prerequisites: Python 3.10 or higher.
+SemanticFlow requires **Python 3.10 or higher**:
 
 ```bash
 # Clone the repository
 git clone <repository_url>
 cd SemanticFlow
 
-# Initialize virtual environment
+# Initialize and activate an isolated virtual environment
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
@@ -206,70 +261,56 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 ```
 
-### 6.2. Pipeline Execution
+### 7.2. CLI Commands for Pipelines and Local Operation
 
 ```bash
-# Inspect relational schema and view inferred entity roles
+# 1. Inspect relational structure and verify inferred entity roles
 semanticflow inspect --input docs/architecture/esquema_relacional.md
 
-# Compile relational schema directly into Power BI PBIP/TMDL bundle
-semanticflow compile --input docs/architecture/esquema_relacional.md --output output/PBIP --name "EnterpriseModel"
-
-# Audit semantic quality score (cQS) with strict failure threshold
+# 2. Validate the cQS Quality Gate (ideal for automated CI/CD pipeline steps)
 semanticflow validate --input docs/architecture/esquema_relacional.md --min-score 75.0
 
-# Synthesize and inspect the C-Level Data Leadership Cockpit
+# 3. Headlessly compile relational schema into native TMDL / PBIP for Microsoft Fabric
+semanticflow compile --input docs/architecture/esquema_relacional.md --output output/PBIP --name "CommercialModel"
+
+# 4. Generate C-Level Data Leadership Cockpit in the console
 semanticflow cockpit --input docs/architecture/esquema_relacional.md --format human
 
-# Export all 10 Persona Lenses and Leadership Cockpit in Markdown and JSON
+# 5. Export Multi-Stakeholder Views and Cockpit artifacts in Markdown and JSON
 semanticflow personas export --input docs/architecture/esquema_relacional.md --output output/personas
 
-# Generate Data Dictionary and Mermaid ERD documentation
+# 6. Generate enterprise Data Dictionary and Mermaid ERD diagrams
 semanticflow docgen --input docs/architecture/esquema_relacional.md --output output/docs
 ```
 
-### 6.3. Verification Suite & Invariant Tests
+### 7.3. Quality Assurance and Testing Suite
 
 ```bash
-# Execute the complete automated verification test suite
+# Execute the full automated test suite (71 tests)
 pytest -v
 
-# Run golden regression tests to assert byte-for-byte serialization stability
+# Validate deterministic golden regression to prevent unintended semantic changes
 pytest tests/test_golden_regression.py
 
-# Verify static typing and style compliance
+# Verify code style and static type safety
 ruff check .
 mypy src/
 ```
 
 ---
 
-## 7. Domain Glossary
+## 8. Enterprise Domain Glossary
 
-* **Canonical Abstract Syntax Tree (Canonical AST):** An engine-agnostic intermediate representation of data models containing entities, attributes, relationships, governance annotations, and semantic metrics.
-* **Tabular Model Definition Language (TMDL):** Microsoft's declarative human-readable folder-and-file syntax for defining Analysis Services and Power BI semantic models.
-* **Power BI Project (`.pbip`):** The modern, source-control-friendly file format storing report and dataset definitions in text format without binary locks.
-* **Persona Lens:** A deterministic mathematical projection that filters and contextualizes the global semantic model into a domain-specific perspective tailored to a distinct engineering or business role.
-* **Data Leadership Cockpit:** An aggregated synthesis of organizational maturity across ten analytical dimensions providing actionable, prioritized recommendations for executive oversight.
-* **Semantic Quality Score ($cQS$):** A continuous bounded index $[0, 100]$ measuring architectural health, topological cleanliness, governance completeness, and contractual integrity.
+* **Semantic Modeling as Code (SMaC):** A DataOps discipline that defines, versions, and validates analytical semantic models using declarative code files stored in Git rather than manual GUI modifications.
+* **Microsoft Fabric Git Integration:** Microsoft Fabric's native capability to synchronize cloud workspaces with Azure DevOps or GitHub repositories using plain text model definitions.
+* **Tabular Model Definition Language (TMDL):** A folder-based, plain-text declarative syntax developed by Microsoft to represent Power BI and Analysis Services semantic model metadata.
+* **Power BI Project (`.pbip`):** A developer-focused file format that stores report and dataset definitions in individual text files, enabling seamless multi-developer collaboration in Git.
+* **Semantic Quality Score ($cQS$):** A continuous objective score $[0, 100]$ measuring architectural integrity, governance completeness, PII exposure risks, and relational cleanliness.
+* **Multi-Stakeholder Governance Matrix:** A multidimensional framework projecting the model across four corporate pillars (Governance, Cloud FinOps, Analytics, and Business).
+* **Data Leadership Cockpit:** An aggregated executive summary diagnosing model maturity and providing prioritized governance directives for Chief Data Officers (CDO).
 
 ---
 
-## 8. Academic & Engineering References
+## 9. License and Enterprise Governance
 
-1. Kimball, R., & Ross, M. (2013). *The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling* (3rd ed.). John Wiley & Sons.
-2. Microsoft Corporation. (2024). *Tabular Model Definition Language (TMDL) Specification*. Microsoft Learn Technical Documentation.
-3. Fowler, M. (2002). *Patterns of Enterprise Application Architecture*. Addison-Wesley Professional.
-4. Dehghani, Z. (2022). *Data Mesh: Delivering Data-Driven Value at Scale*. O'Reilly Media.
-5. Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). *Introduction to Algorithms* (4th ed.). MIT Press.
-
-### BibTeX Citation
-
-```bibtex
-@software{semanticflow_2026,
-  author = {SemanticFlow Core Engineering Team},
-  title = {SemanticFlow: Enterprise Declarative Semantic Compiler and Multi-Persona Projection Engine},
-  year = {2026},
-  url = {https://github.com/AlvaroAlejandroFinOps/SemanticFlow}
-}
-```
+SemanticFlow is open-source software licensed under the **Apache 2.0** License. For contribution guidelines and extensible architecture specifications, refer to [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/](docs/).

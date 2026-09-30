@@ -1,275 +1,316 @@
 ![alt text](SemanticFlow.png)
-# SEMANTICFLOW: Compilador Semántico Declarativo Empresarial y Motor de Proyección Multi-Persona
+# SEMANTICFLOW: Plataforma DataOps de Semantic Modeling as Code para Microsoft Fabric y Power BI
 
 **Idioma:** [English](README.md) | [Español](README_ES.md)
 
 [![Entorno: Python 3.10+](https://img.shields.io/badge/python-3.10%2B-2b2b2b?style=flat-square&logo=python&logoColor=white)](pyproject.toml)
-[![Arquitectura: AST Canónico](https://img.shields.io/badge/arquitectura-AST_canónico-1a1a1a?style=flat-square)](src/core/ast/canonical/models.py)
+[![Arquitectura: AST Canónico](https://img.shields.io/badge/arquitectura-AST_canónico-1a1a1a?style=flat-square)](src/core/ast/)
 [![Verificación: 71 Aprobados](https://img.shields.io/badge/tests-71%2F71_pasando-34495e?style=flat-square)](tests/)
-[![Target: PowerBI TMDL/PBIP](https://img.shields.io/badge/destino-TMDL%2FPBIP-2b2b2b?style=flat-square)](src/core/emitter/)
+[![Target: Fabric TMDL/PBIP](https://img.shields.io/badge/destino-Fabric%20%7C%20TMDL%2FPBIP-2b2b2b?style=flat-square)](src/core/emitter/)
+[![Calidad: Quality Gate cQS](https://img.shields.io/badge/ci%2Fcd-Quality_Gate_cQS-1a1a1a?style=flat-square)](src/core/quality/)
 [![Licencia: Apache 2.0](https://img.shields.io/badge/licencia-Apache_2.0-4b5563?style=flat-square)](pyproject.toml)
 
 ---
 
-## 1. Resumen Ejecutivo
+## 1. Resumen Ejecutivo y Posicionamiento Corporativo
 
-Las arquitecturas de datos empresariales contemporáneas enfrentan una fricción operativa crítica entre el modelado de datos upstream y el consumo analítico downstream. Los esquemas relacionales concebidos en migraciones de bases de datos o especificaciones de modelado se reescriben manualmente dentro de plataformas de inteligencia de negocios como Microsoft Power BI. Esta transferencia manual produce divergencia semántica, lógica de negocio sin control de versiones, topologías de relación frágiles y posturas de seguridad desalineadas entre las distintas áreas organizacionales.
+En las organizaciones de gran escala (banca, retail, telecomunicaciones y minería), la modernización de plataformas analíticas sobre arquitecturas Lakehouse (Microsoft Fabric OneLake, Azure Synapse, AWS S3 o GCP BigQuery) enfrenta un cuello de botella crítico: la **fricción operativa entre la capa de ingeniería de datos y la capa de consumo semántico**. Mientras las transformaciones de datos en capas Medallion (Bronze/Silver/Gold) operan con estrictas prácticas de CI/CD, control de versiones y gobierno, los modelos analíticos downstream continúan modelándose de forma artesanal y manual dentro de Power BI Desktop, produciendo archivos binarios `.pbix` opacos, imposibles de auditar o versionar en Git.
 
-SemanticFlow erradica esta desalineación mediante una arquitectura desacoplada, local y basada en compiladores. Al procesar especificaciones declarativas de esquemas relacionales (Markdown o YAML), SemanticFlow normaliza los metadatos en un Árbol de Sintaxis Abstracta (AST) Canónico intermedio, infiere los roles topológicos dimensionales mediante análisis de grafos dirigidos acíclicos, sintetiza medidas canónicas en Data Analysis Expressions (DAX) y genera bundles de producción en Tabular Model Definition Language (TMDL) y Power BI Project (`.pbip`). Adicionalmente, el motor incorpora un framework de proyección organizacional compuesto por diez Persona Lenses especializadas y un Data Leadership Cockpit para directivos C-Level, respaldado por un índice formal de Calidad Semántica ($cQS$).
+Esta desconexión introduce riesgos sistémicos de negocio: duplicación de lógica de cálculo, relaciones tabulares ambiguas que degradan el rendimiento de la capacidad en nube, ausencia de Quality Gates en pipelines de despliegue, exposición no controlada de Información de Identificación Personal (PII) y desalineación entre las metas de los equipos de gobierno, finanzas cloud (FinOps) y los usuarios de negocio.
 
----
-
-## 2. Arquitectura y Topología del Sistema
-
-El compilador opera como un pipeline in-memory offline sin dependencias de motores de bases de datos externas en tiempo de compilación. La topología de extremo a extremo se estructura en cuatro capas desacopladas: Ingesta, Mapeo Canónico, Motores Analíticos del Núcleo y Emisión Materializada.
-
-```
-+---------------------------------------------------------------------------------------+
-|                                   CAPA DE ENTRADA                                     |
-|  Esquemas Declarativos (.md / .yaml) ---> MarkdownSchemaParser / YamlSchemaParser     |
-+-------------------------------------------+-------------------------------------------+
-                                            |
-                                            v
-+---------------------------------------------------------------------------------------+
-|                                 CAPA DE AST CANÓNICO                                  |
-|     RawRelationalSchema  ======>  RawToCanonicalMapper  ======>  CanonicalProject     |
-+-------------------------------------------+-------------------------------------------+
-                                            |
-         +----------------------------------+----------------------------------+
-         |                                  |                                  |
-         v                                  v                                  v
-+-----------------------+  +--------------------------------+  +-----------------------+
-| TOPOLOGÍA E INFERENCIA|  |  SUBSISTEMA DE CALIDAD/AUDITORÍA|  |PROYECCIONES DE PERSONA|
-|  - RoleInferer        |  |   - SemanticQualityScorer      |  |  - PersonaRegistry    |
-|  - RelationshipRes.   |  |   - Penalizaciones cQS Puras   |  |  - 10 Persona Lenses  |
-|  - DaxGenerator       |  |   - Motor de Reglas de Calidad |  |  - Leadership Cockpit |
-+-----------+-----------+  +----------------+---------------+  +-----------+-----------+
-            |                               |                              |
-            +-------------------------------+------------------------------+
-                                            |
-                                            v
-+---------------------------------------------------------------------------------------+
-|                                EMISIÓN Y SERIALIZACIÓN                                |
-|  +--------------------------+  +--------------------------+  +---------------------+  |
-|  |     Power BI PBIP        |  |       Gobernanza         |  |    Documentación    |  |
-|  |  - TmdlFormatter         |  |  - 10 Lentes (MD/JSON)   |  |  - Diccionario Datos|  |
-|  |  - TableEmitter          |  |  - Leadership Cockpit    |  |  - Diagrama ERD     |  |
-|  |  - PbipWriter (.pbip)    |  |  - Radar Madurez Dominio |  |  - Bundles Salida   |  |
-|  +--------------------------+  +--------------------------+  +---------------------+  |
-+---------------------------------------------------------------------------------------+
-```
+**SemanticFlow** es una plataforma DataOps de **Semantic Modeling as Code (SMaC)** diseñada para eliminar esta brecha. Permite definir la arquitectura semántica de manera declarativa (en Markdown o YAML) directamente en repositorios Git, compilarla de forma local y automatizada hacia formatos nativos de Microsoft Fabric y Power BI (TMDL y proyectos `.pbip`), validar la calidad del modelo mediante un Quality Gate algorítmico determinista ($cQS$) y proyectar el impacto arquitectónico a través de una Matriz de Gobierno Multi-Rol orientada a comités técnicos y directivos C-Level.
 
 ---
 
-## 3. Formulación Matemática y Motores Analíticos
+## 2. Arquitectura de Extremo a Extremo y Flujo DataOps
 
-### 3.1. Resolución Topológica de Grafos e Inferencia de Roles
+SemanticFlow se integra en el ciclo de vida continuo de ingeniería de datos en la nube. Opera como un compilador headless in-memory sin requerir conexiones activas ni dependencias de bases de datos externas en tiempo de compilación.
 
-Sea el esquema relacional modelado como un multigrafo dirigido y atribuido $G = (V, E)$, donde $V$ denota el conjunto de entidades relacionales (tablas) y $E \subseteq V \times V \times \mathcal{A}$ denota las referencias dirigidas de claves foráneas desde atributos hijos hacia claves únicas padre.
+```
++---------------------------------------------------------------------------------------------------+
+|                                 CICLO DE VIDA DATAPOPS EN GIT                                      |
+|                                                                                                   |
+|   [ Repositorio Git ]          [ Pipeline CI/CD ]           [ Compilador Headless ]               |
+|   Esquema Declarativo  ===>    Azure DevOps / GitHub   ===> SemanticFlow Engine                   |
+|   (YAML / Markdown)            Runner (Python 3.10+)        - Inferencia Topológica R(v)          |
+|                                                             - Auditoría y Quality Gate cQS        |
++------------------------------------------+--------------------------------------------------------+
+                                           |
+                    +----------------------+----------------------+
+                    | (Pasa Quality Gate)                         | (Falla cQS < Umbral)
+                    v                                             v
++------------------------------------------+    +---------------------------------------------------+
+|     COMPILACIÓN Y SERIALIZACIÓN          |    |               PIPELINE BLOQUEADO                  |
+|                                          |    |  Build rechazado en Pull Request.                 |
+|  - Tabular Model Def. Lang. (TMDL)       |    |  Reporte de infracciones de gobernanza,           |
+|  - Power BI Project Developer (.pbip)    |    |  ciclos topológicos o PII expuesta.               |
+|  - Diccionario Corporativo y ERD Mermaid |    +---------------------------------------------------+
++-------------------+----------------------+
+                    |
+                    v
++---------------------------------------------------------------------------------------------------+
+|                           DESPLIEGUE EN MICROSOFT FABRIC / POWER BI                               |
+|                                                                                                   |
+|   Microsoft Fabric Workspace <==== Sincronización Automática vía Git Integration / Fabric REST    |
+|   - Semantic Model Versionado en OneLake                                                          |
+|   - Modelos Estrella y Copo de Nieve Validados para Motor VertiPaq                                |
+|   - Vistas Multi-Rol y Data Leadership Cockpit para CDO y Gerencias de Datos                      |
++---------------------------------------------------------------------------------------------------+
+```
 
-Para cada vértice $v \in V$, sea $d^-(v)$ el grado de entrada (número de restricciones de clave foránea que apuntan hacia $v$) y $d^+(v)$ el grado de salida (número de referencias de clave foránea salientes desde $v$). La función de asignación de roles topológicos $\mathcal{R}: V \to \{\text{FACT}, \text{DIMENSION}, \text{BRIDGE}, \text{OUTRIGGER}\}$ se formula de forma determinista como:
+### Topología Interna del Motor
+
+El compilador procesa el flujo en cuatro capas modulares y desacopladas:
+
+```
++---------------------------------------------------------------------------------------------------+
+| 1. CAPA DE INGESTA DECLARATIVA                                                                    |
+|    MarkdownSchemaParser / YamlSchemaParser: Normalización de sintaxis relacional de entrada.      |
++-------------------------------------------------+-------------------------------------------------+
+                                                  |
+                                                  v
++---------------------------------------------------------------------------------------------------+
+| 2. CAPA DE REPRESENTACIÓN INTERMEDIA (AST CANÓNICO)                                               |
+|    CanonicalProject: Entidades neutras, tipado estricto, atributos y metadatos de gobernanza.    |
++-------------------------------------------------+-------------------------------------------------+
+                                                  |
+         +----------------------------------------+----------------------------------------+
+         |                                        |                                        |
+         v                                        v                                        v
++-----------------------------+  +--------------------------------+  +------------------------------+
+| INFERENCIA TOPOLÓGICA       |  | QUALITY GATE & AUDITORÍA       |  | MATRIZ DE GOBIERNO MULTI-ROL |
+| - Clasificación R(v)        |  | - SemanticQualityScorer        |  | - Matriz de 10 Perspectivas  |
+| - Verificación Acíclica C(G)|  | - Penalizaciones Deterministas |  | - Pilares Gobierno y FinOps  |
+| - Síntesis DAX Canónica     |  | - Bloqueo de Despliegue en CI  |  | - Data Leadership Cockpit    |
++--------------+--------------+  +----------------+---------------+  +--------------+---------------+
+               |                                  |                                 |
+               +----------------------------------+---------------------------------+
+                                                  |
+                                                  v
++---------------------------------------------------------------------------------------------------+
+| 3. CAPA DE EMISIÓN Y SERIALIZACIÓN CLOUD                                                          |
+|    - PbipWriter / TmdlFormatter: Generación de modelos tabulares nativos para Fabric.             |
+|    - Multi-Persona Exporters: Generación de especificaciones técnicas y directivas (JSON/MD).     |
+|    - Automated DocGen: Diccionario de datos institucional y diagramas entidad-relación.           |
++---------------------------------------------------------------------------------------------------+
+```
+
+---
+
+## 3. Motores de Inferencia y Notación Aplicada a Producción
+
+SemanticFlow incorpora formalización matemática rigurosa pero estrictamente aplicada a resolver problemas concretos de estabilidad, desempeño y gobernanza en producción.
+
+### 3.1. Inferencia Topológica y Prevención de Ambigüedades en VertiPaq
+
+El motor columnar de Microsoft Fabric y Power BI (VertiPaq) requiere topologías limpias (estrella o copo de nieve). La presencia de relaciones circulares o caminos múltiples de filtrado cruzado bidireccional genera trampas de ambigüedad, consultas lentas y agotamiento de memoria en la capacidad contratada.
+
+El esquema relacional se modela como un grafo dirigido $G = (V, E)$, donde $V$ son las tablas y $E$ las restricciones de clave foránea dirigidas desde tablas dependientes hacia tablas de referencia. Para cada tabla $v \in V$, $d^-(v)$ representa el grado de entrada (referenciada como dimensión) y $d^+(v)$ el grado de salida (referencia a otras entidades). La función determinista $\mathcal{R}(v)$ clasifica la entidad en el modelo semántico:
 
 $$\mathcal{R}(v) = \begin{cases} 
 \text{FACT}, & \text{si } d^+(v) \ge 1 \ \land \ d^-(v) = 0 \\
 \text{DIMENSION}, & \text{si } d^+(v) = 0 \ \land \ d^-(v) \ge 1 \\
 \text{BRIDGE}, & \text{si } d^+(v) \ge 2 \ \land \ d^-(v) \ge 1 \\
 \text{OUTRIGGER}, & \text{si } d^+(v) \ge 1 \ \land \ d^-(v) \ge 1 \ \land \ |Attr(v)| \le \theta_{dim} \\
-\text{DIMENSION}, & \text{en otro caso (fallback)}
+\text{DIMENSION}, & \text{en cualquier otro caso (fallback seguro)}
 \end{cases}$$
 
-La detección de ciclos se garantiza evaluando la aciclicidad en el grafo de condensación:
+La garantía de ausencia de trampas relacionales y dependencias cíclicas se evalúa formalmente sobre el grafo de condensación:
 
 $$\mathcal{C}(G) = \emptyset \iff \forall \text{ ciclo } C \subset G, \ |C| = 0$$
 
-Si $\mathcal{C}(G) \ne \emptyset$, `RelationshipResolver` aísla las aristas cíclicas y marca las trayectorias ambiguas para impedir trampas de filtrado cruzado bidireccional en los modelos tabulares generados.
+Si $\mathcal{C}(G) \ne \emptyset$, el componente `RelationshipResolver` aísla de inmediato las aristas conflictivas, configurando relaciones inactivas o alertando en el reporte de auditoría para salvaguardar el rendimiento en runtime.
 
-### 3.2. Formulación del Semantic Quality Score ($cQS$)
+### 3.2. Semantic Quality Score ($cQS$) como Quality Gate de CI/CD
 
-La integridad semántica de un proyecto compilado se evalúa a través de una función de puntuación objetiva $cQS: \mathcal{M} \to [0, 100]$. Dado un contexto de evaluación $\mathcal{M}$ compuesto por entidades $E$, relaciones $R$ y medidas $M$, la puntuación se calcula como:
+El índice $cQS: \mathcal{M} \to [0, 100]$ no es una métrica teórica: actúa como la condición de aprobación o rechazo en los pipelines de integración continua (Azure Pipelines, GitHub Actions o GitLab CI).
 
 $$cQS(\mathcal{M}) = \max\left(0, \ 100 - \sum_{k \in \mathcal{K}} w_k \cdot \mathbb{I}_k(\mathcal{M}) - \sum_{j \in \mathcal{D}} \lambda_j \cdot \mu_j(\mathcal{M})\right)$$
 
 Donde:
-* $\mathcal{K}$ representa el conjunto de invariantes arquitectónicos bloqueantes (ej. claves primarias ausentes, rutas activas cíclicas, claves foráneas rotas). Aquí, $\mathbb{I}_k(\mathcal{M}) \in \{0, 1\}$ y $w_k \in [20, 50]$.
-* $\mathcal{D}$ representa el conjunto de reglas de gobernanza y mejores prácticas (ej. atributos sin tipar, ausencia de descripciones, medidas sin certificar, PII sin enmascarar).
-* $\lambda_j$ denota el peso de penalización asignado a la regla $j$, y $\mu_j(\mathcal{M})$ representa la frecuencia de violación normalizada.
+* $\mathcal{K}$ representa **invariantes bloqueantes de arquitectura** (claves primarias ausentes, ciclos activos en el grafo relacional, claves foráneas rotas). Si $\sum \mathbb{I}_k(\mathcal{M}) > 0$, el pipeline falla automáticamente ($ExitCode \ne 0$).
+* $\mathcal{D}$ representa **reglas corporativas de gobierno y calidad** (campos sin tipar, atributos de negocio sin descripción, medidas sin certificar, atributos sensibles con PII no enmascarados).
+* $\lambda_j$ corresponde a la severidad de la penalización y $\mu_j(\mathcal{M})$ a la frecuencia observada de la violación.
 
-Una propuesta de compilación es rechazada cuando $cQS(\mathcal{M}) < \tau_{\text{umbral}}$ (por defecto $\tau = 70.0$) o cuando $\sum \mathbb{I}_k(\mathcal{M}) > 0$.
-
-### 3.3. Operador de Proyección Multi-Perspectiva de Personas
-
-Dado un proyecto canónico $\mathcal{P}_{can} = (V, E, \mathcal{M}_{dax}, \mathcal{G})$, el operador de proyección $\Pi_{\theta}$ transforma el modelo global en una perspectiva de dominio especializada $\mathcal{V}_{\theta}$:
-
-$$\Pi_{\theta}(\mathcal{P}_{can}) = \left( V_{\theta}, E_{\theta}, \mathcal{M}_{\theta}, \Omega_{\theta}, \text{Radar}_{\theta} \right)$$
-
-Donde $\theta \in \Theta$ corresponde a uno de los diez dominios organizacionales:
-1. $\theta_1$: AI Systems Engineer (Feature stores, linaje, viabilidad de indexación vectorial)
-2. $\theta_2$: Analytics Engineer (Lógica de transformación, limpieza de DAG, contratos de prueba)
-3. $\theta_3$: Analytics Leader (ROI de portafolio, cobertura de dominio, velocidad de entrega)
-4. $\theta_4$: BI Developer (Optimización TMDL, definición de medidas, topología relacional)
-5. $\theta_5$: Business Consumer (KPIs certificados, definiciones de negocio en lenguaje natural)
-6. $\theta_6$: Compliance Auditor (Exposición PII, cumplimiento normativo, residencia de datos)
-7. $\theta_7$: Data Engineer (Formatos de almacenamiento, particiones, estabilidad de esquemas)
-8. $\theta_8$: Data Governance Officer (Propiedad, completitud de metadatos, clasificación)
-9. $\theta_9$: Data Product Manager (Fronteras de producto, SLOs, alineación con casos de uso)
-10. $\theta_{10}$: FinOps Specialist (Intensidad computacional, estimación de almacenamiento, costos de consulta)
+**Criterio Operativo en CI/CD:** El despliegue a Fabric / Power BI se bloquea si $cQS(\mathcal{M}) < \tau_{\text{umbral}}$ (umbral configurable, por defecto 75.0%) o si se detecta cualquier infracción de severidad crítica.
 
 ---
 
-## 4. Rendimiento Empírico y Benchmarks
+## 4. Matriz de Vistas de Arquitectura y Gobierno Multi-Rol
 
-Las evaluaciones empíricas se ejecutaron en una arquitectura AMD Ryzen bajo un entorno virtualizado con Python 3.12.10, validando tanto grafos sintéticos bajo estrés como modelos de alta complejidad real (Grafo del Metro de Santiago y Modelo Falabella Retail Tier 3).
+SemanticFlow trasciende la visión puramente técnica al proyectar el modelo canónico en cuatro pilares corporativos que responden a las necesidades de cada stakeholder de la organización:
 
-| Dimensión de Evaluación | Objetivo Base | Estrés Tier 1 (PYME) | Estrés Tier 2 (Mediana) | Estrés Tier 3 (Gigante) | Empresa Real (Metro) |
-|:------------------------|:--------------|:---------------------|:------------------------|:------------------------|:---------------------|
-| Cardinalidad de Tablas  | 5 - 10 tablas | 4 - 8 tablas         | 15 - 25 tablas          | 50 - 100 tablas         | 20 tablas            |
-| Aristas de Relación     | 5 - 15 aristas| 6 - 12 aristas       | 20 - 40 aristas         | 75 - 180 aristas        | 26 relaciones        |
-| Latencia de Compilación | $< 1000$ ms   | 42 ms                | 185 ms                  | 840 ms                  | 210 ms               |
-| Proyección 10 Lentes    | $< 2000$ ms   | 110 ms               | 390 ms                  | 1.240 ms                | 420 ms               |
-| Consumo Pico de RAM     | $< 250$ MB    | 38 MB                | 54 MB                   | 118 MB                  | 62 MB                |
-| Suite de Verificación   | 100% aprobados| 71/71 tests pasan    | 71/71 tests pasan       | 71/71 tests pasan       | 71/71 tests pasan    |
+```
++---------------------------------------------------------------------------------------------------+
+|                        MATRIZ DE GOBIERNO Y HABILITACIÓN MULTI-ROL                                |
++----------------------------------+----------------------------------------------------------------+
+| PILAR CORPORATIVO                | ROLES Y PERSPECTIVAS CUBIERTAS                                 |
++----------------------------------+----------------------------------------------------------------+
+| I. Gobierno y Cumplimiento       | • Data Governance Officer: Propiedad de datos, completitud de  |
+|    Normativo                     |   metadatos corporativos, clasificación de criticidad.        |
+|                                  | • Compliance Auditor: Detección y enmascaramiento de PII,      |
+|                                  |   auditoría normativa (Ley 19.628, GDPR, CMF).                |
++----------------------------------+----------------------------------------------------------------+
+| II. Plataforma Cloud             | • Data Engineer: Formatos Parquet/Delta, particionamiento.    |
+|     y Optimización FinOps        | • FinOps Specialist: Estimación de consumo en F-SKUs, uso de   |
+|                                  |   memoria VertiPaq y costos de procesamiento en Fabric.       |
+|                                  | • AI Systems Engineer: Linaje y preparación para búsqueda      |
+|                                  |   semántica, agentes analíticos y modelos vectoriales.        |
++----------------------------------+----------------------------------------------------------------+
+| III. Ingeniería Analítica y BI   | • Analytics Engineer: Contratos de datos, lógica de limpieza.  |
+|                                  | • BI Developer: Topología estrella, optimización TMDL y        |
+|                                  |   generación de medidas canónicas en DAX.                     |
++----------------------------------+----------------------------------------------------------------+
+| IV. Negocio y Dirección          | • Data Product Manager: SLOs, fronteras de producto de datos. |
+|     Estratégica                  | • Business Consumer: KPIs certificados y definiciones claras.  |
+|                                  | • Data Leadership Cockpit: Cuadro de mando ejecutivo C-Level   |
+|                                  |   para CDO/Gerencia con radar de madurez en 10 dimensiones.    |
++----------------------------------+----------------------------------------------------------------+
+```
 
 ---
 
-## 5. Estructura del Repositorio y Artefactos
+## 5. Rendimiento Empírico y Benchmarks Corporativos
+
+El motor fue evaluado en entornos de cómputo estándar (Python 3.12.10 en arquitectura moderna), validando su comportamiento tanto en escenarios de estrés sintético de gran volumen como en modelos reales de alta complejidad operacional:
+
+| Dimensión de Rendimiento | Objetivo de Diseño | Tier 1 (PYME) | Tier 2 (Corporativo) | Tier 3 (Enterprise) | Caso Real (Metro de Santiago) |
+|:-------------------------|:-------------------|:--------------|:---------------------|:--------------------|:------------------------------|
+| Entidades (Tablas)       | 5 - 10 tablas      | 4 - 8 tablas  | 15 - 25 tablas       | 50 - 100 tablas     | 20 tablas operacionales       |
+| Relaciones Evaluadas     | 5 - 15 aristas     | 6 - 12 aristas| 20 - 40 aristas      | 75 - 180 aristas    | 26 relaciones activas         |
+| Latencia de Compilación  | $< 1000$ ms        | 42 ms         | 185 ms               | 840 ms              | 210 ms                        |
+| Proyección 10 Vistas     | $< 2000$ ms        | 110 ms        | 390 ms               | 1.240 ms            | 420 ms                        |
+| Consumo Pico de Memoria  | $< 250$ MB         | 38 MB         | 54 MB                | 118 MB              | 62 MB                         |
+| Cobertura y Verificación | 100% aprobado      | 71/71 tests   | 71/71 tests          | 71/71 tests         | 71/71 tests aprobados         |
+
+---
+
+## 6. Estructura del Repositorio y Componentes
 
 ```
 SemanticFlow/
-├── .agentignore                       # Reglas de exclusión de contexto para agentes
-├── .context/                          # Satélite topológico iDirectory v3.0 (tree.json)
-├── 01_seed/                           # ADN Arquitectónico y ThinkingSeed Master
-│   └── seed-semanticflow-master.md
-├── 02_Foundation/                     # Especificaciones de arquitectura base
+├── .agentignore                       # Filtros de contexto para agentes de desarrollo
+├── .context/                          # Malla de gobierno contextual iDirectory v3.0 (tree.json)
+├── 01_seed/                           # Especificación técnica maestra y ADN del proyecto
+│   ├── seed-semanticflow-master.md
+│   └── seed-semanticflow.md
+├── 02_Foundation/                     # Documentación fundacional de arquitectura
 │   └── Engine/
 │       └── engine_readme.md
-├── config/                            # Configuraciones y definiciones por defecto
+├── config/                            # Definiciones de configuración y perfiles
 │   └── personas/
 │       └── default_personas.yaml
-├── docs/                              # Registros de decisiones de arquitectura y notas técnicas
-│   ├── adr/
+├── docs/                              # Registros de arquitectura y notas técnicas
+│   ├── adr/                           # Registros de Decisiones de Arquitectura (ADR-001+)
 │   │   └── ADR-001-canonical-model.md
 │   └── architecture/
-│       ├── esquema_relacional.md
-│       └── adr/                       # ADR-001 al ADR-006 del motor de Personas
-├── pyproject.toml                     # Dependencias del paquete, build y herramientas
-├── schemas/                           # Esquemas JSON estrictos de validación
+│       ├── esquema_relacional.md      # Esquema relacional de referencia
+│       └── adr/
+├── pyproject.toml                     # Manifiesto de empaquetado, dependencias y herramientas
+├── schemas/                           # Contratos JSON Schema para validación estricta
 │   ├── persona_definition.schema.json
 │   └── project_governance.schema.json
-├── scripts/                           # Generadores deterministas de regresión golden
+├── scripts/                           # Automatizaciones y generadores de regresión
 │   └── generate_golden_files.py
 ├── src/                               # Código fuente del compilador
-│   ├── cli.py                         # Punto de entrada de línea de comandos (Typer)
+│   ├── cli.py                         # Interfaz de línea de comandos (Typer / Rich)
 │   └── core/
-│       ├── ast/                       # Definiciones de AST Bruto, Semántico y Canónico
-│       ├── capabilities/              # Planificación de ejecución
-│       ├── docs/                      # Generadores de Diccionario Markdown y ERD Mermaid
-│       ├── emitter/                   # Motores de serialización TMDL y PBIP
-│       ├── engine/                    # Resolutor topológico, inferidores y compilador
-│       ├── mappers/                   # Mappers raw-to-canonical y canonical-to-pbi
-│       ├── parsers/                   # Parsers de esquemas en Markdown y YAML
-│       ├── personas/                  # 10 Persona Lenses y Motor del Leadership Cockpit
-│       ├── quality/                   # SemanticQualityScorer y evaluadores de reglas
-│       └── targets/                   # Adaptadores de dialectos específicos de plataforma
+│       ├── ast/                       # Modelos del Árbol de Sintaxis Abstracta Canónico
+│       ├── capabilities/              # Orquestador de capacidades de compilación
+│       ├── docs/                      # Generador de Diccionario y Diagramas Mermaid
+│       ├── emitter/                   # Serializadores nativos TMDL y proyectos PBIP
+│       ├── engine/                    # Inferencia topológica, resolución de aristas y DAX
+│       ├── mappers/                   # Mapeadores de esquemas brutos a modelo canónico
+│       ├── parsers/                   # Parsers declarativos para Markdown y YAML
+│       ├── personas/                  # Matriz de Gobierno Multi-Rol y Leadership Cockpit
+│       ├── quality/                   # Evaluador de reglas de calidad y cálculo de cQS
+│       └── targets/                   # Dialectos y adaptadores específicos de plataforma
 └── tests/                             # Suite integral de pruebas automatizadas
-    ├── test_all_lenses_deep.py
-    ├── test_canonical_model.py
-    ├── test_cli.py
-    ├── test_cli_personas.py
-    ├── test_golden_regression.py
-    ├── test_inference_engine.py
-    ├── test_leadership_cockpit.py
-    ├── test_persona_contracts.py
+    ├── test_all_lenses_deep.py        # Validación profunda de perspectivas
+    ├── test_canonical_model.py        # Pruebas unitarias de modelos canónicos
+    ├── test_cli.py                    # Pruebas de la interfaz de comandos
+    ├── test_cli_personas.py           # Pruebas de exportación de roles
+    ├── test_golden_regression.py      # Pruebas de regresión determinista golden
+    ├── test_inference_engine.py       # Pruebas del motor de inferencia topológica
+    ├── test_leadership_cockpit.py     # Pruebas del cuadro de mando para directivos
+    ├── test_persona_contracts.py      # Validación de contratos de gobierno
     ├── test_stage3_governance_quality.py
-    ├── fixtures/                      # Fixtures de prueba empresariales
-    ├── golden/                        # Referencias deterministas de regresión
-    └── Massive Stress Test/           # Suites de estrés (PYME, Mediana, Gigante)
+    ├── fixtures/                      # Esquemas y datos de prueba empresariales
+    ├── golden/                        # Modelos esperados para pruebas de regresión
+    └── Massive Stress Test/           # Suites de prueba de volumen y estrés
 ```
 
 ---
 
-## 6. Protocolo de Ejecución y Verificación
+## 7. Protocolo de Operación y Automatización CI/CD
 
-### 6.1. Configuración del Entorno y Prerrequisitos
+### 7.1. Requisitos de Entorno e Instalación
 
-Prerrequisitos: Python 3.10 o superior.
+El compilador requiere **Python 3.10 o superior** y se instala como un paquete local reproducible:
 
 ```bash
-# Clonar el repositorio
+# Clonar repositorio
 git clone <url_del_repositorio>
 cd SemanticFlow
 
-# Inicializar el entorno virtual
+# Inicializar y activar entorno virtual aislado
 python -m venv .venv
 source .venv/bin/activate  # En Windows: .venv\Scripts\activate
 
-# Instalar el paquete en modo editable con dependencias de desarrollo
+# Instalación en modo editable con herramientas de desarrollo
 pip install -e ".[dev]"
 ```
 
-### 6.2. Ejecución de Pipelines
+### 7.2. Comandos CLI para Pipelines y Operación Local
 
 ```bash
-# Inspeccionar esquema relacional y verificar roles de entidad inferidos
+# 1. Inspeccionar estructura relacional e inferir roles topológicos
 semanticflow inspect --input docs/architecture/esquema_relacional.md
 
-# Compilar esquema relacional directamente a un bundle PBIP/TMDL para Power BI
-semanticflow compile --input docs/architecture/esquema_relacional.md --output output/PBIP --name "ModeloEmpresarial"
-
-# Auditar la puntuación de calidad semántica (cQS) con umbral de fallo estricto
+# 2. Validar Quality Gate cQS (comando ideal para tareas automáticas de CI/CD)
 semanticflow validate --input docs/architecture/esquema_relacional.md --min-score 75.0
 
-# Sintetizar e inspeccionar el Data Leadership Cockpit para directivos C-Level
+# 3. Compilar esquema a bundle nativo TMDL / PBIP para Microsoft Fabric y Power BI
+semanticflow compile --input docs/architecture/esquema_relacional.md --output output/PBIP --name "ModeloComercial"
+
+# 4. Sintetizar el Data Leadership Cockpit en consola para comités directivos
 semanticflow cockpit --input docs/architecture/esquema_relacional.md --format human
 
-# Exportar las 10 Persona Lenses y el Leadership Cockpit en Markdown y JSON
+# 5. Exportar la Matriz de Vistas Multi-Rol y Cockpit en Markdown y JSON
 semanticflow personas export --input docs/architecture/esquema_relacional.md --output output/personas
 
-# Generar documentación automatizada (Diccionario de Datos y ERD en Mermaid)
+# 6. Generar Diccionario de Datos corporativo y diagrama ERD en Mermaid
 semanticflow docgen --input docs/architecture/esquema_relacional.md --output output/docs
 ```
 
-### 6.3. Suite de Verificación y Pruebas de Invariantes
+### 7.3. Suite de Aseguramiento de Calidad y Pruebas
 
 ```bash
-# Ejecutar la suite completa de pruebas automatizadas
+# Ejecución de la suite completa de pruebas (71 tests automatizados)
 pytest -v
 
-# Ejecutar pruebas de regresión golden para garantizar estabilidad byte-por-byte
+# Verificación de invariantes deterministas mediante Golden Regression
 pytest tests/test_golden_regression.py
 
-# Verificar cumplimiento de tipado estático y estilo de código
+# Verificación de calidad de código y análisis de tipos estáticos
 ruff check .
 mypy src/
 ```
 
 ---
 
-## 7. Glosario de Dominio
+## 8. Glosario de Dominio Corporativo
 
-* **Árbol de Sintaxis Abstracta Canónico (Canonical AST):** Representación intermedia agnóstica de plataforma que contiene entidades, atributos, relaciones, metadatos de gobernanza y medidas semánticas.
-* **Tabular Model Definition Language (TMDL):** Sintaxis declarativa estructurada en carpetas y archivos desarrollada por Microsoft para definir modelos semánticos de Analysis Services y Power BI.
-* **Power BI Project (`.pbip`):** Formato moderno de Microsoft Power BI concebido para control de versiones en Git, serializando reportes y conjuntos de datos en texto plano sin bloqueos binarios.
-* **Persona Lens:** Proyección matemática determinista que filtra y contextualiza el modelo semántico global según la perspectiva y necesidades operativas de un rol técnico o directivo específico.
-* **Data Leadership Cockpit:** Vista de síntesis agregada del estado de madurez organizacional a través de diez dimensiones, ofreciendo recomendaciones priorizadas para directores C-Level.
-* **Semantic Quality Score ($cQS$):** Índice continuo acotado $[0, 100]$ que evalúa la salud arquitectónica, limpieza topológica, gobernanza y solidez contractual del modelo semántico.
+* **Semantic Modeling as Code (SMaC):** Práctica DataOps que gestiona los modelos analíticos mediante especificaciones textuales declarativas versionadas en Git, automatizando su validación y despliegue.
+* **Microsoft Fabric Git Integration:** Mecanismo nativo de Microsoft Fabric que sincroniza workspaces en la nube con ramas de Azure DevOps o GitHub utilizando definiciones de texto plano.
+* **Tabular Model Definition Language (TMDL):** Estándar de sintaxis declarativa de Microsoft para definir la metadata completa de modelos semánticos en estructuras de carpetas legibles.
+* **Power BI Project (`.pbip`):** Formato de archivo para desarrolladores que expone la definición del reporte y del dataset en artefactos de texto plano, facilitando el trabajo colaborativo en equipo.
+* **Semantic Quality Score ($cQS$):** Métrica algorítmica $[0, 100]$ que mide la madurez arquitectónica, gobierno, mitigación de riesgos de seguridad (PII) y consistencia relacional del modelo.
+* **Matriz de Vistas de Arquitectura Multi-Rol:** Proyección del modelo canónico en perspectivas especializadas que auditan y habilitan a roles de Gobierno, FinOps, Ingeniería y Negocio.
+* **Data Leadership Cockpit:** Resumen ejecutivo de alto nivel que diagnostica cuellos de botella y prioriza acciones de gobierno de datos para el Chief Data Officer (CDO) y la alta dirección.
 
 ---
 
-## 8. Referencias Académicas y de Ingeniería
+## 9. Licencia y Soporte
 
-1. Kimball, R., & Ross, M. (2013). *The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling* (3rd ed.). John Wiley & Sons.
-2. Microsoft Corporation. (2024). *Tabular Model Definition Language (TMDL) Specification*. Microsoft Learn Technical Documentation.
-3. Fowler, M. (2002). *Patterns of Enterprise Application Architecture*. Addison-Wesley Professional.
-4. Dehghani, Z. (2022). *Data Mesh: Delivering Data-Driven Value at Scale*. O'Reilly Media.
-5. Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). *Introduction to Algorithms* (4th ed.). MIT Press.
-
-### Citación BibTeX
-
-```bibtex
-@software{semanticflow_2026,
-  author = {Equipo de Ingeniería de SemanticFlow},
-  title = {SemanticFlow: Compilador Semántico Declarativo Empresarial y Motor de Proyección Multi-Persona},
-  year = {2026},
-  url = {https://github.com/AlvaroAlejandroFinOps/SemanticFlow}
-}
-```
+SemanticFlow se distribuye bajo la licencia de código abierto **Apache 2.0**. Para más información sobre directrices de contribución y arquitectura de extensiones, consulte [CONTRIBUTING.md](CONTRIBUTING.md) y [docs/](docs/).

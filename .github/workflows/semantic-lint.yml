@@ -1,0 +1,25 @@
+name: SemanticFlow Pull Request Quality Gate
+
+on:
+  pull_request:
+    paths:
+      - 'docs/architecture/**'
+      - 'schemas/**'
+      - 'src/**'
+
+jobs:
+  semantic-linter:
+    name: Semantic Linter & cQS Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run SemanticFlow Quality Gate
+        uses: ./
+        with:
+          schema-path: "docs/architecture/esquema_relacional.md"
+          min-score: "75.0"
+          export-cockpit: "true"
+          output-pbip: "output/PBIP"
+          model-name: "CI_Verified_Model"

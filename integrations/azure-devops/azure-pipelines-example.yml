@@ -1,0 +1,42 @@
+# ==============================================================================
+# Azure Pipelines Template: SemanticFlow PR Quality Gate
+# ==============================================================================
+trigger:
+  branches:
+    include:
+      - main
+      - master
+
+pr:
+  branches:
+    include:
+      - main
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.12'
+    displayName: 'Configurar Python 3.12'
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install semanticflow
+    displayName: 'Instalar SemanticFlow CLI'
+
+  - script: |
+      semanticflow validate --input docs/architecture/esquema_relacional.md --min-score 75.0
+    displayName: 'Ejecutar Semantic Quality Gate (cQS)'
+
+  - script: |
+      semanticflow compile --input docs/architecture/esquema_relacional.md --output $(Build.ArtifactStagingDirectory)/pbip --name "ModeloProduccion"
+    displayName: 'Compilar TMDL/PBIP para Fabric'
+    condition: succeeded()
+
+  - publish: $(Build.ArtifactStagingDirectory)/pbip
+    artifact: FabricSemanticModel
+    displayName: 'Publicar Artefacto PBIP'
+    condition: succeeded()

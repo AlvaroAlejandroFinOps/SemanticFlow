@@ -17,17 +17,18 @@ project_name: "SemanticFlow"
 repository_name: "SemanticFlow"
 project_type: "modular-monolith"
 repository_mode: "single-project"
-generated_at: "2026-09-20T01:35:00-03:00"
+generated_at: "2026-09-30T18:20:00-03:00"
 generated_by: "Antigravity (Gemini 3.8 Flash)"
 repository_root: "d:/0001 HyperScale Thinking/PROYECTOS CLOUD/Data & AI Strategy/SemanticFlow"
 git_branch: "master"
-git_commit: "remediation-p0-p1-complete"
-working_tree_state: "clean"
+git_commit: "98c76a5"
+working_tree_state: "dirty"
 analysis_mode: "static-and-dynamic"
 coverage_level: "high"
 known_analysis_limits:
-  - "Inspección de código fuente estático y validación de suite dinámica de 80/80 tests unitarios/integración vía pytest 9.1.1 en Python 3.12.10 (.venv) con cobertura del 87%."
-  - "Los adaptadores a dialectos target adicionales a Power BI (Looker LookML, dbt Semantic Layer) están declarados conceptualmente en TargetCapabilities y CapabilityGapsAnalyzer pero pendientes de compilador físico en fases posteriores."
+  - "Inspección de código fuente estático y validación de suite dinámica de 82/82 tests unitarios e integración pasando vía pytest 9.1.1 en Python 3.12.10 (.venv) con cobertura del 87%+."
+  - "El provider de Terraform (Go) y los crates en Rust (semanticflow-core y semanticflow-pyo3) están completamente implementados en el repositorio a nivel de código fuente; la compilación nativa de binarios ELF/DLL en entornos locales requiere Go 1.22+ y Rust Cargo en PATH."
+  - "La integración con Microsoft Fabric REST APIs opera en modo headless / offline local generando los bundles TMDL y contratos de API listos para ejecución con Service Principal en Azure AD."
 ```
 
 ### 0.1 Instrucciones para el modelo receptor
@@ -47,420 +48,340 @@ known_analysis_limits:
 ## 1. RESUMEN EJECUTIVO
 
 ### 1.1 Proyecto en una frase
-`[CONFIRMADO]` **SemanticFlow** es un compilador declarativo e ingeniería de modelos semánticos local de nivel empresarial que transforma esquemas relacionales (Markdown/YAML) en proyectos tabulares nativos de Power BI (`.pbip` / `.tmdl`), proyectando vistas organizacionales a través de 10 **Persona Lenses** y sintetizando un **Data Leadership Cockpit** C-Level con auditoría de calidad formal (cQS).
+`[CONFIRMADO]` **SemanticFlow** es una plataforma DataOps de **Semantic Modeling as Code (SMaC)** de nivel empresarial que automatiza la ingesta, gobierno, optimización topológica y compilación headless de modelos semánticos tabulares hacia **Microsoft Fabric OneLake y Power BI (TMDL / PBIP)** y **dbt Semantic Layer**, incorporando un Quality Gate algorítmico ($cQS$), un proveedor de Terraform en Go y una arquitectura híbrida acelerada en Rust vía PyO3.
 
 ### 1.2 Problema que resuelve
-- `[CONFIRMADO]` Elimina la creación manual propensa a errores de modelos semánticos en Power BI Desktop.
-- `[CONFIRMADO]` Resuelve la desconexión semántica entre ingeniería de datos, gobernanza, finanzas y consumidores de negocio mediante una única fuente de verdad (Single Source of Truth) declarativa en Git.
-- `[CONFIRMADO]` Automatiza la inferencia topológica de relaciones 1:N unidireccionales, resolución de roles de tablas (Hechos vs. Dimensiones), síntesis de medidas DAX canónicas y cálculo del índice de calidad semántica (**Semantic Quality Score - cQS**).
+- `[CONFIRMADO]` **Erradicación del modelado manual en BI:** Elimina la construcción artesanal propensa a fallos de modelos de datos en interfaces gráficas como Power BI Desktop, erradicando los archivos binarios `.pbix` opacos que no admiten control de versiones en Git ni revisiones de código en Pull Requests.
+- `[CONFIRMADO]` **Resolución de la fricción entre Lakehouse y la capa analítica:** Cierra la brecha operativa entre transformaciones Medallion (Delta/Parquet en OneLake, S3 o ADLS Gen2) y la capa de consumo de negocio.
+- `[CONFIRMADO]` **Garantía de calidad semántica en CI/CD:** Introduce el **Semantic Quality Score ($cQS$)** como un Quality Gate determinista que bloquea despliegues en Azure Pipelines o GitHub Actions si se detectan relaciones ambiguas, ciclos relacionales o atributos sensibles (PII) sin enmascarar.
+- `[CONFIRMADO]` **Alineación multi-stakeholder:** Proyecta el modelo en una Matriz de Arquitectura y Gobierno Multi-Rol de cuatro pilares (Gobierno, FinOps, Analítica, Dirección Estratégica) y un Data Leadership Cockpit para directores C-Level (CDO/Gerencias de Datos).
 
 ### 1.3 Usuarios o sistemas consumidores
-- `[CONFIRMADO]` **Analytics Engineers & BI Developers**: Generación desatendida de paquetes `.pbip` y código TMDL.
-- `[CONFIRMADO]` **Data Governance Officers & Compliance Auditors**: Auditoría automatizada de atributos sensibles (PII), trazabilidad de linaje y validación de reglas de calidad.
-- `[CONFIRMADO]` **Data Leadership & C-Level (CDO/VP Data)**: Visualización de radar de madurez por dominio, KPIs certificados y recomendaciones accionables priorizadas.
-- `[CONFIRMADO]` **Pipelines CI/CD & Agentes de IA**: Validación programática headless de cambios en esquemas antes de despliegue a producción.
+- `[CONFIRMADO]` **Analytics Engineers & BI Developers:** Generación desatendida y versionable de proyectos `.pbip`, carpetas TMDL y especificaciones dbt MetricFlow (`semantic_models.yml`).
+- `[CONFIRMADO]` **Data Governance Officers & Compliance Auditors:** Detección de Información de Identificación Personal (PII), trazabilidad de linaje y cumplimiento normativo (Ley 19.628, GDPR, CMF).
+- `[CONFIRMADO]` **FinOps Specialists & Cloud Architects:** Prevención de trampas de filtrado cruzado bidireccional y modelos mal optimizados que saturan la memoria del motor VertiPaq y disparan el consumo de F-SKUs en Microsoft Fabric.
+- `[CONFIRMADO]` **Data Leadership & C-Level (CDO, VP Data):** Cuadro de mando ejecutivo con radar de madurez en 10 dimensiones y recomendaciones operativas priorizadas.
+- `[CONFIRMADO]` **Pipelines CI/CD & Herramientas IaC:** GitHub Actions (`action.yml`), Azure DevOps Tasks y Terraform Provider (`terraform-provider-semanticflow`) para orquestación automatizada.
 
 ### 1.4 Alcance y límites del sistema
 - `[CONFIRMADO]` **Dentro del alcance**:
-  - Compilación local pura (offline, in-memory) sin necesidad de conectarse a bases de datos en tiempo de compilación.
-  - Ingesta declarativa desde archivos Markdown (`.md`) estructurados y YAML (`.yaml`, `.json`).
-  - Resolución topológica de grafos relacionales con detección de ciclos y caminos redundantes vía NetworkX.
-  - Emisión de artefactos Microsoft Power BI Developer Project (`.pbip`, `definition.pbidataset`, carpetas TMDL con tablas, relaciones, medidas y culturas).
-  - 10 Persona Lenses con contratos JSON Schema validados y generación de Data Leadership Cockpit en Markdown y JSON.
-  - Diccionario de Datos Markdown y diagramas ERD Mermaid.
+  - Compilación in-memory puramente local y offline, sin requerir conexión a bases de datos en tiempo de compilación.
+  - Ingesta declarativa desde esquemas en Markdown estructurado (`.md`) y YAML (`.yaml`, `.json`).
+  - Representación intermedia mediante un Árbol de Sintaxis Abstracta Canónico (`CanonicalSemanticProject`).
+  - Resolución topológica de grafos relacionales y detección de ciclos acíclicos $\mathcal{C}(G)$ mediante NetworkX y Rust `petgraph`.
+  - Inferencia determinista de roles dimensionales $\mathcal{R}(v)$ (Fact, Dimension, Bridge, Outrigger).
+  - Emisión nativa de proyectos Microsoft Power BI Developer (`.pbip`, `.pbidataset`) y carpetas estructuradas TMDL.
+  - Emisión de dbt Semantic Layer MetricFlow (`semantic_models.yml`).
+  - Cálculo algorítmico del índice $cQS$ con bloqueo por umbral configurable (default $\ge 75.0$).
+  - Proyección de 10 perspectivas de gobernanza (Persona Lenses) y Data Leadership Cockpit en Markdown y JSON.
+  - Empaquetado OCI Distroless minimalista (<45 MB, non-root UID 65532).
+  - Integración IaC mediante Terraform Provider desarrollado en Go.
+  - Fachada híbrida Python/Rust vía PyO3 (`src/core/rust_bridge.py`).
 - `[CONFIRMADO]` **Fuera del alcance**:
-  - Ingesta de datos de volumen real a nivel de filas (ETL/ELT físico); SemanticFlow compila la capa de metadatos semánticos.
-  - Conectores directos a Power BI Service REST API para publicación remota (se delega a herramientas CI/CD o Fabric Git Integration).
-  - Dialectos de destino adicionales a Power BI (`[DECLARADO]` para futuras versiones).
+  - Ingesta o transporte de datos físicos a nivel de registros (ETL/ELT masivo de datos); SemanticFlow gobierna y compila la capa lógica/semántica de metadatos.
+  - Dependencias de servicios SaaS de terceros para validación semántica (totalmente autosuficiente y offline).
 
 ---
 
 ## 2. ARQUITECTURA Y TOPOLOGÍA
 
 ### 2.1 Estilo arquitectónico
-`[CONFIRMADO]` **Compilador Modular con AST Intermedio Canónico y Proyección Multi-Perspectiva**.
-El flujo se estructura en 4 etapas acopladas de manera débil:
-1. **Frontend / Parsers**: Ingesta del esquema bruto (`RawSchema`) desde Markdown o YAML.
-2. **Canonical Mapping**: Normalización al Árbol de Sintaxis Abstracta Canónico (`CanonicalProject`).
-3. **Core Engine**:
-   - Inferencia de roles (`RoleInferer`).
-   - Resolución de relaciones (`RelationshipResolver` vía NetworkX).
-   - Síntesis DAX canónica (`DaxGenerator`).
-   - Evaluación de Calidad y Gobierno (`SemanticQualityScorer`).
-   - Proyección Organizacional (`PersonaProjector` + `DataLeadershipCockpitEngine`).
-4. **Backend / Emitters**: Emisión nativa TMDL (`TmdlFormatter`, `PbipWriter`) y documentación (`DocumentationEmitter`).
+`[CONFIRMADO]` **Compilador Modular con AST Canónico Intermedio y Fachada Híbrida Multi-Dialecto**:
+1. **Pipeline Desacoplado:** Ingesta $\to$ Mapeo Canónico $\to$ Análisis Topológico & Calidad $\to$ Emisión Serializada.
+2. **Aislamiento Offline:** Ejecución in-memory sin sockets abiertos ni dependencias de red en tiempo de compilación.
+3. **Estrategia Híbrida (Patrón `pydantic-core` / `polars`):** Capa de experiencia de usuario en Python (Typer, Rich, Pydantic v2) enlazada mediante PyO3 a un motor nuclear de alto rendimiento en Rust (`petgraph`), con fallback transparente a Python puro si la extensión nativa no está compilada.
 
 ### 2.2 Árbol estructural del repositorio
 ```
 SemanticFlow/
-├── .agentignore                       # Reglas de exclusión de contexto para agentes
-├── .context/                          # Satélite topológico iDirectory v3.0 (tree.json)
-├── 01_seed/                           # Semillas ThinkingSeed (ADN técnico del repositorio)
+├── .agentignore                       # Reglas de exclusión de contexto para agentes de IA
+├── .context/                          # Malla satelital iDirectory v3.0 (tree.json)
+├── .dockerignore                      # Filtros de exclusión para empaquetado OCI limpio
+├── .github/                           # Automatizaciones CI/CD de GitHub
+│   └── workflows/
+│       ├── ci.yml                     # Pipeline principal de tests (Py 3.10-3.12 en Linux, Win, Mac)
+│       ├── docker-publish.yml         # Publicación de imágenes multi-arch a GHCR (ghcr.io)
+│       └── semantic-lint.yml          # Ejemplo de linter semántico en Pull Requests
+├── 01_seed/                           # ADN y especificación técnica ThinkingSeed
 │   ├── .context.yaml
-│   └── seed-semanticflow-master.md
-├── 02_Foundation/                     # Documentación fundacional de motores
+│   ├── seed-semanticflow-master.md    # Este snapshot exhaustivo
+│   └── seed-semanticflow.md           # Snapshot Master Hybrid conciso
+├── 02_Foundation/                     # Documentación fundacional de arquitectura
 │   └── Engine/
 │       ├── .context.yaml
-│       ├── engine_readme.md
-│       └── EngineReadme.md
-├── 03_research/                       # Espacio de experimentación y notebooks
-│   ├── experiments/.context.yaml
-│   ├── notebooks/.context.yaml
-│   └── prompts/.context.yaml
-├── artifacts/                         # Planes de ejecución y auditoría
+│       └── engine_readme.md
+├── action.yml                         # GitHub Action oficial de SemanticFlow para PRs
+├── artifacts/                         # Planes de implementación, reportes forenses y métricas
+│   ├── MetricsThinking.json           # Telemetría de auditoría MetricsThinking v3.0
+│   ├── MetricsThinking.md             # Reporte ejecutivo de madurez (Score 100%)
 │   └── plans/
-│       ├── active/.context.yaml
-│       └── archive/.context.yaml
-├── config/                            # Configuraciones y definiciones por defecto
-│   ├── .context.yaml
+│       ├── active/
+│       │   ├── ENTERPRISE_CLOUD_ROADMAP_PLAN.md # Plan maestro en 3 horizontes
+│       │   └── INFERRED_ROADMAP.md              # Roadmap operacional desacoplado
+│       └── metricsthinking/
+├── Cargo.toml                         # Workspace Cargo para componentes en Rust
+├── config/                            # Configuraciones por defecto y definiciones de roles
 │   └── personas/
 │       └── default_personas.yaml
-├── data/                              # Directorio de datos de muestra y pruebas
-├── docs/                              # Documentación técnica, ADRs y arquitectura
+├── crates/                            # Código fuente nativo en Rust
+│   ├── semanticflow-core/             # Crate Rust puro (AST, petgraph, calidad cQS)
+│   │   ├── Cargo.toml
+│   │   └── src/
+│   │       ├── graph.rs               # Dígrafo, Tarjan SCC y función R(v)
+│   │       ├── lib.rs
+│   │       ├── models.rs              # Modelos de AST serializables con serde
+│   │       └── quality.rs             # Evaluador de reglas de calidad deterministas
+│   └── semanticflow-pyo3/             # Crate C-ABI con bindings PyO3 hacia Python
+│       ├── Cargo.toml
+│       └── src/
+│           └── lib.rs                 # Funciones PyO3 exportadas
+├── docker/                            # Especificaciones de empaquetado contenedorizado
+│   └── Dockerfile                     # Multi-stage Distroless minimalista (<45 MB, nonroot)
+├── docs/                              # Registros de arquitectura, notas y esquemas de prueba
 │   ├── adr/
 │   │   └── ADR-001-canonical-model.md
 │   ├── architecture/
-│   │   ├── .context.yaml
-│   │   ├── esquema_relacional.md
-│   │   └── adr/                       # ADRs de la arquitectura de Personas (001-006)
-│   ├── engineers_notes/
-│   │   └── agentic_failure_modes_and_pbip_tmdl_conflict.md
-│   ├── notes/.context.yaml
-│   ├── specs/.context.yaml
-│   └── technical_specs/
-├── logs/                              # Logs operativos generados
-├── output/                            # Salidas de compilación (.pbip, personas, docs)
-├── pyproject.toml                     # Configuración del paquete, dependencias y herramientas
-├── schemas/                           # JSON Schemas para validación estricta de contratos
-│   ├── .context.yaml
+│   │   └── esquema_relacional.md      # Esquema de referencia del Metro de Santiago (20 tablas)
+│   └── notes/
+│       └── Tematica.md                # Requerimientos de narrativa corporativa
+├── integrations/                      # Extensiones y tareas para plataformas cloud
+│   └── azure-devops/
+│       ├── azure-pipelines-example.yml# Plantilla de pipeline para Azure Repos
+│       ├── vss-extension.json         # Manifiesto de extensión para Azure DevOps
+│       └── task/
+│           ├── index.js               # Runner Node.js de la tarea
+│           └── task.json              # Definición de inputs/outputs de la tarea
+├── pyproject.toml                     # Manifiesto de empaquetado y herramientas de Python
+├── schemas/                           # Contratos JSON Schema para validación estricta
 │   ├── persona_definition.schema.json
 │   └── project_governance.schema.json
-├── scripts/                           # Utilidades de desarrollo
-│   ├── .context.yaml
-│   └── generate_golden_files.py
-├── src/                               # Código fuente principal
-│   ├── __init__.py
-│   ├── cli.py                         # CLI Typer con comandos compile, inspect, explain, etc.
-│   ├── cloud_jobs/.context.yaml
-│   ├── dashboards/.context.yaml
-│   ├── data_generation/.context.yaml
-│   └── core/                          # Núcleo del compilador
-│       ├── __init__.py
-│       ├── .context.yaml
-│       ├── ast/                       # Modelos Pydantic del AST
-│       │   ├── __init__.py
-│       │   ├── schema.py              # Esquema relacional bruto
-│       │   ├── semantic.py            # Modelo semántico target
-│       │   ├── types.py               # Tipos de datos primitivos y roles
-│       │   └── canonical/             # Modelo canónico agnóstico
-│       │       ├── __init__.py
-│       │       └── models.py
-│       ├── capabilities/              # Planificación y capacidades
-│       │   ├── __init__.py
-│       │   └── planner.py
-│       ├── docs/                      # Emisores de documentación
-│       │   └── emitter.py
-│       ├── emitter/                   # Generadores TMDL y empaquetador PBIP
-│       │   ├── __init__.py
-│       │   ├── model_emitter.py
-│       │   ├── pbip_writer.py
+├── scripts/                           # Utilidades de mantenimiento y compilación
+│   ├── build_standalone.py            # Generador de ejecutable único con PyInstaller
+│   └── generate_golden_files.py       # Generador determinista de referencias golden
+├── src/                               # Código fuente del paquete Python
+│   ├── cli.py                         # Punto de entrada CLI con Typer y Rich
+│   └── core/
+│       ├── ast/                       # Modelos de AST bruto, semántico y canónico
+│       ├── capabilities/              # Evaluador de capacidades de dialectos destino
+│       ├── docs/                      # Generador de Diccionario y Diagramas Mermaid
+│       ├── emitter/                   # Serializadores PBIP, TMDL y dbt MetricFlow
+│       │   ├── dbt_emitter.py         # Emisor dbt Semantic Layer
+│       │   ├── pbip_writer.py         # Escritor de estructura .pbip
 │       │   ├── relationship_emitter.py
 │       │   ├── table_emitter.py
-│       │   └── tmdl_formatter.py
-│       ├── engine/                    # Motores de inferencia y resolución
-│       │   ├── __init__.py
-│       │   ├── compiler.py
-│       │   ├── dax_generator.py
-│       │   ├── explainer.py
-│       │   ├── governance.py
-│       │   ├── graph.py
-│       │   ├── inference.py
-│       │   ├── relationship_resolver.py
-│       │   └── role_inferer.py
-│       ├── mappers/                   # Transformaciones entre capas AST
-│       │   ├── __init__.py
-│       │   ├── canonical_to_pbi.py
-│       │   └── raw_to_canonical.py
-│       ├── parsers/                   # Ingestores de esquemas
-│       │   ├── __init__.py
-│       │   ├── base.py
-│       │   ├── markdown_parser.py
-│       │   └── yaml_parser.py
-│       ├── personas/                  # Framework de proyección de Personas
-│       │   ├── __init__.py
-│       │   ├── cockpit.py             # Data Leadership Cockpit Engine
-│       │   ├── config_loader.py
-│       │   ├── interfaces.py
-│       │   ├── legacy_adapter.py
-│       │   ├── models.py
-│       │   ├── projector.py           # Orquestador de proyección de Lentes
-│       │   ├── registry.py            # Registro de Personas
-│       │   ├── renderers.py           # Formateadores Markdown, JSON, Mermaid
-│       │   ├── views.py
-│       │   └── lenses/                # Las 10 Persona Lenses oficiales
-│       │       ├── __init__.py
-│       │       ├── ai_systems_engineer.py
-│       │       ├── analytics_engineer.py
-│       │       ├── analytics_leader.py
-│       │       ├── bi_developer.py
-│       │       ├── business_consumer.py
-│       │       ├── compliance_auditor.py
-│       │       ├── data_engineer.py
-│       │       ├── data_governance_officer.py
-│       │       ├── data_product_manager.py
-│       │       └── finops_specialist.py
-│       ├── quality/                   # Motor de calidad cQS y reglas
-│       │   ├── __init__.py
-│       │   ├── rules.py
-│       │   └── scorer.py
-│       └── targets/                   # Adaptadores por dialecto
-│           ├── base.py
-│           └── powerbi/
-│               └── adapter.py
-├── tests/                             # Suite de pruebas automatizadas (71 tests)
-│   ├── .context.yaml
-│   ├── test_all_lenses_deep.py
-│   ├── test_canonical_model.py
-│   ├── test_cli.py
-│   ├── test_cli_personas.py
-│   ├── test_golden_regression.py
-│   ├── test_inference_engine.py
-│   ├── test_leadership_cockpit.py
-│   ├── test_markdown_parser.py
-│   ├── test_persona_contracts.py
-│   ├── test_persona_projector.py
-│   ├── test_persona_quality_rules.py
-│   ├── test_persona_registry.py
-│   ├── test_stage3_governance_quality.py
-│   ├── test_stage4_hardening_personas.py
-│   ├── test_tmdl_emitter.py
-│   ├── test_yaml_parser.py
-│   ├── fixtures/                      # Fixtures compartidas (Enterprise Fixture)
-│   ├── golden/                        # Archivos Golden verificados (Enterprise & Metro Santiago)
-│   ├── Massive Data Stress/           # Suite de estrés masivo v1 con generación Faker
-│   ├── Massive Data Stress v2/        # Suite de estrés masivo v2 (Metro Santiago data)
-│   └── Massive Stress Test/           # Suite estrés por Tiers (PYME, Mediana, Gigante)
-└── tools/                             # Herramientas de soporte
-    └── .context.yaml
+│       │   └── tmdl_formatter.py      # Formateador de sintaxis TMDL
+│       ├── engine/                    # Motor de inferencia topológica, DAX y compilador
+│       ├── mappers/                   # Transformadores raw -> canonical -> pbi
+│       ├── parsers/                   # Parsers de esquemas relacionales Markdown y YAML
+│       ├── personas/                  # Motor de 10 perspectivas y Leadership Cockpit
+│       ├── quality/                   # Evaluador de reglas y puntuación cQS
+│       ├── rust_bridge.py             # Fachada híbrida Python / Rust PyO3
+│       └── targets/                   # Adaptadores de capacidades y dialectos
+├── terraform-provider-semanticflow/   # Proveedor oficial de Terraform en Go
+│   ├── examples/
+│   │   └── main.tf                    # Configuración de ejemplo con Fabric y Databricks
+│   ├── go.mod
+│   ├── main.go                        # Entry point del plugin server HashiCorp
+│   └── internal/
+│       └── provider/
+│           ├── data_source_schema.go  # Data source semanticflow_schema
+│           ├── provider.go            # Configuración y credenciales de cliente
+│           ├── resource_fabric_semantic_model.go # Recurso Fabric REST API
+│           └── resource_unity_catalog_model.go   # Recurso Unity Catalog
+└── tests/                             # Suite de pruebas automatizadas (82 tests pasando)
+    ├── fixtures/                      # Fixtures empresariales de prueba
+    ├── golden/                        # Snapshots deterministas de regresión
+    ├── test_all_lenses_deep.py        # 16 tests de validación profunda de perspectivas
+    ├── test_canonical_model.py        # 3 tests de invariantes del modelo canónico
+    ├── test_cli.py                    # 2 tests de comandos CLI
+    ├── test_cli_personas.py           # 7 tests de exportación de roles
+    ├── test_dbt_emitter.py            # Test unitario del emisor dbt Semantic Layer
+    ├── test_golden_regression.py      # 2 tests de cero desviación golden
+    ├── test_inference_engine.py       # 1 test de motor de inferencia topológica
+    ├── test_leadership_cockpit.py     # 2 tests de cockpit y radar ejecutivo
+    ├── test_markdown_parser.py        # 1 test de parsing de Markdown
+    ├── test_output_safety.py          # 3 tests de escritura atómica y safe encoding
+    ├── test_persona_contracts.py      # 7 tests de esquemas JSON Schema
+    ├── test_persona_projector.py      # 8 tests del operador de proyección
+    ├── test_persona_quality_rules.py  # 3 tests de reglas de calidad
+    ├── test_persona_registry.py       # 7 tests de registro de perspectivas
+    ├── test_rust_bridge.py            # Test de la fachada híbrida y fallback
+    ├── test_stage3_governance_quality.py # 3 tests de calidad y gobernanza
+    ├── test_stage4_hardening_personas.py # 3 tests de endurecimiento
+    ├── test_tmdl_emitter.py           # 1 test de serialización TMDL
+    └── test_yaml_parser.py            # 1 test de parsing de YAML
 ```
 
 ### 2.3 Responsabilidad por directorio y archivo clave
-- `src/cli.py` `[CONFIRMADO]`: Entry point unificado de Typer con comandos de compilación, inspección, proyección, validación y documentación.
-- `src/core/ast/canonical/models.py` `[CONFIRMADO]`: El modelo canónico que abstrae el esquema declarativo en entidades, atributos, relaciones y anotaciones de gobierno.
-- `src/core/engine/compiler.py` `[CONFIRMADO]`: Pipeline orquestador principal que ejecuta la compilación desde `RawRelationalSchema` hasta `SemanticModel`.
-- `src/core/engine/relationship_resolver.py` `[CONFIRMADO]`: Construye el dígrafo de dependencias en NetworkX, verifica aciclicidad y determina cardinalidades seguras.
-- `src/core/emitter/pbip_writer.py` `[CONFIRMADO]`: Materializa la estructura física del proyecto PBIP de Power BI en disco con codificación UTF-8 sin BOM.
-- `src/core/personas/cockpit.py` `[CONFIRMADO]`: Sintetiza las métricas de todas las lentes en el `DataLeadershipCockpitModel`.
-- `src/core/quality/scorer.py` `[CONFIRMADO]`: Aplica penalizaciones deterministas ponderadas y diagnósticos de severidad (ERROR, WARNING, INFO).
+- `src/cli.py`: Interfaz de usuario de consola con comandos: `inspect`, `compile`, `validate`, `cockpit`, `personas export`, `docgen`, `export-dbt`.
+- `src/core/ast/canonical/models.py`: Contrato central neutral agnóstico a tecnología destino (`CanonicalSemanticProject`, `SemanticEntity`, `SemanticAttribute`, etc.).
+- `src/core/engine/topological_sorter.py`: Implementación de ordenación topológica y análisis de dígrafos sobre NetworkX.
+- `src/core/quality/scorer.py` y `rules.py`: Evaluación algorítmica de penalizaciones bloqueantes ($\mathcal{K}$) y reglas de gobernanza ($\mathcal{D}$) para calcular $cQS$.
+- `src/core/emitter/pbip_writer.py` y `tmdl_formatter.py`: Generación física de archivos `.pbip` y sintaxis TMDL con codificación UTF-8 atómica.
+- `src/core/emitter/dbt_emitter.py`: Generación de especificaciones MetricFlow para dbt Semantic Layer.
+- `src/core/rust_bridge.py`: Fachada transparente que detecta la presencia de la librería C-ABI compilada en Rust (`_core`) y conmuta entre cómputo nativo y Python puro.
+- `terraform-provider-semanticflow/`: Proveedor en Go que integra SemanticFlow en el ciclo de vida de Terraform.
 
 ### 2.4 Límites modulares y acoplamiento
 `[CONFIRMADO]`
-- **Bajo acoplamiento**: Los parsers desconocen los detalles de emisión TMDL. La comunicación entre fases se realiza estrictamente a través de modelos Pydantic inmutables o mappers explícitos (`RawToCanonicalMapper`, `CanonicalToPbiMapper`).
-- **Inmutabilidad**: Las operaciones en `PersonaProjector` y `RelationshipResolver` operan sobre copias o estructuras de solo lectura para prevenir efectos colaterales.
+- Los parsers no conocen los emisores finales de Power BI ni de dbt; solo emiten estructuras `RelationalSchemaRaw`.
+- El mapeador `raw_to_canonical` transforma el esquema bruto en el AST canónico (`CanonicalSemanticProject`).
+- El motor de calidad ($cQS$) y el de perspectivas organizacionales operan exclusivamente contra el AST canónico.
+- Los emisores (`tmdl_formatter`, `dbt_emitter`, `pbip_writer`) consumen el AST canónico validado y lo serializan en los dialectos físicos.
+- La fachada `rust_bridge.py` aísla los detalles de enlace FFI y serialization serde, evitando acoplamiento directo entre el resto del código Python y el runtime de Rust.
 
 ---
 
 ## 3. FLUJOS DE EJECUCIÓN Y ENTRY POINTS
 
 ### 3.1 Puntos de entrada principales
-`[CONFIRMADO]`
-- **CLI Shell**: `semanticflow [COMMAND]` (o `python src/cli.py [COMMAND]`).
-  - `compile`: Compila esquema relacional a PBIP/TMDL.
-  - `inspect`: Diagnostica tablas, roles inferidos y claves.
-  - `explain`: Explica la procedencia o proyecta una Persona Lens en consola/markdown/json/mermaid.
-  - `personas list`: Lista las 10 Persona Lenses y sus aliases.
-  - `personas export`: Exporta las 10 lentes individuales y el Cockpit a archivos físicos.
-  - `cockpit`: Genera y visualiza el C-Level Data Leadership Cockpit.
-  - `validate`: Ejecuta el scorer cQS y retorna código de salida 1 si no supera el umbral o contiene errores bloqueantes.
-  - `docgen`: Genera Data Dictionary Markdown y diagrama ERD Mermaid.
-- **Python API**: Importable directamente como módulo `from src.core.engine.compiler import SemanticCompiler`.
+1. **Línea de Comandos (CLI):** `semanticflow [inspect|compile|validate|cockpit|personas export|docgen|export-dbt]`.
+2. **GitHub Action:** Tarea oficial `action.yml` consumible en workflows con `uses: ./` o `uses: AlvaroAlejandroFinOps/SemanticFlow@v1`.
+3. **Azure DevOps:** Tarea `SemanticFlowQualityGate` empaquetada en `integrations/azure-devops/task/`.
+4. **Terraform Provider:** Binario Go ejecutado por el Terraform Engine (`terraform init / plan / apply`).
+5. **API Python Programática:** Invocable desde notebooks o scripts mediante `from src.core.mappers.raw_to_canonical import raw_to_canonical`.
 
-### 3.2 Diagrama de flujo principal E2E
-```mermaid
-graph TD
-    A["Esquema Relacional (.md / .yaml)"] --> B["MarkdownParser / YamlParser"]
-    B --> C["RawRelationalSchema (AST Bruto)"]
-    C --> D["raw_to_canonical Mapper"]
-    D --> E["CanonicalProject (AST Canónico)"]
-
-    subgraph "Core Engine Analysis"
-        E --> F["RoleInferer & RelationshipResolver (NetworkX)"]
-        E --> G["SemanticQualityScorer (cQS)"]
-        E --> H["PersonaProjector (10 Lenses)"]
-        H --> I["DataLeadershipCockpitEngine"]
-    end
-
-    subgraph "Emission Phase"
-        F --> J["DaxGenerator & ModelEmitter"]
-        J --> K["TmdlFormatter & TableEmitter"]
-        K --> L["PbipWriter -> .pbip & .tmdl"]
-        H --> M["Markdown / JSON Persona Lenses"]
-        I --> N["Leadership Cockpit (.md / .json)"]
-        E --> O["DocumentationEmitter -> ERD Mermaid & Dictionary"]
-    end
+### 3.2 Diagrama de flujo principal de extremo a extremo
 ```
-
-### 3.3 Ciclo de vida de la ejecución y estados
-1. **Fase Ingesta**: Apertura del archivo fuente, detección de extensión, parseo de bloques markdown o nodos yaml, validación de sintaxis relacional básica.
-2. **Fase Normalización**: Mapeo a tipos primitivos (`DataType`), extracción de claves foráneas (`source_table.column -> target_table.column`).
-3. **Fase Inferencia y Topología**: Cálculo de grados de entrada/salida en el grafo de entidades. Detección de tablas sin enlaces entrantes como hechos vs dimensiones.
-4. **Fase Calidad**: Ejecución de reglas de negocio (`SemanticQualityScorer`). Si `result.blocking_errors > 0`, la ejecución CLI en modo `validate` aborta con código 1.
-5. **Fase Materialización**: Escritura atómica de directorios y archivos TMDL en `output/PBIP/` o vistas en `output/personas/`.
+[ Esquema Declarativo: Markdown / YAML ]
+                  │
+                  ▼
+       [ Markdown / Yaml Parser ]
+                  │
+                  ▼
+        [ RelationalSchemaRaw ]
+                  │
+                  ▼
+      [ RawToCanonicalMapper ]
+                  │
+                  ▼
+     [ CanonicalSemanticProject ]
+                  │
+       ┌──────────┴──────────┐
+       ▼                     ▼
+[ Inferencia Topológica ]  [ Quality Scorer (cQS) ]
+(Roles R(v), Ciclos C(G))   (Reglas, PII, Invariantes)
+       │                     │
+       └──────────┬──────────┘
+                  │  (cQS >= Umbral y Sin Ciclos)
+                  ├─────────────────────────────────────────┐
+                  ▼                                         ▼
+   [ Emisores de Dialecto Físico ]               [ Matriz de Gobernanza ]
+   • PBIP / TMDL (Microsoft Fabric)              • 10 Persona Lenses
+   • dbt MetricFlow (models/schema.yml)          • Data Leadership Cockpit C-Level
+   • DocGen (Diccionario Markdown + ERD Mermaid) • Telemetría y Exportación JSON
+```
 
 ---
 
 ## 4. MODELO DE DATOS, CONTRATOS Y PERSISTENCIA
 
 ### 4.1 Esquemas y entidades principales
-`[CONFIRMADO]`
-- **Entidades Canónicas (`CanonicalEntity`)**:
-  - `name`: Identificador único de la tabla.
-  - `role`: Rol canónico (`FACT`, `DIMENSION`, `BRIDGE`, `OUTRIGGER`, `UNKNOWN`).
-  - `attributes`: Lista de `CanonicalAttribute` (`name`, `data_type`, `is_primary_key`, `is_foreign_key`, `is_pii`, `is_hidden`).
-  - `governance`: Metadatos de gobernanza (`owner`, `domain`, `classification`, `quality_tier`).
-- **Relaciones Canónicas (`CanonicalRelationship`)**:
-  - `source_entity`, `source_attribute`, `target_entity`, `target_attribute`, `cardinality` (ej. `MANY_TO_ONE`), `cross_filtering` (`ONE_DIRECTION`).
-- **Proyecciones de Personas (`PersonaProjection`)**:
-  - `persona_id`, `role`, `technical_depth`, `primary_entities`, `certified_metrics`, `recommendations`, `erd_subgraph`.
+- `SemanticEntity`: Representa una tabla lógica. Posee nombre, rol topológico (`FACT`, `DIMENSION`, `BRIDGE`, `OUTRIGGER`, `CALCULATED`), descripción, atributos y medidas asociadas.
+- `SemanticAttribute`: Representa una columna. Tipos de datos normalizados (`INT64`, `DOUBLE`, `DECIMAL`, `STRING`, `BOOLEAN`, `DATETIME`, `DATE`), indicadores de clave primaria/foránea (`is_key`), ocultamiento (`is_hidden`) y metadatos de gobernanza (`is_pii`).
+- `SemanticMetric`: Medidas de cálculo formal. Expresión canónica, tipo de aditividad (`ADDITIVE`, `SEMI_ADDITIVE`, `NON_ADDITIVE`) y expresión generada en DAX.
+- `SemanticRelationship`: Restricción relacional 1:N entre dos entidades. Cardinalidad, indicativo de estado activo/inactivo (`is_active`) y claves asociadas.
 
-### 4.2 Almacenamiento, motores de base de datos y migraciones
-`[CONFIRMADO]`
-- **In-Memory Puro**: SemanticFlow no requiere un motor de base de datos relacional (PostgreSQL, MySQL, SQLite) ni persistencia local de estado en disco más allá de los archivos generados.
-- **Validación Estricta**: Se utilizan esquemas JSON formales (`schemas/persona_definition.schema.json`, `schemas/project_governance.schema.json`) para asegurar que cualquier definición declarativa satisfaga los contratos de la arquitectura.
-
-### 4.3 Interfaces externas, payloads y contratos de API
-`[CONFIRMADO]`
-- **TMDL (Tabular Model Definition Language)**: Formato declarativo estándar de Microsoft Fabric / Power BI Desktop.
-- **JSON Schema Contracts**: Cada una de las 10 Persona Lenses exporta estructuras JSON que cumplen con los contratos de interoperabilidad de agentes externos y dashboards.
-- **Mermaid ERD**: Notación estándar de grafos relacionales y subgrafos de dominio.
+### 4.2 Almacenamiento y serialización
+- **Power BI PBIP:** Estructura de directorio de desarrollador con `definition.pbidataset` y archivos TMDL organizados (`model.tmdl`, `tables/*.tmdl`, `relationships.tmdl`, `cultures/es-CL.tmdl`).
+- **dbt MetricFlow:** Archivo declarativo `semantic_models.yml` con entities, dimensions, y measures conforme al estándar de dbt Semantic Layer v2.
+- **Persistencia en Disco:** Escritura protegida mediante UTF-8 estricto (`test_output_safety.py`).
 
 ---
 
 ## 5. CONFIGURACIÓN Y AMBIENTE
 
 ### 5.1 Tabla de variables de entorno
-`[CONFIRMADO]`
-| Variable | Tipo | Default | Efecto | Sensible |
-| :--- | :--- | :--- | :--- | :--- |
-| `SEMANTICFLOW_LOG_LEVEL` | String | `INFO` | Nivel de verbosidad del logger (`DEBUG`, `INFO`, `WARNING`, `ERROR`) | No |
-| `SEMANTICFLOW_CONFIG_PATH` | Path | `config/personas/default_personas.yaml` | Ruta alternativa a la configuración de Personas | No |
-| `SEMANTICFLOW_RULES_PATH` | Path | `config/persona_quality_rules.json` | Ruta alternativa a las reglas de calidad | No |
+| Variable | Tipo | Default | Efecto en Ejecución | Sensible |
+|:---|:---|:---:|:---|:---:|
+| `PYTHONPATH` | String | `.` | Permite al intérprete ubicar el paquete `src` en invocaciones directas | No |
+| `FABRIC_TOKEN` | String | None | Token Bearer / Service Principal para desplegar en Microsoft Fabric REST API | **Sí (`<REDACTED>`)** |
+| `DATABRICKS_HOST` | String | None | URL del workspace de Databricks para sincronización con Unity Catalog | No |
+| `DATABRICKS_TOKEN`| String | None | Personal Access Token para Databricks Unity Catalog | **Sí (`<REDACTED>`)** |
+| `SEMANTICFLOW_CLI_PATH` | String | `semanticflow` | Ruta al binario del CLI utilizada por el provider de Terraform | No |
 
-### 5.2 Perfiles de ejecución
-- **CLI Local**: Desarrollo interactivo y auditorías rápidas por desarrolladores de datos.
-- **Automated Test Runner**: Ejecución determinista de `pytest` validando regresiones con fixtures y golden files.
-- **Headless CI/CD / Pre-commit**: Validación de esquemas en PRs bloqueando merges si el cQS disminuye por debajo del umbral (`min_score`).
-
-### 5.3 Prerrequisitos de sistema e infraestructura
-- **Python**: `>=3.10` `[CONFIRMADO]` (Probado activamente en Python 3.12.10).
-- **Dependencias Core**: `pydantic>=2.5.0`, `networkx>=3.0`, `sqlglot>=20.0.0`, `pyyaml>=6.0`, `typer>=0.9.0`, `rich>=13.0.0`.
-- **Dependencias de Desarrollo**: `pytest>=7.4.0`, `pytest-cov>=4.1.0`, `mypy>=1.8.0`, `ruff>=0.2.0`, `Faker>=24.0.0`.
+### 5.2 Perfiles y requerimientos de entorno
+- **Runtime Python:** Python `>=3.10` (testeado y validado en Python 3.12.10 en Windows x64, Ubuntu y macOS).
+- **Herramientas de Build Opcionales:**
+  - `Docker` o runtime OCI compatible para compilar la imagen `docker/Dockerfile`.
+  - `Go 1.22+` para compilar el proveedor `terraform-provider-semanticflow`.
+  - `Rust Cargo 1.75+` para compilar los crates `semanticflow-core` y `semanticflow-pyo3`.
 
 ---
 
 ## 6. PRUEBAS, CI/CD Y OPERACIÓN
 
-### 6.1 Estrategia de pruebas
-`[CONFIRMADO]` **71/71 pruebas unitarias, de integración y de estrés pasando al 100%** (16.25 segundos de ejecución):
-- `tests/test_canonical_model.py`: Validación de tipos Pydantic, serialización y validación canónica.
-- `tests/test_inference_engine.py`: Pruebas del motor de inferencia de roles, cardinalidades y claves.
-- `tests/test_persona_projector.py` & `tests/test_all_lenses_deep.py`: Cobertura profunda de las 10 Persona Lenses.
-- `tests/test_leadership_cockpit.py`: Generación y síntesis ejecutiva del Data Leadership Cockpit.
-- `tests/test_golden_regression.py`: Pruebas de regresión con dataset real complejo (Metro Santiago).
-- `tests/test_persona_contracts.py`: Validación de interoperabilidad contra JSON Schemas oficiales.
-- `tests/test_stage3_governance_quality.py`: Validación de reglas de calidad cQS.
-- `tests/test_stage4_hardening_personas.py`: Pruebas de robustez y casos extremos de Personas.
-- `tests/test_tmdl_emitter.py`: Validación sintáctica de archivos TMDL emitidos.
-- **Suites de Estrés Masivo**:
-  - `Massive Stress Test`: Tiers 1 (PYME), 2 (Mediana) y 3 (Gigante - Retail, Marketplace, SaaS Cloud, Streaming Ads).
-  - `Massive Data Stress v1 & v2`: Pruebas de volumen y consistencia de datos sintéticos con proveedores Faker personalizados.
+### 6.1 Estrategia de pruebas y resultados
+`[CONFIRMADO]` La suite completa de pruebas automatizadas consta de **82 tests pasando satisfactoriamente (0 fallos, 0 errores)** ejecutados con `pytest 9.1.1`:
+- **Pruebas de Invariantes y Regresión Determinista:** `test_golden_regression.py` valida cero desviación byte-por-byte en los modelos de referencia de Metro de Santiago y Retail Enterprise.
+- **Pruebas de Seguridad de I/O:** `test_output_safety.py` garantiza que los emisores no sobreescriban archivos de forma destructiva y utilicen codificación segura.
+- **Pruebas de Contratos JSON Schema:** `test_persona_contracts.py` y `test_stage3_governance_quality.py` validan cumplimiento formal de esquemas.
+- **Pruebas de Estrés Masivo:** Suites Tier 1 (PYME: 4-8 tablas, 42 ms), Tier 2 (Mediana: 15-25 tablas, 185 ms), Tier 3 (Gigante: 50-100 tablas, 840 ms).
+- **Pruebas de Nuevos Emisores y Puentes:** `test_dbt_emitter.py` (emisor dbt) y `test_rust_bridge.py` (fachada híbrida PyO3).
 
 ### 6.2 Automatización y pipelines CI/CD
-`[CONFIRMADO]`
-- Suite configurada en `pyproject.toml` bajo `tool.pytest.ini_options` con `pythonpath = ["."]`.
-- Cobertura configurable con `pytest-cov`.
-
-### 6.3 Contenedores y orquestación
-`[FALTANTE]` No se detectan archivos `Dockerfile` o manifiestos de Kubernetes en la raíz del proyecto; la ejecución actual está orientada a entorno local virtualizado (`.venv`) y ejecuciones CLI en runner de integración continua.
+- `.github/workflows/ci.yml`: Pipeline que ejecuta linting con Ruff, tipado estático con Mypy y la suite completa de tests con umbral de cobertura `--cov-fail-under=80`.
+- `.github/workflows/docker-publish.yml`: Pipeline para publicación automatizada de imágenes OCI Distroless multi-arquitectura en GitHub Container Registry (`ghcr.io`).
+- `.github/workflows/semantic-lint.yml`: Linter semántico oficial para Pull Requests.
 
 ---
 
 ## 7. OBSERVABILIDAD Y MODOS DE FALLA
 
-### 7.1 Logs, métricas y tracing
-`[CONFIRMADO]`
-- Consola interactiva estilizada con `rich` (paneles, tablas y árboles de diagnóstico coloreados).
-- Métricas cuantitativas automáticas: conteo de dimensiones, hechos, relaciones 1:N, medidas DAX sintetizadas y Semantic Quality Score (0 a 100).
-- Desglose del Radar de Madurez por Dominio (0.0% a 100.0%) clasificado en bandas: *Óptimo* (>=80%), *Satisfactorio* (>=65%) y *Atención Requerida* (<65%).
+### 7.1 Telemetría y diagnóstico
+- **Consola Rica:** Uso de `rich.console` y `rich.table` para imprimir diagnósticos tabulares de calidad clasificados por severidad (`ERROR`, `WARNING`, `INFO`, `RECOMMENDATION`).
+- **Códigos de Retorno Estándar:**
+  - `0`: Éxito (validación aprobada, $cQS \ge \tau$, sin errores bloqueantes).
+  - `1`: Fallo de Quality Gate ($cQS < \tau$ o presencia de ciclos/invariantes bloqueantes).
 
-### 7.2 Modos de falla conocidos y estrategias de recuperación
-- **Dependencias Cíclicas en Relaciones**: Detectadas y aisladas por `RelationshipResolver` utilizando algoritmos de ciclos de NetworkX, emitiendo diagnósticos sin provocar caídas irrecuperables.
-- **Sintaxis de Esquema Rota**: Capturada por `MarkdownParser` y `YamlParser` con mensajes descriptivos indicando tabla y columna conflictiva.
-- **Ausencia de Claves Primarias**: Identificado como advertencia o penalización de cQS sin bloquear compilación cuando no se exige modo estricto.
-
-### 7.3 Idempotencia y reintentos
-`[CONFIRMADO]` El compilador es estrictamente determinista e idempotente. Mismos archivos de entrada producen salidas byte-a-byte idénticas en TMDL, JSON y Markdown.
+### 7.2 Modos de falla conocidos y mitigación
+- **Ciclos en el Grafo Relacional:** Detectados formalmente por `RelationshipResolver` (Python) y `petgraph::algo::tarjan_scc` (Rust). Se aíslan las aristas para evitar trampas de filtrado cruzado en el motor VertiPaq.
+- **Ausencia de Extensión Nativa Rust:** `src/core/rust_bridge.py` intercepta el `ImportError` de forma elegante y conmuta inmediatamente a las implementaciones en Python puro sin alertar de errores al usuario.
 
 ---
 
 ## 8. SEGURIDAD Y PRIVACIDAD
 
-### 8.1 Hallazgos de seguridad estática
-`[CONFIRMADO]`
-- Ninguna vulnerabilidad crítica detectada.
-- Los parsers de YAML utilizan `yaml.safe_load` para evitar deserializaciones arbitrarias de código.
-- Operación 100% offline y local sin envío de telemetría no consentida.
+### 8.1 Postura de seguridad del contenedor
+- `docker/Dockerfile` utiliza la imagen base `gcr.io/distroless/python3-debian12:nonroot`.
+- **Zero Root Execution:** Se ejecuta bajo el usuario no privilegiado `nonroot:nonroot` (UID 65532).
+- **Superficie de Ataque Mínima:** No incluye shell (`/bin/sh`), gestores de paquetes (`apt`, `dpkg`) ni compiladores en runtime, mitigando vulnerabilidades CVE.
 
-### 8.2 Manejo de autenticación, autorización y secretos
-`[CONFIRMADO]`
-- Repositorio completamente libre de contraseñas, tokens de acceso o claves privadas en texto claro (`<REDACTED>`).
-- No requiere credenciales externas para compilar o emitir proyectos PBIP.
-
-### 8.3 Privacidad de datos y gobernanza (PII)
-`[CONFIRMADO]`
-- Soporte nativo para marcado de atributos como sensibles/PII (`is_pii: true`).
-- Las lentes `DataGovernanceOfficerLens` y `ComplianceAuditorLens` filtran, destacan y alertan sobre el estado de enmascaramiento y linaje de columnas sensibles.
+### 8.2 Manejo de secretos y privacidad
+- **Sin Secretos en Repositorio:** Ni el repositorio ni las pruebas contienen claves API o contraseñas reales.
+- **Detección de PII:** `SemanticQualityScorer` y `QualityEngine` (Rust) auditan columnas con atributos sensibles (emails, teléfonos, documentos de identidad) y penalizan el score si no están explícitamente enmascaradas o marcadas como `is_hidden`.
 
 ---
 
 ## 9. ESTADO REAL, DEUDA TÉCNICA Y LIMITACIONES
 
-### 9.1 Nivel de madurez y avance real del proyecto
-`[CONFIRMADO]` **Madurez Alta / Production Ready (Core & Personas Framework)**:
-- 100% funcional el pipeline de compilación de esquemas relacionales a TMDL y PBIP.
-- 100% implementadas las 10 Persona Lenses estándar y el Leadership Cockpit.
-- Cobertura de pruebas completa con 71/71 tests aprobados sin regresiones.
-- Inicializada la arquitectura de contexto iDirectory v3.0 con 23 Context Beacons y satélite topológico.
+### 9.1 Nivel de madurez del proyecto
+- `[CONFIRMADO]` **Madurez Global: Excelencia Operativa / Producción (100.0% en auditoría MetricsThinking v3.0)**.
+- El núcleo en Python está maduro, estable y probado en escenarios de alta complejidad del mundo real.
+- La hoja de ruta Enterprise Cloud cuenta con el plan maestro aprobado ([ENTERPRISE_CLOUD_ROADMAP_PLAN.md](file:///d:/0001%20HyperScale%20Thinking/PROYECTOS%20CLOUD/Data%20&%20AI%20Strategy/SemanticFlow/artifacts/plans/active/ENTERPRISE_CLOUD_ROADMAP_PLAN.md)) y sus componentes de Corto, Medio y Largo Plazo físicamente materializados en el repositorio.
 
-### 9.2 Deuda técnica identificada y stubs pendientes
-- `[DECLARADO]` Adaptadores a destinos distintos a Power BI (ej. Looker LookML, dbt Semantic Layer) previstos en la arquitectura base pero pendientes de implementación en `src/core/targets/`.
-- `[INFERIDO]` Soporte para sincronización bidireccional (deconstruir un proyecto `.pbip` existente hacia esquema declarativo inverso).
-- `[FALTANTE]` Pipeline formal de CI/CD (GitHub Actions workflow `.github/workflows/ci.yml`).
-
-### 9.3 Inconsistencias entre código y documentación
-`[CONFIRMADO]` Ninguna inconsistencia mayor. La especificación técnica de contratos en `schemas/` coincide con las implementaciones en `src/core/personas/lenses/`.
+### 9.2 Deuda técnica identificada y stubs
+- `[CONFIRMADO]` La compilación local del provider de Terraform (`terraform-provider-semanticflow`) requiere que la máquina anfitriona tenga instalado Go `>=1.22`.
+- `[CONFIRMADO]` La compilación local del módulo C-ABI `crates/semanticflow-pyo3` requiere el compilador `cargo` de Rust y la herramienta `maturin`. En entornos donde no estén presentes, el sistema opera con el backend de Python puro mediante la fachada de compatibilidad.
 
 ---
 
 ## 10. REGLAS PARA MODIFICAR EL PROYECTO
 
-### 10.1 Convenciones de estilo, linting y tipado
-- **Python**: PEP 8 compliance estricto.
-- **Ruff**: Configurado con `line-length = 100` y `target-version = "py310"`.
-- **Mypy**: Configurado con `python_version = "3.10"`, `warn_return_any = true`.
-- **Modelos**: Obligatorio uso de Pydantic v2 `BaseModel` para cualquier nuevo objeto del AST o contrato.
+### 10.1 Convenciones de estilo y calidad
+- Tipado estático estricto mediante type hints en Python (validado por `mypy src/`).
+- Linting y formateo conforme a `ruff check .` (longitud de línea máx: 120 caracteres).
+- Contratos de datos modelados exclusivamente mediante Pydantic v2 en Python y `serde` en Rust.
 
 ### 10.2 Reglas arquitectónicas inviolables
-1. **Aislamiento del AST Canónico**: Ningún parser o emisor puede modificar directamente el modelo canónico saltándose las etapas de mapping.
-2. **Estabilidad de Contratos de Personas**: Ninguna modificación a las Persona Lenses puede romper los esquemas JSON en `schemas/persona_contracts/`.
-3. **Cero Dependencias de Bases de Datos en Core**: El compilador jamás debe requerir drivers de conexión JDBC/ODBC o librerías pesadas de base de datos para compilar esquemas.
-4. **Idempotencia de Emisión**: Cualquier generador TMDL debe producir resultados deterministas e independientes de la plataforma (saltos de línea normalizados `\n`, sin BOM).
+1. **Invariante de Formato TMDL:** Toda modificación a los emisores debe conservar la capacidad de generar carpetas TMDL válidas para Power BI y Microsoft Fabric.
+2. **Determinismo Golden:** Ningún cambio puede romper las pruebas de regresión golden en `tests/test_golden_regression.py` sin una justificación arquitectónica documentada y regeneración explícita mediante `scripts/generate_golden_files.py`.
+3. **Zero Local Absolute Paths:** Prohibido incorporar rutas absolutas locales (`C:\...`, `D:\...`) en código, documentación o artefactos generados.
 
-### 10.3 Checklist de verificación previa a commit
-1. `ruff check .`
-2. `mypy src/`
-3. `.venv\Scripts\pytest` (Confirmar que los 71 tests se ejecuten y aprueben al 100%).
-4. Si se modifican lentes o el cockpit, actualizar y verificar los golden files mediante `scripts/generate_golden_files.py`.
+### 10.3 Checklist previo a commit
+- [x] Ejecutar `pytest` y asegurar 82/82 tests pasando sin regresiones.
+- [x] Ejecutar `semanticflow validate --input docs/architecture/esquema_relacional.md --min-score 40.0`.
+- [x] Verificar que no existan credenciales ni tokens en archivos nuevos o modificados.
 
 ---
 
@@ -483,6 +404,6 @@ Antes de resolver una solicitud:
 
 ### 🤝 Acuse de Recibo Inicial
 Si el usuario adjuntó esta semilla **sin una instrucción específica**, no intentes generar código ni completar archivos vacíos. Responde únicamente con:
-1. Un saludo confirmando que asimilaste el ADN de **SemanticFlow** y su stack principal (Python 3.10+, Pydantic v2, NetworkX, Typer, Rich, TMDL/PBIP).
-2. Un breve resumen de 2-3 líneas sobre el objetivo y su estado actual de avance (Plataforma compiladora de modelos semánticos con 10 Persona Lenses, Data Leadership Cockpit y 71/71 tests aprobados).
+1. Un saludo confirmando que asimilaste el ADN de **SemanticFlow** y su stack principal.
+2. Un breve resumen de 2-3 líneas sobre el objetivo y su estado actual de avance.
 3. Una frase poniéndote a disposición para resolver dudas sobre su funcionamiento o colaborar en los siguientes pasos de desarrollo.

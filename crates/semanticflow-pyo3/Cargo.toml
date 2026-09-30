@@ -1,0 +1,16 @@
+[package]
+name = "semanticflow-pyo3"
+version = "0.1.0"
+edition = "2021"
+description = "PyO3 Python bindings for semanticflow-core"
+authors = ["SemanticFlow Core Team"]
+license = "Apache-2.0"
+
+[lib]
+name = "_core"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module"] }
+semanticflow-core = { path = "../semanticflow-core" }
+serde_json = "1.0"

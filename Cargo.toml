@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "crates/semanticflow-core",
+    "crates/semanticflow-pyo3",
+]
+resolver = "2"

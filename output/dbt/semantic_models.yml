@@ -1,0 +1,560 @@
+version: 2
+semantic_models:
+- name: dim_linea
+  description: "Representa las l\xEDneas de la red del Metro de Santiago."
+  model: ref('dim_linea')
+  entities:
+  - name: sk_linea
+    type: primary
+    description: "Surrogate Key de la l\xEDnea ferroviaria."
+  dimensions:
+  - name: codigo_linea
+    type: categorical
+    description: "C\xF3digo identificador de la l\xEDnea (ej: L1, L2, L3, L4, L4A,\
+      \ L5, L6, L7)."
+  - name: color
+    type: categorical
+    description: "Color distintivo de la l\xEDnea."
+  - name: tecnologia
+    type: categorical
+    description: "Sistema de control y tecnolog\xEDa de la l\xEDnea (ej: CBTC, ASFA,\
+      \ CBTC-UTO)."
+  - name: longitud_km
+    type: categorical
+    description: "Longitud total de la l\xEDnea en kil\xF3metros."
+  measures:
+  - name: dim_linea_count
+    description: Total count of Dim_Linea
+    agg: count
+    expr: '1'
+- name: dim_estacion
+  description: "Representa cada una de las estaciones que componen las distintas l\xED\
+    neas de metro."
+  model: ref('dim_estacion')
+  entities:
+  - name: sk_estacion
+    type: primary
+    description: "Surrogate Key de la estaci\xF3n."
+  - name: sk_linea
+    type: primary
+    description: "Relaci\xF3n con la l\xEDnea a la que pertenece la estaci\xF3n."
+  dimensions:
+  - name: codigo_estacion
+    type: categorical
+    description: "C\xF3digo t\xE9cnico estructurado (ej: EST-L1-01)."
+  - name: nombre_estacion
+    type: categorical
+    description: "Nombre comercial y p\xFAblico de la estaci\xF3n."
+  - name: comuna
+    type: categorical
+    description: "Comuna de Santiago donde se emplaza la estaci\xF3n."
+  - name: tipo_estacion
+    type: categorical
+    description: "Configuraci\xF3n f\xEDsica (Subterr\xE1nea, Viaducto, Superficie)."
+  - name: es_combinacion
+    type: categorical
+    description: "Indicador l\xF3gico (1 = Es combinaci\xF3n con otra l\xEDnea, 0\
+      \ = No es combinaci\xF3n)."
+  measures:
+  - name: dim_estacion_count
+    description: Total count of Dim_Estacion
+    agg: count
+    expr: '1'
+- name: dim_tren_coche
+  description: Representa la flota de trenes asignados a la red de metro.
+  model: ref('dim_tren_coche')
+  entities:
+  - name: sk_tren
+    type: primary
+    description: "Surrogate Key \xFAnica para cada tren (formaci\xF3n)."
+  - name: sk_linea
+    type: primary
+    description: "L\xEDnea asignada de operaci\xF3n para el tren."
+  dimensions:
+  - name: id_formacion
+    type: categorical
+    description: "Identificador \xFAnico de la formaci\xF3n de trenes (ej: TRN-001)."
+  - name: modelo
+    type: categorical
+    description: 'Modelo de material rodante (ej: NS-74, NS-93, AS-02, NS-04, AS-14,
+      NS-16).'
+  - name: cant_coches
+    type: categorical
+    description: "N\xFAmero de vagones o coches que componen la formaci\xF3n (5, 6,\
+      \ 7)."
+  - name: capacidad_pax
+    type: categorical
+    description: "Capacidad de pasajeros m\xE1xima de la formaci\xF3n."
+  measures:
+  - name: dim_tren_coche_count
+    description: Total count of Dim_Tren_Coche
+    agg: count
+    expr: '1'
+- name: dim_usuario_bip
+  description: Registro de tarjetas y usuarios del sistema Bip!
+  model: ref('dim_usuario_bip')
+  entities:
+  - name: sk_usuario
+    type: primary
+    description: "Surrogate Key \xFAnica a nivel BIGINT del usuario."
+  dimensions:
+  - name: numero_tarjeta_bip
+    type: categorical
+    description: "N\xFAmero de la tarjeta Bip!"
+  - name: tipo_usuario
+    type: categorical
+    description: Perfil del usuario (Adulto, Estudiante_TNE, Adulto_Mayor).
+  measures:
+  - name: dim_usuario_bip_count
+    description: Total count of Dim_Usuario_Bip
+    agg: count
+    expr: '1'
+- name: dim_equipamiento
+  description: "Contiene la jerarqu\xEDa de activos e infraestructura cr\xEDtica asociada\
+    \ a trenes o estaciones (m\xF3dulo de mantenimiento/SAP PM)."
+  model: ref('dim_equipamiento')
+  entities:
+  - name: sk_equipo
+    type: primary
+    description: "Surrogate Key del equipo/activo f\xEDsico."
+  - name: sk_tren
+    type: primary
+    description: "Tren asociado al equipo (o -1 si es equipamiento de estaci\xF3n)."
+  - name: sk_estacion
+    type: primary
+    description: "Estaci\xF3n asociada al equipo (o -1 si es equipamiento de tren)."
+  dimensions:
+  - name: sistema
+    type: categorical
+    description: "Subsistema espec\xEDfico (Tracci\xF3n, Frenado, Escaleras Mec\xE1\
+      nicas, etc.)."
+  - name: criticidad
+    type: categorical
+    description: "Nivel de criticidad para la operaci\xF3n (Alta, Media)."
+  measures:
+  - name: dim_equipamiento_count
+    description: Total count of Dim_Equipamiento
+    agg: count
+    expr: '1'
+- name: dim_unidad_negocio
+  description: Estructura organizacional interna para reporte financiero.
+  model: ref('dim_unidad_negocio')
+  entities:
+  - name: sk_unidad
+    type: primary
+    description: Clave primaria de la Unidad de Negocio.
+  dimensions:
+  - name: nombre
+    type: categorical
+    description: Nombre de la unidad (Transporte Pasajeros, Negocios No Tarifarios).
+  measures:
+  - name: dim_unidad_negocio_count
+    description: Total count of Dim_Unidad_Negocio
+    agg: count
+    expr: '1'
+- name: dim_espacio_comercial
+  description: Detalle de locales y publicidad en las estaciones.
+  model: ref('dim_espacio_comercial')
+  entities:
+  - name: sk_espacio
+    type: primary
+    description: "Clave primaria \xFAnica del espacio comercial."
+  - name: sk_estacion
+    type: primary
+    description: "Estaci\xF3n f\xEDsica donde se ubica el espacio."
+  dimensions:
+  - name: tipo
+    type: categorical
+    description: "Tipo de espacio (Local Comercial, Cajero Autom\xE1tico, Publicidad\
+      \ Digital, Antena Telecom)."
+  measures:
+  - name: dim_espacio_comercial_count
+    description: Total count of Dim_Espacio_Comercial
+    agg: count
+    expr: '1'
+- name: dim_proyecto_expansion
+  description: Registro de iniciativas de infraestructura y crecimiento de la red.
+  model: ref('dim_proyecto_expansion')
+  entities:
+  - name: sk_proyecto
+    type: primary
+    description: "Clave \xFAnica del proyecto de expansi\xF3n."
+  dimensions:
+  - name: nombre
+    type: categorical
+    description: "Nombre del proyecto de expansi\xF3n."
+  - name: presupuesto_usd
+    type: categorical
+    description: "Inversi\xF3n total estimada en USD."
+  measures:
+  - name: dim_proyecto_expansion_count
+    description: Total count of Dim_Proyecto_Expansion
+    agg: count
+    expr: '1'
+- name: dim_organizacion_esg
+  description: "Cat\xE1logo de iniciativas y compromisos ESG (Ambiental, Social y\
+    \ Gobernanza)."
+  model: ref('dim_organizacion_esg')
+  entities:
+  - name: sk_iniciativa
+    type: primary
+    description: "Clave \xFAnica de la iniciativa ESG."
+  dimensions:
+  - name: categoria
+    type: categorical
+    description: "\xC1mbito de impacto (Emisiones CO2, Energ\xEDa Renovable, Inclusi\xF3\
+      n, Comunidad)."
+  - name: meta
+    type: categorical
+    description: "Descripci\xF3n del objetivo / indicador a cumplir."
+  measures:
+  - name: dim_organizacion_esg_count
+    description: Total count of Dim_Organizacion_ESG
+    agg: count
+    expr: '1'
+- name: dim_tiempo
+  description: "Dimensi\xF3n temporal detallada para an\xE1lisis de tendencias cronol\xF3\
+    gicas."
+  model: ref('dim_tiempo')
+  entities:
+  - name: fecha_sk
+    type: primary
+    description: 'Clave de fecha formateada en formato `YYYYMMDD` (ej: 20260115).'
+  dimensions:
+  - name: fecha
+    type: time
+    description: Timestamp representativo de la fecha.
+    type_params:
+      time_granularity: day
+  - name: dia
+    type: categorical
+    description: "D\xEDa del mes (1 - 31)."
+  - name: mes
+    type: categorical
+    description: "Mes del a\xF1o (1 - 12)."
+  - name: "a\xF1o"
+    type: categorical
+    description: "A\xF1o calendario."
+  - name: dia_semana
+    type: categorical
+    description: "Indexaci\xF3n del d\xEDa (0 = Lunes, 6 = Domingo)."
+  - name: es_fin_semana
+    type: categorical
+    description: "L\xF3gica binaria (1 = S\xE1bado/Domingo, 0 = Lunes a Viernes)."
+  measures:
+  - name: dim_tiempo_count
+    description: Total count of Dim_Tiempo
+    agg: count
+    expr: '1'
+- name: fact_validacion
+  description: Registra cada uno de los accesos y validaciones de pasajeros en los
+    torniquetes de la red.
+  model: ref('fact_validacion')
+  entities:
+  - name: id_validacion
+    type: foreign
+    description: "Clave primaria autoincremental \xFAnica de validaci\xF3n."
+  - name: fecha_sk
+    type: foreign
+    description: "Clave de asociaci\xF3n temporal."
+  - name: sk_estacion
+    type: foreign
+    description: "Estaci\xF3n donde se efectu\xF3 el ingreso."
+  - name: sk_usuario
+    type: foreign
+    description: Tarjeta de usuario Bip! utilizada.
+  dimensions:
+  - name: segundo_dia
+    type: categorical
+    description: "Segundo del d\xEDa en el que se realiz\xF3 el viaje (0 a 86399)."
+  - name: tarifa_cobrada_clp
+    type: categorical
+    description: Monto cobrado en pesos chilenos (0, 240, 730, 830).
+  - name: canal_validacion
+    type: categorical
+    description: "Medio t\xE9cnico de validaci\xF3n (Torniquete F\xEDsico, Puerta\
+      \ Evasi\xF3n, QR)."
+  measures:
+  - name: fact_validacion_count
+    description: Total count of Fact_Validacion
+    agg: count
+    expr: '1'
+- name: fact_simulacion_flujo
+  description: "Resultados de modelos de simulaci\xF3n basados en agentes en el and\xE9\
+    n y pasillos de estaciones."
+  model: ref('fact_simulacion_flujo')
+  entities:
+  - name: id_agente_flujo
+    type: foreign
+    description: Identificador del agente simulado.
+  - name: fecha_sk
+    type: foreign
+    description: "D\xEDa de la ejecuci\xF3n de la simulaci\xF3n."
+  - name: sk_estacion
+    type: foreign
+    description: "Estaci\xF3n f\xEDsica modelada."
+  dimensions:
+  - name: segundo_dia
+    type: categorical
+    description: "Estampa temporal en segundos desde inicio del d\xEDa."
+  - name: posicion_x
+    type: categorical
+    description: "Coordenada X relativa en el espacio de la estaci\xF3n."
+  - name: posicion_y
+    type: categorical
+    description: "Coordenada Y relativa en el espacio de la estaci\xF3n."
+  - name: estado
+    type: categorical
+    description: "Estado conductual (Ingresando And\xE9n, Esperando Tren, Transito\
+      \ Pasillo, Saliendo)."
+  measures:
+  - name: fact_simulacion_flujo_count
+    description: Total count of Fact_Simulacion_Flujo
+    agg: count
+    expr: '1'
+- name: fact_venta_carga
+  description: Registra las transacciones de carga monetaria en tarjetas Bip!
+  model: ref('fact_venta_carga')
+  entities:
+  - name: id_venta_carga
+    type: foreign
+    description: "Clave \xFAnica de la venta/recarga."
+  - name: fecha_sk
+    type: foreign
+    description: "D\xEDa en que se realiz\xF3 la recarga."
+  - name: sk_estacion
+    type: foreign
+    description: "Estaci\xF3n donde se carg\xF3 el saldo."
+  - name: sk_usuario
+    type: foreign
+    description: "Tarjeta Bip! que recibi\xF3 la carga."
+  dimensions:
+  - name: monto_carga_clp
+    type: categorical
+    description: Monto monetario de la recarga en CLP.
+  - name: metodo_pago
+    type: categorical
+    description: "Medio de pago utilizado (Efectivo, D\xE9bito, Cr\xE9dito, App)."
+  measures:
+  - name: fact_venta_carga_count
+    description: Total count of Fact_Venta_Carga
+    agg: count
+    expr: '1'
+- name: fact_telemetria_tren
+  description: "Muestreo de sensores en tiempo real de cada uno de los trenes en circulaci\xF3\
+    n."
+  model: ref('fact_telemetria_tren')
+  entities:
+  - name: id_log
+    type: foreign
+    description: "Identificador \xFAnico del log de telemetr\xEDa."
+  - name: fecha_sk
+    type: foreign
+    description: "D\xEDa del registro."
+  - name: sk_tren
+    type: foreign
+    description: "Tren emisor de la telemetr\xEDa."
+  dimensions:
+  - name: segundo_dia
+    type: categorical
+    description: "Segundo del d\xEDa de la medici\xF3n (muestreo cada 5s)."
+  - name: velocidad_kmh
+    type: categorical
+    description: Velocidad del tren en ese instante (km/h).
+  - name: temp_motor_c
+    type: categorical
+    description: "Temperatura medida en el motor en \xB0C."
+  - name: voltaje_linea_v
+    type: categorical
+    description: Voltaje captado de la catenaria/tercer riel en Voltios.
+  - name: estado_atp
+    type: categorical
+    description: "Estado del pilotaje autom\xE1tico ATP (1 = Operativo, 0 = Anomal\xED\
+      a)."
+  measures:
+  - name: fact_telemetria_tren_count
+    description: Total count of Fact_Telemetria_Tren
+    agg: count
+    expr: '1'
+- name: fact_sensoraje_via
+  description: "Monitoreo de telemetr\xEDa sobre el desgaste f\xEDsico y vibraci\xF3\
+    n de las v\xEDas f\xE9rreas de la red."
+  model: ref('fact_sensoraje_via')
+  entities:
+  - name: id_sensoraje
+    type: foreign
+    description: "Clave \xFAnica del log del sensor de v\xEDa."
+  - name: fecha_sk
+    type: foreign
+    description: "D\xEDa del an\xE1lisis de v\xEDa."
+  - name: sk_linea
+    type: foreign
+    description: "L\xEDnea ferroviaria analizada."
+  dimensions:
+  - name: vibracion_rms_g
+    type: categorical
+    description: "Nivel de vibraci\xF3n RMS en unidades G (gravedad)."
+  - name: desgaste_riel_mm
+    type: categorical
+    description: "Desgaste f\xEDsico medido del riel en mil\xEDmetros."
+  - name: temp_riel_c
+    type: categorical
+    description: "Temperatura de la v\xEDa en \xB0C."
+  measures:
+  - name: fact_sensoraje_via_count
+    description: Total count of Fact_Sensoraje_Via
+    agg: count
+    expr: '1'
+- name: fact_estado_resultado
+  description: "Consolidaci\xF3n financiera mensual por l\xEDnea y unidad de negocio."
+  model: ref('fact_estado_resultado')
+  entities:
+  - name: sk_periodo
+    type: foreign
+    description: 'Identificador mensual en formato `YYYYMM` (ej: 202512).'
+  - name: sk_linea
+    type: foreign
+    description: "L\xEDnea evaluada financieramente."
+  - name: sk_unidad
+    type: foreign
+    description: 'Unidad organizacional (ej: 1 = Transporte Pasajeros).'
+  dimensions:
+  - name: ingresos_tarifarios_clp
+    type: categorical
+    description: Ingreso total bruto por validaciones de pasaje en CLP.
+  - name: ingresos_nnt_clp
+    type: categorical
+    description: Ingresos de negocios no tarifarios acumulados.
+  - name: costos_operacionales_clp
+    type: categorical
+    description: Gastos operacionales (OPEX) consolidados.
+  - name: ebitda_clp
+    type: categorical
+    description: Margen EBITDA del periodo en pesos chilenos.
+  measures:
+  - name: fact_estado_resultado_count
+    description: Total count of Fact_Estado_Resultado
+    agg: count
+    expr: '1'
+- name: fact_ingresos_nnt
+  description: "Detalle anal\xEDtico mensual de los ingresos de Negocios No Tarifarios\
+    \ (NNT)."
+  model: ref('fact_ingresos_nnt')
+  entities:
+  - name: sk_periodo
+    type: foreign
+    description: Periodo contable mensual `YYYYMM`.
+  - name: sk_linea
+    type: foreign
+    description: "L\xEDnea comercial asociada."
+  - name: sk_unidad
+    type: foreign
+    description: 'Unidad organizacional (ej: 2 = Negocios No Tarifarios).'
+  dimensions:
+  - name: ingreso_arriendos_comerciales_clp
+    type: categorical
+    description: Ingresos por locales comerciales y cajeros.
+  - name: ingreso_publicidad_clp
+    type: categorical
+    description: Ingresos por pauta publicitaria en estaciones/trenes.
+  - name: ingreso_cajeros_telecom_clp
+    type: categorical
+    description: "Ingresos por antenas de telecomunicaci\xF3n y cajeros autom\xE1\
+      ticos."
+  measures:
+  - name: fact_ingresos_nnt_count
+    description: Total count of Fact_Ingresos_NNT
+    agg: count
+    expr: '1'
+- name: fact_consumo_esg
+  description: "KPIs ambientales y de rentabilidad social corporativa mensuales por\
+    \ l\xEDnea."
+  model: ref('fact_consumo_esg')
+  entities:
+  - name: sk_periodo
+    type: foreign
+    description: Periodo mensual `YYYYMM`.
+  - name: sk_linea
+    type: foreign
+    description: "L\xEDnea evaluada en impacto ambiental."
+  dimensions:
+  - name: consumo_traccion_kwh
+    type: categorical
+    description: "Energ\xEDa el\xE9ctrica consumida por la tracci\xF3n de trenes (KWh)."
+  - name: indicador_kwh_ckm
+    type: categorical
+    description: "Consumo espec\xEDfico promedio en KWh por Coche-Kil\xF3metro (CKm)."
+  - name: ahorro_emisiones_co2_ton
+    type: categorical
+    description: "Toneladas de CO2 no emitidas a la atm\xF3sfera por uso de transporte\
+      \ el\xE9ctrico."
+  - name: horas_ahorradas_viajeros
+    type: categorical
+    description: Tiempo total en horas ahorrado por los usuarios al preferir Metro
+      frente a otros modos (Rentabilidad Social).
+  measures:
+  - name: fact_consumo_esg_count
+    description: Total count of Fact_Consumo_ESG
+    agg: count
+    expr: '1'
+- name: fact_cumplimiento_oferta
+  description: "Consolidaci\xF3n mensual de la oferta y la regularidad del servicio\
+    \ por l\xEDnea."
+  model: ref('fact_cumplimiento_oferta')
+  entities:
+  - name: sk_periodo
+    type: foreign
+    description: Periodo contable mensual `YYYYMM`.
+  - name: sk_linea
+    type: foreign
+    description: "L\xEDnea evaluada."
+  dimensions:
+  - name: cumplimiento_frecuencia_pct
+    type: categorical
+    description: "Porcentaje de cumplimiento de frecuencia te\xF3rica vs ejecutada."
+  - name: mkbf_km
+    type: categorical
+    description: "Kil\xF3metros medios entre fallas de material rodante (Mean Kilometer\
+      \ Between Failures)."
+  - name: factor_ocupacion_pct
+    type: categorical
+    description: "Nivel medio de saturaci\xF3n / ocupaci\xF3n de los trenes en hora\
+      \ punta."
+  - name: demanda_buses_respaldo
+    type: categorical
+    description: "Cantidad de buses de apoyo externo solicitados ante saturaci\xF3\
+      n del servicio."
+  measures:
+  - name: fact_cumplimiento_oferta_count
+    description: Total count of Fact_Cumplimiento_Oferta
+    agg: count
+    expr: '1'
+- name: fact_seguridad_nps
+  description: "Indicadores de percepci\xF3n de usuario y eventos de seguridad reportados\
+    \ por mes."
+  model: ref('fact_seguridad_nps')
+  entities:
+  - name: sk_periodo
+    type: foreign
+    description: Periodo mensual `YYYYMM`.
+  - name: sk_linea
+    type: foreign
+    description: "L\xEDnea de metro evaluada."
+  dimensions:
+  - name: nps_satisfaccion
+    type: categorical
+    description: "Puntaje Net Promoter Score de satisfacci\xF3n de pasajeros (-100\
+      \ a 100)."
+  - name: tasa_delitos_millonpax
+    type: categorical
+    description: "Tasa de eventos delictivos reportados por cada mill\xF3n de pasajeros\
+      \ transportados."
+  - name: eventos_seguridad_averias
+    type: categorical
+    description: "Conteo absoluto de eventos de aver\xEDas cr\xEDticas o seguridad\
+      \ registrados en el periodo."
+  measures:
+  - name: fact_seguridad_nps_count
+    description: Total count of Fact_Seguridad_NPS
+    agg: count
+    expr: '1'

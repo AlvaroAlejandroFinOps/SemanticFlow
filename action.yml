@@ -1,0 +1,79 @@
+name: "SemanticFlow Semantic Quality Gate"
+description: "Valida modelos semánticos tabulares, calcula cQS y bloquea regresiones en Pull Requests."
+author: "SemanticFlow Core Team"
+
+branding:
+  icon: "check-circle"
+  color: "blue"
+
+inputs:
+  schema-path:
+    description: "Ruta al archivo de esquema relacional (.md o .yaml)"
+    required: true
+  min-score:
+    description: "Puntuación mínima cQS requerida para aprobar el Quality Gate (0.0 a 100.0)"
+    required: false
+    default: "75.0"
+  export-cockpit:
+    description: "Publica el resumen del Data Leadership Cockpit en el Job Summary del PR ($GITHUB_STEP_SUMMARY)"
+    required: false
+    default: "true"
+  output-pbip:
+    description: "Ruta de salida opcional para compilar el proyecto PBIP/TMDL si la validación es aprobada"
+    required: false
+    default: ""
+  model-name:
+    description: "Nombre del modelo semántico compilado si output-pbip está activo"
+    required: false
+    default: "SemanticModel"
+
+outputs:
+  cqs-score:
+    description: "Puntuación cQS calculada para el modelo"
+    value: ${{ steps.validate-step.outputs.score }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python Runtime
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        cache: "pip"
+
+    - name: Install SemanticFlow Dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e "${{ github.action_path }}"
+
+    - name: Execute SemanticFlow Quality Gate
+      id: validate-step
+      shell: bash
+      run: |
+        echo "::group::SemanticFlow Quality Gate Execution"
+        echo "Validating schema: ${{ inputs.schema-path }}"
+        echo "Target threshold: ${{ inputs.min-score }}"
+        
+        export PYTHONPATH="${{ github.action_path }}"
+        python -m src.cli validate --input "${{ inputs.schema-path }}" --min-score "${{ inputs.min-score }}"
+        VALIDATION_EXIT=$?
+        echo "::endgroup::"
+        
+        if [ "${{ inputs.export-cockpit }}" = "true" ]; then
+          echo "## 📊 SemanticFlow Data Leadership Cockpit" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          python -m src.cli cockpit --input "${{ inputs.schema-path }}" --format human >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ $VALIDATION_EXIT -ne 0 ]; then
+          echo "::error::SemanticFlow Quality Gate FAILED. cQS is below threshold (${{ inputs.min-score }})."
+          exit $VALIDATION_EXIT
+        fi
+        
+        if [ -n "${{ inputs.output-pbip }}" ]; then
+          echo "::group::Compiling PBIP / TMDL Artifacts"
+          python -m src.cli compile --input "${{ inputs.schema-path }}" --output "${{ inputs.output-pbip }}" --name "${{ inputs.model-name }}"
+          echo "::endgroup::"
+        fi

@@ -532,6 +532,50 @@ def docgen(
     )
 
 
+@app.command(name="export-dbt")
+def export_dbt(
+    input_path: Path = typer.Option(
+        ...,
+        "--input",
+        "-i",
+        help="Ruta al archivo del esquema relacional (.md, .yaml, etc.).",
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+    ),
+    output_file: Path = typer.Option(
+        Path("output/dbt/semantic_models.yml"),
+        "--output",
+        "-o",
+        help="Ruta del archivo YAML de salida para dbt MetricFlow.",
+    ),
+):
+    """
+    Exporta el modelo canónico a especificaciones dbt Semantic Layer (MetricFlow).
+    """
+    from src.core.emitter.dbt_emitter import DbtSemanticEmitter
+    from src.core.mappers.raw_to_canonical import raw_to_canonical
+
+    parser = _get_parser_for_file(input_path)
+    raw_schema = parser.parse(input_path)
+    canonical_project = raw_to_canonical(raw_schema)
+
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    emitter = DbtSemanticEmitter(canonical_project)
+    emitter.write_to_file(str(output_file))
+
+    console.print(
+        Panel(
+            f"[bold green]Modelo dbt Semantic Layer exportado exitosamente![/bold green]\n\n"
+            f"- Archivo YAML: [bold white]{output_file}[/bold white]\n"
+            f"- Modelos semánticos: [bold cyan]{len(canonical_project.entities)}[/bold cyan]",
+            title="[bold cyan]dbt Semantic Layer Emitter[/bold cyan]",
+            box=box.ROUNDED,
+        )
+    )
+
+
 if __name__ == "__main__":
 
     app()

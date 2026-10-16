@@ -105,7 +105,8 @@ class MarkdownSchemaParser(BaseSchemaParser):
 
     def _split_table_sections(self, content: str) -> list[tuple[str, str]]:
         """Divide el documento por encabezados de tabla tipo '### 2.1. `Dim_Linea`'."""
-        header_regex = re.compile(r"^###\s+[\d\.]+\s+`?([A-Za-z0-9_]+)`?.*$", re.MULTILINE)
+        # Soporta '### 2.1. `Dim_Linea`', '### `Dim_Linea`' o '### Dim_Linea'
+        header_regex = re.compile(r"^###\s+(?:[\d\.]+\s+)?`?([A-Za-z0-9_]+)`?.*$", re.MULTILINE)
         matches = list(header_regex.finditer(content))
         sections: list[tuple[str, str]] = []
 
@@ -192,13 +193,30 @@ class MarkdownSchemaParser(BaseSchemaParser):
             elif "FKEY" in key_clean or "FOREIGN" in key_clean:
                 key_type = KeyType.FOREIGN
 
-            # Asignar referencias FK si existen
+            # Asignar referencias FK si existen en viñetas o en la propia celda
             fk_target = fk_references.get(col_name.lower())
             target_t, target_c = (None, None)
             if fk_target:
                 target_t, target_c = fk_target
                 if key_type == KeyType.NONE:
                     key_type = KeyType.FOREIGN
+            else:
+                combined_text = f"{key_type_raw} {desc_raw}"
+                fk_match = re.search(
+                    r"(?:FKEY|FK)[^\(]*\(\s*`?([A-Za-z0-9_]+)`?[\.:]`?([A-Za-z0-9_]+)`?\s*\)",
+                    combined_text,
+                    re.IGNORECASE,
+                )
+                if not fk_match:
+                    fk_match = re.search(
+                        r"(?:FKEY|FK)[:\s]+`?([A-Za-z0-9_]+)`?[\.:]`?([A-Za-z0-9_]+)`?",
+                        combined_text,
+                        re.IGNORECASE,
+                    )
+                if fk_match:
+                    target_t, target_c = fk_match.group(1), fk_match.group(2)
+                    if key_type == KeyType.NONE:
+                        key_type = KeyType.FOREIGN
 
             columns.append(
                 ColumnRaw(

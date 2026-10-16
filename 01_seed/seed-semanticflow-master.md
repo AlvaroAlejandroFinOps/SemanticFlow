@@ -17,11 +17,11 @@ project_name: "SemanticFlow"
 repository_name: "SemanticFlow"
 project_type: "modular-monolith"
 repository_mode: "single-project"
-generated_at: "2026-09-30T18:20:00-03:00"
+generated_at: "2026-10-16T17:35:00-03:00"
 generated_by: "Antigravity (Gemini 3.8 Flash)"
 repository_root: "d:/0001 HyperScale Thinking/PROYECTOS CLOUD/Data & AI Strategy/SemanticFlow"
 git_branch: "master"
-git_commit: "98c76a5"
+git_commit: "b9dd3691e1b34f34241fc11037d7f3b47bd64178"
 working_tree_state: "dirty"
 analysis_mode: "static-and-dynamic"
 coverage_level: "high"
@@ -48,13 +48,14 @@ known_analysis_limits:
 ## 1. RESUMEN EJECUTIVO
 
 ### 1.1 Proyecto en una frase
-`[CONFIRMADO]` **SemanticFlow** es una plataforma DataOps de **Semantic Modeling as Code (SMaC)** de nivel empresarial que automatiza la ingesta, gobierno, optimización topológica y compilación headless de modelos semánticos tabulares hacia **Microsoft Fabric OneLake y Power BI (TMDL / PBIP)** y **dbt Semantic Layer**, incorporando un Quality Gate algorítmico ($cQS$), un proveedor de Terraform en Go y una arquitectura híbrida acelerada en Rust vía PyO3.
+`[CONFIRMADO]` **SemanticFlow** es una plataforma DataOps de **Semantic Modeling as Code (SMaC)** de nivel empresarial que automatiza la ingesta, gobierno, optimización topológica y compilación headless de modelos semánticos tabulares hacia **Microsoft Fabric OneLake y Power BI (TMDL / PBIP)** y **dbt Semantic Layer**, incorporando un Quality Gate algorítmico ($cQS$), un proveedor de Terraform en Go, una arquitectura híbrida acelerada en Rust vía PyO3 y un centro de operaciones modular (`artifacts/SemanticFlow/`) con 16 lentes organizacionales especializados.
 
 ### 1.2 Problema que resuelve
 - `[CONFIRMADO]` **Erradicación del modelado manual en BI:** Elimina la construcción artesanal propensa a fallos de modelos de datos en interfaces gráficas como Power BI Desktop, erradicando los archivos binarios `.pbix` opacos que no admiten control de versiones en Git ni revisiones de código en Pull Requests.
 - `[CONFIRMADO]` **Resolución de la fricción entre Lakehouse y la capa analítica:** Cierra la brecha operativa entre transformaciones Medallion (Delta/Parquet en OneLake, S3 o ADLS Gen2) y la capa de consumo de negocio.
 - `[CONFIRMADO]` **Garantía de calidad semántica en CI/CD:** Introduce el **Semantic Quality Score ($cQS$)** como un Quality Gate determinista que bloquea despliegues en Azure Pipelines o GitHub Actions si se detectan relaciones ambiguas, ciclos relacionales o atributos sensibles (PII) sin enmascarar.
-- `[CONFIRMADO]` **Alineación multi-stakeholder:** Proyecta el modelo en una Matriz de Arquitectura y Gobierno Multi-Rol de cuatro pilares (Gobierno, FinOps, Analítica, Dirección Estratégica) y un Data Leadership Cockpit para directores C-Level (CDO/Gerencias de Datos).
+- `[CONFIRMADO]` **Alineación multi-stakeholder:** Proyecta el modelo en 16 Persona Lenses organizacionales y un Data Leadership Cockpit para directores C-Level (CDO/Gerencias de Datos) con radar de madurez multidimensional (0-100%).
+- `[CONFIRMADO]` **Operatividad y reproducibilidad en IDE local:** Estandariza un flujo estructurado de `inputs/` y `outputs/` con plantillas y un orquestador CLI (`run_pipeline.py`) para procesar empresas y clientes en un solo comando.
 
 ### 1.3 Usuarios o sistemas consumidores
 - `[CONFIRMADO]` **Analytics Engineers & BI Developers:** Generación desatendida y versionable de proyectos `.pbip`, carpetas TMDL y especificaciones dbt MetricFlow (`semantic_models.yml`).
@@ -72,11 +73,12 @@ known_analysis_limits:
   - Inferencia determinista de roles dimensionales $\mathcal{R}(v)$ (Fact, Dimension, Bridge, Outrigger).
   - Emisión nativa de proyectos Microsoft Power BI Developer (`.pbip`, `.pbidataset`) y carpetas estructuradas TMDL.
   - Emisión de dbt Semantic Layer MetricFlow (`semantic_models.yml`).
-  - Cálculo algorítmico del índice $cQS$ con bloqueo por umbral configurable (default $\ge 75.0$).
-  - Proyección de 10 perspectivas de gobernanza (Persona Lenses) y Data Leadership Cockpit en Markdown y JSON.
+  - Cálculo algorítmico del índice $cQS$ con bloqueo por umbral configurable (default $\ge 75.0$ / operativo $\ge 45.0$).
+  - Proyección de 16 perspectivas de gobernanza (Persona Lenses) y Data Leadership Cockpit en Markdown y JSON.
   - Empaquetado OCI Distroless minimalista (<45 MB, non-root UID 65532).
   - Integración IaC mediante Terraform Provider desarrollado en Go.
   - Fachada híbrida Python/Rust vía PyO3 (`src/core/rust_bridge.py`).
+  - Orquestador operativo local (`artifacts/SemanticFlow/run_pipeline.py`) y plantillas multicliente.
 - `[CONFIRMADO]` **Fuera del alcance**:
   - Ingesta o transporte de datos físicos a nivel de registros (ETL/ELT masivo de datos); SemanticFlow gobierna y compila la capa lógica/semántica de metadatos.
   - Dependencias de servicios SaaS de terceros para validación semántica (totalmente autosuficiente y offline).
@@ -87,7 +89,7 @@ known_analysis_limits:
 
 ### 2.1 Estilo arquitectónico
 `[CONFIRMADO]` **Compilador Modular con AST Canónico Intermedio y Fachada Híbrida Multi-Dialecto**:
-1. **Pipeline Desacoplado:** Ingesta $\to$ Mapeo Canónico $\to$ Análisis Topológico & Calidad $\to$ Emisión Serializada.
+1. **Pipeline Desacoplado:** Ingesta $\to$ Mapeo Canónico $\to$ Análisis Topológico & Calidad $\to$ Emisión Serializada $\to$ Distribución Multilente.
 2. **Aislamiento Offline:** Ejecución in-memory sin sockets abiertos ni dependencias de red en tiempo de compilación.
 3. **Estrategia Híbrida (Patrón `pydantic-core` / `polars`):** Capa de experiencia de usuario en Python (Typer, Rich, Pydantic v2) enlazada mediante PyO3 a un motor nuclear de alto rendimiento en Rust (`petgraph`), con fallback transparente a Python puro si la extensión nativa no está compilada.
 
@@ -114,15 +116,46 @@ SemanticFlow/
 ├── artifacts/                         # Planes de implementación, reportes forenses y métricas
 │   ├── MetricsThinking.json           # Telemetría de auditoría MetricsThinking v3.0
 │   ├── MetricsThinking.md             # Reporte ejecutivo de madurez (Score 100%)
-│   └── plans/
-│       ├── active/
-│       │   ├── ENTERPRISE_CLOUD_ROADMAP_PLAN.md # Plan maestro en 3 horizontes
-│       │   └── INFERRED_ROADMAP.md              # Roadmap operacional desacoplado
-│       └── metricsthinking/
+│   ├── plans/
+│   │   ├── active/
+│   │   │   ├── ENTERPRISE_CLOUD_ROADMAP_PLAN.md # Plan maestro en 3 horizontes
+│   │   │   └── INFERRED_ROADMAP.md              # Roadmap operacional desacoplado
+│   │   └── metricsthinking/
+│   └── SemanticFlow/                  # HUB OPERATIVO SMaC DEL IDE LOCAL
+│       ├── README.md                  # Visión general y topología del hub operativo
+│       ├── RUNBOOK_EXECUTION.md       # Guía paso a paso para añadir nuevas empresas
+│       ├── run_pipeline.py            # Orquestador end-to-end de 1 comando
+│       ├── inputs/                    # DIRECTORIO DE ENTRADA (INGESTA)
+│       │   ├── README.md              # Especificación contractual de esquemas
+│       │   ├── templates/             # Plantillas base (schema_template.md y .yaml)
+│       │   └── companies/             # Partición por empresa (metro_santiago, etc.)
+│       └── outputs/                   # DIRECTORIO DE SALIDA (ARTEFACTOS COMPILADOS)
+│           ├── README.md              # Especificación y compatibilidad con herramientas
+│           ├── pbip/                  # Modelos Power BI Developer (.pbip) y TMDL
+│           ├── dbt/                   # Capa semántica dbt MetricFlow (YAML)
+│           ├── docs/                  # Diccionario de datos y Diagramas ERD
+│           ├── leadership_cockpit/    # Visión ejecutiva C-Level y Radar Cross-Lens
+│           └── lenses/                # 16 Carpetas de Persona Lenses individuales
+│               ├── 01_data_analyst/   # (README.md, ACTIONS.md, proyecciones)
+│               ├── 02_analytics_engineer/
+│               ├── 03_data_engineer/
+│               ├── 04_data_scientist/
+│               ├── 05_bi_developer/
+│               ├── 06_data_architect/
+│               ├── 07_data_governance_officer/
+│               ├── 08_platform_engineer/
+│               ├── 09_domain_owner/
+│               ├── 10_audit_risk/
+│               ├── 11_analytics_leader/
+│               ├── 12_data_product_manager/
+│               ├── 13_finops_specialist/
+│               ├── 14_ai_systems_engineer/
+│               ├── 15_business_consumer/
+│               └── 16_compliance_auditor/
 ├── Cargo.toml                         # Workspace Cargo para componentes en Rust
 ├── config/                            # Configuraciones por defecto y definiciones de roles
 │   └── personas/
-│       └── default_personas.yaml
+│       └── default_personas.yaml      # Especificación formal de las 16 Persona Lenses
 ├── crates/                            # Código fuente nativo en Rust
 │   ├── semanticflow-core/             # Crate Rust puro (AST, petgraph, calidad cQS)
 │   │   ├── Cargo.toml
@@ -171,9 +204,11 @@ SemanticFlow/
 │       │   ├── table_emitter.py
 │       │   └── tmdl_formatter.py      # Formateador de sintaxis TMDL
 │       ├── engine/                    # Motor de inferencia topológica, DAX y compilador
+│       ├── leadership/                # Motor y analizadores autónomos del Leadership Cockpit
 │       ├── mappers/                   # Transformadores raw -> canonical -> pbi
 │       ├── parsers/                   # Parsers de esquemas relacionales Markdown y YAML
-│       ├── personas/                  # Motor de 10 perspectivas y Leadership Cockpit
+│       ├── personas/                  # Motor de 16 perspectivas y Leadership Cockpit
+│       │   └── lenses/                # 16 Implementaciones Python de PersonaLens
 │       ├── quality/                   # Evaluador de reglas y puntuación cQS
 │       ├── rust_bridge.py             # Fachada híbrida Python / Rust PyO3
 │       └── targets/                   # Adaptadores de capacidades y dialectos
@@ -213,12 +248,14 @@ SemanticFlow/
 ```
 
 ### 2.3 Responsabilidad por directorio y archivo clave
-- `src/cli.py`: Interfaz de usuario de consola con comandos: `inspect`, `compile`, `validate`, `cockpit`, `personas export`, `docgen`, `export-dbt`.
+- `src/cli.py`: Interfaz de consola con comandos: `inspect`, `compile`, `validate`, `cockpit`, `personas export`, `docgen`, `export-dbt`.
+- `artifacts/SemanticFlow/run_pipeline.py`: Orquestador end-to-end de 1 solo paso que valida $cQS$, compila PBIP/TMDL, exporta dbt MetricFlow, genera documentación técnica y distribuye proyecciones a las 16 carpetas de lentes.
 - `src/core/ast/canonical/models.py`: Contrato central neutral agnóstico a tecnología destino (`CanonicalSemanticProject`, `SemanticEntity`, `SemanticAttribute`, etc.).
-- `src/core/engine/topological_sorter.py`: Implementación de ordenación topológica y análisis de dígrafos sobre NetworkX.
+- `src/core/parsers/markdown_parser.py`: Parser con soporte robusto para tablas con o sin numeración y extracción inline de FKs en celdas de Markdown.
 - `src/core/quality/scorer.py` y `rules.py`: Evaluación algorítmica de penalizaciones bloqueantes ($\mathcal{K}$) y reglas de gobernanza ($\mathcal{D}$) para calcular $cQS$.
-- `src/core/emitter/pbip_writer.py` y `tmdl_formatter.py`: Generación física de archivos `.pbip` y sintaxis TMDL con codificación UTF-8 atómica.
+- `src/core/emitter/pbip_writer.py` y `tmdl_formatter.py`: Generación física de proyectos `.pbip` y sintaxis TMDL con codificación UTF-8 atómica.
 - `src/core/emitter/dbt_emitter.py`: Generación de especificaciones MetricFlow para dbt Semantic Layer.
+- `src/core/leadership/engine.py`: Motor de síntesis ejecutiva, radar de madurez (0-100%) y exportación multidestino.
 - `src/core/rust_bridge.py`: Fachada transparente que detecta la presencia de la librería C-ABI compilada en Rust (`_core`) y conmuta entre cómputo nativo y Python puro.
 - `terraform-provider-semanticflow/`: Proveedor en Go que integra SemanticFlow en el ciclo de vida de Terraform.
 
@@ -236,10 +273,11 @@ SemanticFlow/
 
 ### 3.1 Puntos de entrada principales
 1. **Línea de Comandos (CLI):** `semanticflow [inspect|compile|validate|cockpit|personas export|docgen|export-dbt]`.
-2. **GitHub Action:** Tarea oficial `action.yml` consumible en workflows con `uses: ./` o `uses: AlvaroAlejandroFinOps/SemanticFlow@v1`.
-3. **Azure DevOps:** Tarea `SemanticFlowQualityGate` empaquetada en `integrations/azure-devops/task/`.
-4. **Terraform Provider:** Binario Go ejecutado por el Terraform Engine (`terraform init / plan / apply`).
-5. **API Python Programática:** Invocable desde notebooks o scripts mediante `from src.core.mappers.raw_to_canonical import raw_to_canonical`.
+2. **Orquestador Local Automatizado:** `python artifacts/SemanticFlow/run_pipeline.py --company <empresa_id>`.
+3. **GitHub Action:** Tarea oficial `action.yml` consumible en workflows con `uses: ./` o `uses: AlvaroAlejandroFinOps/SemanticFlow@v1`.
+4. **Azure DevOps:** Tarea `SemanticFlowQualityGate` empaquetada en `integrations/azure-devops/task/`.
+5. **Terraform Provider:** Binario Go ejecutado por el Terraform Engine (`terraform init / plan / apply`).
+6. **API Python Programática:** Invocable desde notebooks o scripts mediante `from src.core.mappers.raw_to_canonical import raw_to_canonical`.
 
 ### 3.2 Diagrama de flujo principal de extremo a extremo
 ```
@@ -267,7 +305,7 @@ SemanticFlow/
                   ├─────────────────────────────────────────┐
                   ▼                                         ▼
    [ Emisores de Dialecto Físico ]               [ Matriz de Gobernanza ]
-   • PBIP / TMDL (Microsoft Fabric)              • 10 Persona Lenses
+   • PBIP / TMDL (Microsoft Fabric)              • 16 Persona Lenses Especializados
    • dbt MetricFlow (models/schema.yml)          • Data Leadership Cockpit C-Level
    • DocGen (Diccionario Markdown + ERD Mermaid) • Telemetría y Exportación JSON
 ```
@@ -358,6 +396,7 @@ SemanticFlow/
 ### 9.1 Nivel de madurez del proyecto
 - `[CONFIRMADO]` **Madurez Global: Excelencia Operativa / Producción (100.0% en auditoría MetricsThinking v3.0)**.
 - El núcleo en Python está maduro, estable y probado en escenarios de alta complejidad del mundo real.
+- El centro de operaciones `artifacts/SemanticFlow/` proporciona un entorno de trabajo unificado para procesar múltiples empresas de forma aislada e instantánea.
 - La hoja de ruta Enterprise Cloud cuenta con el plan maestro aprobado ([ENTERPRISE_CLOUD_ROADMAP_PLAN.md](file:///d:/0001%20HyperScale%20Thinking/PROYECTOS%20CLOUD/Data%20&%20AI%20Strategy/SemanticFlow/artifacts/plans/active/ENTERPRISE_CLOUD_ROADMAP_PLAN.md)) y sus componentes de Corto, Medio y Largo Plazo físicamente materializados en el repositorio.
 
 ### 9.2 Deuda técnica identificada y stubs
@@ -380,7 +419,7 @@ SemanticFlow/
 
 ### 10.3 Checklist previo a commit
 - [x] Ejecutar `pytest` y asegurar 82/82 tests pasando sin regresiones.
-- [x] Ejecutar `semanticflow validate --input docs/architecture/esquema_relacional.md --min-score 40.0`.
+- [x] Ejecutar `python artifacts/SemanticFlow/run_pipeline.py --company metro_santiago`.
 - [x] Verificar que no existan credenciales ni tokens en archivos nuevos o modificados.
 
 ---

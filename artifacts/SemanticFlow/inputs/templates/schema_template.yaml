@@ -1,0 +1,63 @@
+# SemanticFlow Canonical Relational Schema Template
+version: "1.0"
+name: "Empresa_Ejemplo_Model"
+culture: "es-CL"
+description: "Plantilla YAML para modelado semántico as Code con SemanticFlow."
+
+tables:
+  - name: "Dim_Cliente"
+    role: "DIMENSION"
+    description: "Maestro de clientes corporativos y particulares."
+    columns:
+      - name: "SK_Cliente"
+        data_type: "int64"
+        is_primary_key: true
+        description: "Surrogate key del cliente."
+      - name: "Codigo_Cliente"
+        data_type: "string"
+        description: "Código natural de negocio."
+      - name: "Nombre_Completo"
+        data_type: "string"
+        description: "Nombre del cliente."
+        pii: true
+      - name: "Segmento"
+        data_type: "string"
+        description: "Segmentación comercial."
+
+  - name: "Dim_Producto"
+    role: "DIMENSION"
+    description: "Catálogo de productos y líneas de negocio."
+    columns:
+      - name: "SK_Producto"
+        data_type: "int64"
+        is_primary_key: true
+        description: "Surrogate key del producto."
+      - name: "Nombre_Producto"
+        data_type: "string"
+        description: "Descripción del artículo."
+      - name: "Categoria"
+        data_type: "string"
+        description: "Familia de productos."
+
+  - name: "Fact_Ventas"
+    role: "FACT"
+    description: "Transacciones de venta detalladas."
+    columns:
+      - name: "SK_Venta"
+        data_type: "int64"
+        is_primary_key: true
+        description: "Identificador único de venta."
+      - name: "SK_Cliente"
+        data_type: "int64"
+        foreign_key: "Dim_Cliente.SK_Cliente"
+        description: "Relación con la dimensión cliente."
+      - name: "SK_Producto"
+        data_type: "int64"
+        foreign_key: "Dim_Producto.SK_Producto"
+        description: "Relación con la dimensión producto."
+      - name: "Cantidad"
+        data_type: "int32"
+        description: "Volumen vendido."
+      - name: "Monto_Neto"
+        data_type: "decimal"
+        description: "Ingreso total percibido."

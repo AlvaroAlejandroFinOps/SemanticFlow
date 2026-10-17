@@ -17,12 +17,12 @@ project_name: "SemanticFlow"
 repository_name: "SemanticFlow"
 project_type: "modular-monolith"
 repository_mode: "single-project"
-generated_at: "2026-10-16T17:35:00-03:00"
+generated_at: "2026-10-16T22:05:00-03:00"
 generated_by: "Antigravity (Gemini 3.8 Flash)"
 repository_root: "d:/0001 HyperScale Thinking/PROYECTOS CLOUD/Data & AI Strategy/SemanticFlow"
 git_branch: "master"
-git_commit: "b9dd3691e1b34f34241fc11037d7f3b47bd64178"
-working_tree_state: "dirty"
+git_commit: "147233c754d5eec7d1cf75276c7c4f4feae7f8cb"
+working_tree_state: "clean"
 analysis_mode: "static-and-dynamic"
 coverage_level: "high"
 known_analysis_limits:
@@ -48,18 +48,19 @@ known_analysis_limits:
 ## 1. RESUMEN EJECUTIVO
 
 ### 1.1 Proyecto en una frase
-`[CONFIRMADO]` **SemanticFlow** es una plataforma DataOps de **Semantic Modeling as Code (SMaC)** de nivel empresarial que automatiza la ingesta, gobierno, optimización topológica y compilación headless de modelos semánticos tabulares hacia **Microsoft Fabric OneLake y Power BI (TMDL / PBIP)** y **dbt Semantic Layer**, incorporando un Quality Gate algorítmico ($cQS$), un proveedor de Terraform en Go, una arquitectura híbrida acelerada en Rust vía PyO3 y un centro de operaciones modular (`artifacts/SemanticFlow/`) con 16 lentes organizacionales especializados.
+`[CONFIRMADO]` **SemanticFlow** es una plataforma DataOps de **Semantic Modeling as Code (SMaC)** de nivel empresarial que automatiza la ingesta, gobierno, optimización topológica y compilación headless de modelos semánticos tabulares hacia **Microsoft Fabric OneLake y Power BI (TMDL / PBIP)** y **dbt Semantic Layer**, incorporando un Quality Gate algorítmico ($cQS$), un proveedor de Terraform en Go, una arquitectura híbrida acelerada en Rust vía PyO3 y un centro de operaciones modular (`artifacts/SemanticFlow/`) con enriquecimiento empresarial impulsado por IA, 16 lentes organizacionales especializados y un Data Leadership Cockpit C-Level.
 
 ### 1.2 Problema que resuelve
 - `[CONFIRMADO]` **Erradicación del modelado manual en BI:** Elimina la construcción artesanal propensa a fallos de modelos de datos en interfaces gráficas como Power BI Desktop, erradicando los archivos binarios `.pbix` opacos que no admiten control de versiones en Git ni revisiones de código en Pull Requests.
-- `[CONFIRMADO]` **Resolución de la fricción entre Lakehouse y la capa analítica:** Cierra la brecha operativa entre transformaciones Medallion (Delta/Parquet en OneLake, S3 o ADLS Gen2) y la capa de consumo de negocio.
+- `[CONFIRMADO]` **Resolución de la fricción entre Lakehouse y la capa analítica:** Cierra la brecha operativa entre transformaciones Medallion (Delta/Parquet en OneLake, S3 o ADLS Gen2) y la capa de consumo de negocio, garantizando compatibilidad nativa con Power BI Direct Lake (`directLakeBehavior = directLakeOnly`).
 - `[CONFIRMADO]` **Garantía de calidad semántica en CI/CD:** Introduce el **Semantic Quality Score ($cQS$)** como un Quality Gate determinista que bloquea despliegues en Azure Pipelines o GitHub Actions si se detectan relaciones ambiguas, ciclos relacionales o atributos sensibles (PII) sin enmascarar.
+- `[CONFIRMADO]` **Enriquecimiento Empresarial e IA Contextual:** Mediante plantillas estructuradas (`company_profile_template.yaml` y perfiles de empresa en `inputs/companies/<empresa>/company_profile.yaml`), inyecta contexto de negocio, objetivos estratégicos, unidades operativas, normativas sectoriales y KPIs al modelo semántico canónico.
 - `[CONFIRMADO]` **Alineación multi-stakeholder:** Proyecta el modelo en 16 Persona Lenses organizacionales y un Data Leadership Cockpit para directores C-Level (CDO/Gerencias de Datos) con radar de madurez multidimensional (0-100%).
-- `[CONFIRMADO]` **Operatividad y reproducibilidad en IDE local:** Estandariza un flujo estructurado de `inputs/` y `outputs/` con plantillas y un orquestador CLI (`run_pipeline.py`) para procesar empresas y clientes en un solo comando.
+- `[CONFIRMADO]` **Operatividad y reproducibilidad en IDE local:** Estandariza un flujo estructurado de `inputs/` y `outputs/` con plantillas y un orquestador CLI (`run_pipeline.py`) para procesar empresas y clientes en un solo comando con auto-descubrimiento de esquemas relacionales.
 
 ### 1.3 Usuarios o sistemas consumidores
 - `[CONFIRMADO]` **Analytics Engineers & BI Developers:** Generación desatendida y versionable de proyectos `.pbip`, carpetas TMDL y especificaciones dbt MetricFlow (`semantic_models.yml`).
-- `[CONFIRMADO]` **Data Governance Officers & Compliance Auditors:** Detección de Información de Identificación Personal (PII), trazabilidad de linaje y cumplimiento normativo (Ley 19.628, GDPR, CMF).
+- `[CONFIRMADO]` **Data Governance Officers & Compliance Auditors:** Detección de Información de Identificación Personal (PII), trazabilidad de linaje y cumplimiento normativo (Ley 19.628, GDPR, Ley 20.123, LGUC, CMF).
 - `[CONFIRMADO]` **FinOps Specialists & Cloud Architects:** Prevención de trampas de filtrado cruzado bidireccional y modelos mal optimizados que saturan la memoria del motor VertiPaq y disparan el consumo de F-SKUs en Microsoft Fabric.
 - `[CONFIRMADO]` **Data Leadership & C-Level (CDO, VP Data):** Cuadro de mando ejecutivo con radar de madurez en 10 dimensiones y recomendaciones operativas priorizadas.
 - `[CONFIRMADO]` **Pipelines CI/CD & Herramientas IaC:** GitHub Actions (`action.yml`), Azure DevOps Tasks y Terraform Provider (`terraform-provider-semanticflow`) para orquestación automatizada.
@@ -67,7 +68,7 @@ known_analysis_limits:
 ### 1.4 Alcance y límites del sistema
 - `[CONFIRMADO]` **Dentro del alcance**:
   - Compilación in-memory puramente local y offline, sin requerir conexión a bases de datos en tiempo de compilación.
-  - Ingesta declarativa desde esquemas en Markdown estructurado (`.md`) y YAML (`.yaml`, `.json`).
+  - Ingesta declarativa desde esquemas en Markdown estructurado (`.md`) y YAML (`.yaml`, `.json`), con soporte para cabeceras dinámicas y bloques Mermaid ERD.
   - Representación intermedia mediante un Árbol de Sintaxis Abstracta Canónico (`CanonicalSemanticProject`).
   - Resolución topológica de grafos relacionales y detección de ciclos acíclicos $\mathcal{C}(G)$ mediante NetworkX y Rust `petgraph`.
   - Inferencia determinista de roles dimensionales $\mathcal{R}(v)$ (Fact, Dimension, Bridge, Outrigger).
@@ -78,7 +79,7 @@ known_analysis_limits:
   - Empaquetado OCI Distroless minimalista (<45 MB, non-root UID 65532).
   - Integración IaC mediante Terraform Provider desarrollado en Go.
   - Fachada híbrida Python/Rust vía PyO3 (`src/core/rust_bridge.py`).
-  - Orquestador operativo local (`artifacts/SemanticFlow/run_pipeline.py`) y plantillas multicliente.
+  - Orquestador operativo local (`artifacts/SemanticFlow/run_pipeline.py`) y plantillas multicliente con auto-detección de esquemas y enriquecimiento contextual.
 - `[CONFIRMADO]` **Fuera del alcance**:
   - Ingesta o transporte de datos físicos a nivel de registros (ETL/ELT masivo de datos); SemanticFlow gobierna y compila la capa lógica/semántica de metadatos.
   - Dependencias de servicios SaaS de terceros para validación semántica (totalmente autosuficiente y offline).
@@ -92,6 +93,7 @@ known_analysis_limits:
 1. **Pipeline Desacoplado:** Ingesta $\to$ Mapeo Canónico $\to$ Análisis Topológico & Calidad $\to$ Emisión Serializada $\to$ Distribución Multilente.
 2. **Aislamiento Offline:** Ejecución in-memory sin sockets abiertos ni dependencias de red en tiempo de compilación.
 3. **Estrategia Híbrida (Patrón `pydantic-core` / `polars`):** Capa de experiencia de usuario en Python (Typer, Rich, Pydantic v2) enlazada mediante PyO3 a un motor nuclear de alto rendimiento en Rust (`petgraph`), con fallback transparente a Python puro si la extensión nativa no está compilada.
+4. **Hub de Operación IDE:** Espacio estructurado `artifacts/SemanticFlow/` que separa entradas particionadas por empresa (`inputs/companies/`), plantillas contractuales (`inputs/templates/`) y salidas compiladas segregadas por herramienta (`outputs/{pbip,dbt,docs,leadership_cockpit,lenses}/`).
 
 ### 2.2 Árbol estructural del repositorio
 ```
@@ -106,8 +108,7 @@ SemanticFlow/
 │       └── semantic-lint.yml          # Ejemplo de linter semántico en Pull Requests
 ├── 01_seed/                           # ADN y especificación técnica ThinkingSeed
 │   ├── .context.yaml
-│   ├── seed-semanticflow-master.md    # Este snapshot exhaustivo
-│   └── seed-semanticflow.md           # Snapshot Master Hybrid conciso
+│   └── seed-semanticflow-master.md    # Este snapshot exhaustivo
 ├── 02_Foundation/                     # Documentación fundacional de arquitectura
 │   └── Engine/
 │       ├── .context.yaml
@@ -124,19 +125,21 @@ SemanticFlow/
 │   └── SemanticFlow/                  # HUB OPERATIVO SMaC DEL IDE LOCAL
 │       ├── README.md                  # Visión general y topología del hub operativo
 │       ├── RUNBOOK_EXECUTION.md       # Guía paso a paso para añadir nuevas empresas
-│       ├── run_pipeline.py            # Orquestador end-to-end de 1 comando
+│       ├── run_pipeline.py            # Orquestador end-to-end con auto-descubrimiento y gobernanza
 │       ├── inputs/                    # DIRECTORIO DE ENTRADA (INGESTA)
 │       │   ├── README.md              # Especificación contractual de esquemas
-│       │   ├── templates/             # Plantillas base (schema_template.md y .yaml)
-│       │   └── companies/             # Partición por empresa (metro_santiago, etc.)
+│       │   ├── templates/             # Plantillas canónicas (schema_template.md/.yaml, company_profile_template.yaml)
+│       │   └── companies/             # Partición por empresa
+│       │       ├── metro_santiago/    # Metro de Santiago (Transporte y Retail, 20 tablas)
+│       │       └── santolaya/         # Santolaya Constructora e Inmobiliaria (14 tablas)
 │       └── outputs/                   # DIRECTORIO DE SALIDA (ARTEFACTOS COMPILADOS)
 │           ├── README.md              # Especificación y compatibilidad con herramientas
-│           ├── pbip/                  # Modelos Power BI Developer (.pbip) y TMDL
-│           ├── dbt/                   # Capa semántica dbt MetricFlow (YAML)
-│           ├── docs/                  # Diccionario de datos y Diagramas ERD
-│           ├── leadership_cockpit/    # Visión ejecutiva C-Level y Radar Cross-Lens
+│           ├── pbip/                  # Modelos Power BI Developer (.pbip) y TMDL por empresa
+│           ├── dbt/                   # Capa semántica dbt MetricFlow (YAML) por empresa
+│           ├── docs/                  # Diccionario de datos y Diagramas ERD por empresa
+│           ├── leadership_cockpit/    # Visión ejecutiva C-Level y Radar Cross-Lens por empresa
 │           └── lenses/                # 16 Carpetas de Persona Lenses individuales
-│               ├── 01_data_analyst/   # (README.md, ACTIONS.md, proyecciones)
+│               ├── 01_data_analyst/   # (README.md, ACTIONS.md, proyecciones por empresa)
 │               ├── 02_analytics_engineer/
 │               ├── 03_data_engineer/
 │               ├── 04_data_scientist/
@@ -249,9 +252,9 @@ SemanticFlow/
 
 ### 2.3 Responsabilidad por directorio y archivo clave
 - `src/cli.py`: Interfaz de consola con comandos: `inspect`, `compile`, `validate`, `cockpit`, `personas export`, `docgen`, `export-dbt`.
-- `artifacts/SemanticFlow/run_pipeline.py`: Orquestador end-to-end de 1 solo paso que valida $cQS$, compila PBIP/TMDL, exporta dbt MetricFlow, genera documentación técnica y distribuye proyecciones a las 16 carpetas de lentes.
-- `src/core/ast/canonical/models.py`: Contrato central neutral agnóstico a tecnología destino (`CanonicalSemanticProject`, `SemanticEntity`, `SemanticAttribute`, etc.).
-- `src/core/parsers/markdown_parser.py`: Parser con soporte robusto para tablas con o sin numeración y extracción inline de FKs en celdas de Markdown.
+- `artifacts/SemanticFlow/run_pipeline.py`: Orquestador end-to-end de 1 solo paso con auto-descubrimiento de esquemas relacionales, carga contextual de gobernanza desde `company_profile.yaml`, validación $cQS$, compilación PBIP/TMDL, exportación dbt MetricFlow, generación documental y distribución de proyecciones a las 16 carpetas de lentes.
+- `src/core/ast/canonical/models.py`: Contrato central neutral agnóstico a tecnología destino (`CanonicalSemanticProject`, `SemanticEntity`, `SemanticAttribute`, `ProjectGovernance`, etc.).
+- `src/core/parsers/markdown_parser.py`: Parser relacional avanzado con soporte dinámico de cabeceras (`Tipo Delta`, `Restricción`, `Naturaleza`, `Glosa`), delimitación estricta de tablas, y extracción e integración bidireccional de entidades y relaciones desde diagramas Mermaid `erDiagram`.
 - `src/core/quality/scorer.py` y `rules.py`: Evaluación algorítmica de penalizaciones bloqueantes ($\mathcal{K}$) y reglas de gobernanza ($\mathcal{D}$) para calcular $cQS$.
 - `src/core/emitter/pbip_writer.py` y `tmdl_formatter.py`: Generación física de proyectos `.pbip` y sintaxis TMDL con codificación UTF-8 atómica.
 - `src/core/emitter/dbt_emitter.py`: Generación de especificaciones MetricFlow para dbt Semantic Layer.
@@ -272,8 +275,8 @@ SemanticFlow/
 ## 3. FLUJOS DE EJECUCIÓN Y ENTRY POINTS
 
 ### 3.1 Puntos de entrada principales
-1. **Línea de Comandos (CLI):** `semanticflow [inspect|compile|validate|cockpit|personas export|docgen|export-dbt]`.
-2. **Orquestador Local Automatizado:** `python artifacts/SemanticFlow/run_pipeline.py --company <empresa_id>`.
+1. **Orquestador Local Automatizado:** `python artifacts/SemanticFlow/run_pipeline.py --company <empresa_id>` (soporta `--company metro_santiago` y `--company santolaya`).
+2. **Línea de Comandos (CLI):** `semanticflow [inspect|compile|validate|cockpit|personas export|docgen|export-dbt]`.
 3. **GitHub Action:** Tarea oficial `action.yml` consumible en workflows con `uses: ./` o `uses: AlvaroAlejandroFinOps/SemanticFlow@v1`.
 4. **Azure DevOps:** Tarea `SemanticFlowQualityGate` empaquetada en `integrations/azure-devops/task/`.
 5. **Terraform Provider:** Binario Go ejecutado por el Terraform Engine (`terraform init / plan / apply`).
@@ -281,33 +284,33 @@ SemanticFlow/
 
 ### 3.2 Diagrama de flujo principal de extremo a extremo
 ```
-[ Esquema Declarativo: Markdown / YAML ]
+[ Esquema Declarativo: Markdown / YAML ]   +   [ company_profile.yaml ]
+                  │                                        │
+                  ▼                                        ▼
+        [ Markdown / Yaml Parser ]               [ Contexto IA / Gobernanza ]
+                  │                                        │
+                  ▼                                        │
+         [ RelationalSchemaRaw ]                           │
+                  │                                        │
+                  ▼                                        │
+       [ RawToCanonicalMapper ]                            │
+                  │                                        │
+                  ▼                                        │
+      [ CanonicalSemanticProject ] ◄───────────────────────┘ (Inyección de ProjectGovernance)
                   │
-                  ▼
-       [ Markdown / Yaml Parser ]
-                  │
-                  ▼
-        [ RelationalSchemaRaw ]
-                  │
-                  ▼
-      [ RawToCanonicalMapper ]
-                  │
-                  ▼
-     [ CanonicalSemanticProject ]
-                  │
-       ┌──────────┴──────────┐
-       ▼                     ▼
-[ Inferencia Topológica ]  [ Quality Scorer (cQS) ]
-(Roles R(v), Ciclos C(G))   (Reglas, PII, Invariantes)
-       │                     │
-       └──────────┬──────────┘
-                  │  (cQS >= Umbral y Sin Ciclos)
-                  ├─────────────────────────────────────────┐
-                  ▼                                         ▼
-   [ Emisores de Dialecto Físico ]               [ Matriz de Gobernanza ]
-   • PBIP / TMDL (Microsoft Fabric)              • 16 Persona Lenses Especializados
-   • dbt MetricFlow (models/schema.yml)          • Data Leadership Cockpit C-Level
-   • DocGen (Diccionario Markdown + ERD Mermaid) • Telemetría y Exportación JSON
+        ┌──────────┴──────────┐
+        ▼                     ▼
+ [ Inferencia Topológica ]  [ Quality Scorer (cQS) ]
+ (Roles R(v), Ciclos C(G))   (Reglas, PII, Invariantes)
+        │                     │
+        └──────────┬──────────┘
+                   │  (cQS >= Umbral y Sin Ciclos)
+                   ├─────────────────────────────────────────┐
+                   ▼                                         ▼
+    [ Emisores de Dialecto Físico ]               [ Matriz de Gobernanza ]
+    • PBIP / TMDL (Microsoft Fabric)              • 16 Persona Lenses Especializados
+    • dbt MetricFlow (models/schema.yml)          • Data Leadership Cockpit C-Level
+    • DocGen (Diccionario Markdown + ERD Mermaid) • Telemetría y Exportación JSON
 ```
 
 ---
@@ -315,9 +318,11 @@ SemanticFlow/
 ## 4. MODELO DE DATOS, CONTRATOS Y PERSISTENCIA
 
 ### 4.1 Esquemas y entidades principales
-- `SemanticEntity`: Representa una tabla lógica. Posee nombre, rol topológico (`FACT`, `DIMENSION`, `BRIDGE`, `OUTRIGGER`, `CALCULATED`), descripción, atributos y medidas asociadas.
+- `CanonicalSemanticProject`: Raíz del AST canónico. Contiene identificador, nombre, versión, descripción, metadatos de gobernanza (`ProjectGovernance`), entidades, relaciones y diagnósticos.
+- `ProjectGovernance`: Metadatos corporativos de nivel de proyecto (`domain_id`, `domain_name`, `classification`, `data_product_status`, `owner`, `steward`, `compliance_frameworks`, `tags`, `custom_properties`).
+- `SemanticEntity`: Representa una tabla lógica. Posee nombre, rol topológico (`FACT`, `DIMENSION`, `BRIDGE`, `OUTRIGGER`, `CALCULATED`), descripción, granularidad (`grain`), atributos y medidas asociadas.
 - `SemanticAttribute`: Representa una columna. Tipos de datos normalizados (`INT64`, `DOUBLE`, `DECIMAL`, `STRING`, `BOOLEAN`, `DATETIME`, `DATE`), indicadores de clave primaria/foránea (`is_key`), ocultamiento (`is_hidden`) y metadatos de gobernanza (`is_pii`).
-- `SemanticMetric`: Medidas de cálculo formal. Expresión canónica, tipo de aditividad (`ADDITIVE`, `SEMI_ADDITIVE`, `NON_ADDITIVE`) y expresión generada en DAX.
+- `SemanticMetric`: Medidas de cálculo formal. Expresión canónica, tipo de aditividad (`ADDITIVE`, `SEMI_ADDITIVE`, `NON_ADDITIVE`), formato y expresión generada en DAX.
 - `SemanticRelationship`: Restricción relacional 1:N entre dos entidades. Cardinalidad, indicativo de estado activo/inactivo (`is_active`) y claves asociadas.
 
 ### 4.2 Almacenamiento y serialización
@@ -395,8 +400,8 @@ SemanticFlow/
 
 ### 9.1 Nivel de madurez del proyecto
 - `[CONFIRMADO]` **Madurez Global: Excelencia Operativa / Producción (100.0% en auditoría MetricsThinking v3.0)**.
-- El núcleo en Python está maduro, estable y probado en escenarios de alta complejidad del mundo real.
-- El centro de operaciones `artifacts/SemanticFlow/` proporciona un entorno de trabajo unificado para procesar múltiples empresas de forma aislada e instantánea.
+- El núcleo en Python está maduro, estable y probado en escenarios de alta complejidad del mundo real (Metro de Santiago con 20 tablas y Santolaya con 14 tablas / 27 relaciones).
+- El centro de operaciones `artifacts/SemanticFlow/` proporciona un entorno de trabajo unificado para procesar múltiples empresas de forma aislada e instantánea con enriquecimiento mediante perfiles de empresa en YAML.
 - La hoja de ruta Enterprise Cloud cuenta con el plan maestro aprobado ([ENTERPRISE_CLOUD_ROADMAP_PLAN.md](file:///d:/0001%20HyperScale%20Thinking/PROYECTOS%20CLOUD/Data%20&%20AI%20Strategy/SemanticFlow/artifacts/plans/active/ENTERPRISE_CLOUD_ROADMAP_PLAN.md)) y sus componentes de Corto, Medio y Largo Plazo físicamente materializados en el repositorio.
 
 ### 9.2 Deuda técnica identificada y stubs
@@ -420,6 +425,7 @@ SemanticFlow/
 ### 10.3 Checklist previo a commit
 - [x] Ejecutar `pytest` y asegurar 82/82 tests pasando sin regresiones.
 - [x] Ejecutar `python artifacts/SemanticFlow/run_pipeline.py --company metro_santiago`.
+- [x] Ejecutar `python artifacts/SemanticFlow/run_pipeline.py --company santolaya`.
 - [x] Verificar que no existan credenciales ni tokens en archivos nuevos o modificados.
 
 ---

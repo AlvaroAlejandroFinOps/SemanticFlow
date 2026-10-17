@@ -6,13 +6,16 @@ from typing import List
 from pydantic import BaseModel
 
 from src.core.ast.canonical.models import CanonicalSemanticProject, Diagnostic, DiagnosticSeverity
+from src.core.quality.dax_validator import validate_project_dax_metrics
 from src.core.quality.rules import (
     validate_certified_metrics,
+    validate_direct_lake_compatibility,
     validate_grain_declaration,
     validate_metric_descriptions,
     validate_pii_classification,
     validate_project_governance,
     validate_ratio_metrics,
+    validate_vertipaq_performance,
 )
 
 
@@ -46,13 +49,20 @@ class SemanticQualityScorer:
         all_diagnostics.extend(validate_ratio_metrics(self.project))
         all_diagnostics.extend(validate_project_governance(self.project))
         all_diagnostics.extend(validate_pii_classification(self.project))
+        all_diagnostics.extend(validate_project_dax_metrics(self.project))
+        all_diagnostics.extend(validate_direct_lake_compatibility(self.project))
+        all_diagnostics.extend(validate_vertipaq_performance(self.project))
 
         deductions = 0.0
         blocking_errors = 0
         warnings = 0
 
         for d in all_diagnostics:
-            deductions += self.ACCEPTABLE_WEIGHTS.get(d.severity, 0.0)
+            if d.penalty is not None:
+                deductions += d.penalty
+            else:
+                deductions += self.ACCEPTABLE_WEIGHTS.get(d.severity, 0.0)
+
             if d.severity == DiagnosticSeverity.ERROR:
                 blocking_errors += 1
             elif d.severity == DiagnosticSeverity.WARNING:

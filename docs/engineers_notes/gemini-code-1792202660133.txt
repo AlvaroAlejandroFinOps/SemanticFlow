@@ -1,0 +1,214 @@
+================================================================================
+PLAN DE REINGENIERÍA TÉCNICA: HARDENING DE SEGURIDAD, DETERMINISMO ZERO-DIFF
+Y BLINDAJE DE PRODUCCIÓN DESDE EL IDE (SMaC)
+PROYECTO: SemanticFlow
+OBJETIVO: RESOLVER VULNERABILIDADES CRÍTICAS, GARANTIZAR DETERMINISMO EN GIT,
+          VALIDAR DIRECT LAKE Y CONTROLAR CALIDAD DE EXPRESIONES DAX
+================================================================================
+
+1. OBJETIVO Y ALCANCE
+--------------------------------------------------------------------------------
+Implementar salvaguardas de seguridad, determinismo y control de esquemas para
+asegurar que el uso de SemanticFlow dentro del IDE (por ingenieros de datos y
+asistentes de IA) sea robusto, auditable e inmune a vulnerabilidades de inyección,
+path traversal o contaminación en repositorios Git:
+  a) Sanitizar accesos al filesystem y erradicar riesgos de Path Traversal en la
+     selección de empresas/perfiles.
+  b) Implementar ordenamiento canónico estricto (Zero-Diff Invariant) en todos
+     los emisores de código (TMDL, PBIP, dbt, JSON) para evitar diff noise en Git.
+  c) Prevenir la fuga o ingesta de secretos en el contexto del agente LLM.
+  d) Blindar modelos y medidas contra "Semantic Injection" y alucinaciones en
+     fórmulas DAX mediante validación léxica de tokens.
+  e) Extender las reglas algorítmicas del Quality Gate (cQS) con verificación de
+     compatibilidad con Direct Lake y detección de antipatrones VertiPaq.
+
+Todas las rutas son relativas a la raíz del repositorio local SemanticFlow.
+
+
+2. MATRIZ DE RIESGO Y COMPONENTES AFECTADOS
+--------------------------------------------------------------------------------
+| Componente                        | Riesgo Identificado                 | Acción de Blindaje                         |
+|-----------------------------------|-------------------------------------|--------------------------------------------|
+| artifacts/SemanticFlow/run_pipeline.py | Path Traversal vía `--company`     | Validación regex + Path.is_relative_to()   |
+| src/core/emitter/*.py             | Diff noise no determinista en Git   | Ordenamiento lexicográfico de entidades/cols|
+| src/core/ast/canonical/models.py  | Semantic Injection en DAX           | Validador Pydantic de sintaxis y tokens DAX|
+| .agentignore / schemas/           | Fuga de secretos en contexto LLM    | Scan regex de credenciales en inputs/      |
+| src/core/quality/rules.py         | Incompatibilidad Direct Lake        | Reglas D-011 (Tipos) y D-012 (VertiPaq)    |
+
+
+3. FASES DE EJECUCIÓN PASO A PASO
+--------------------------------------------------------------------------------
+
+FASE 1: HARDENING DE SEGURIDAD Y CONTROL DE ENTRADAS (INPUT SANITIZATION)
+--------------------------------------------------------------------------------
+1.1 Prevención de Path Traversal en el orquestador:
+    - Archivo: artifacts/SemanticFlow/run_pipeline.py
+    - Acción:
+      * Crear la función de validación estricta:
+        ```python
+        import re
+        from pathlib import Path
+
+        def sanitize_company_id(company_id: str) -> str:
+            if not re.match(r"^[a-zA-Z0-9_-]+$", company_id):
+                raise ValueError(
+                    f"Identificador de empresa inválido '{company_id}'. "
+                    f"Solo se permiten caracteres alfanuméricos, guiones y guiones bajos."
+                )
+            return company_id
+        ```
+      * Al resolver las rutas de entrada y salida:
+        ```python
+        safe_company = sanitize_company_id(args.company)
+        input_dir = (Path("artifacts/SemanticFlow/inputs/companies") / safe_company).resolve()
+        base_inputs = Path("artifacts/SemanticFlow/inputs/companies").resolve()
+        
+        if not input_dir.is_relative_to(base_inputs):
+            raise PermissionError("Acceso no autorizado fuera del directorio de inputs.")
+        ```
+
+1.2 Blindaje contra secretos en perfiles corporativos e inputs:
+    - Archivo: schemas/project_governance.schema.json y company_profile_template.yaml
+    - Acción:
+      * Añadir regla de validación de propiedades que rechace claves con nombres sensibles:
+        `^(?!.*(secret|token|password|bearer|api_key|private_key)).*$`
+      * En `run_pipeline.py`, añadir una verificación previa a la compilación:
+        Escanear los archivos `company_profile.yaml` y `.md` buscando patrones de:
+        - Azure AD Client Secrets / API Keys (`[a-zA-Z0-9~._-]{34,}` asociados a `client_secret`)
+        - Tokens Bearer (`Bearer eyJ...`)
+        Si se detecta coincidencia, detener el pipeline con código de salida 1 y mensaje:
+        `[SECURITY ERROR] Se detectó una posible credencial o secreto hardcodeado en los inputs.`
+
+1.3 Actualización de reglas en .agentignore:
+    - Archivo: .agentignore
+    - Acción: Asegurar que contenga explícitamente:
+      ```text
+      *.env
+      *.env.*
+      *.secret
+      *.pem
+      *.key
+      credentials.json
+      **/token_cache/**
+      **/azure_auth/**
+      ```
+
+
+FASE 2: DETERMINISMO ESTRICTO EN GIT (ZERO-DIFF EMISSION INVARIANT)
+--------------------------------------------------------------------------------
+2.1 Ordenamiento canónico en serializadores TMDL:
+    - Archivo: src/core/emitter/tmdl_formatter.py
+    - Acción:
+      * Al iterar sobre entidades, ordenar por `entity.name.lower()` alfabéticamente.
+      * Al iterar sobre atributos de una tabla:
+        Ordenar colocando primero las claves (`is_key=True` descendente) y luego por `attr.name.lower()`.
+      * Al iterar sobre medidas/métricas:
+        Ordenar alfabéticamente por `metric.name.lower()`.
+      * Garantizar que las particiones TMDL (`partition ... = m`) se emitan en orden determinista.
+
+2.2 Ordenamiento canónico en serializador PBIP y dbt:
+    - Archivo: src/core/emitter/pbip_writer.py y src/core/emitter/dbt_emitter.py
+    - Acción:
+      * Ordenar las claves en los diccionarios generados antes de serializar a JSON o YAML:
+        `json.dumps(..., sort_keys=True)` o volcado YAML ordenado.
+      * Asegurar que `relationships.tmdl` ordene las relaciones por:
+        `(from_entity_id, from_attribute_id, to_entity_id, to_attribute_id)`.
+
+
+FASE 3: BLINDAJE LÉXICO DAX Y PREVENCIÓN DE SEMANTIC INJECTION
+--------------------------------------------------------------------------------
+3.1 Validador de expresiones DAX para SemanticMetric:
+    - Archivo: src/core/ast/canonical/models.py (o crear src/core/quality/dax_validator.py)
+    - Acción:
+      * Implementar validación de expresiones para `SemanticMetric`:
+        1. Balanceo estricto de paréntesis, corchetes y llaves (`()`, `[]`, `{}`).
+        2. Bloqueo de sentencias administrativas o de escape de contexto:
+           Rechazar palabras clave no operativas en medidas tabulares: `EVALUATE`,
+           `DEFINE`, `VAR ... RETURN` desbalanceados, llamadas a comandos SQL directos.
+        3. Exigir que las referencias a columnas dentro de funciones DAX cumplan
+           el formato estándar: `'Tabla'[Columna]` o `[Medida]`.
+      * Si la expresión no cumple, emitir un `Diagnostic` de categoría `SEMANTIC`
+        con severidad `ERROR` que impida la compilación.
+
+
+FASE 4: QUALITY GATE (cQS) EXTENDIDO PARA DIRECT LAKE Y FINOPS VERTIPAQ
+--------------------------------------------------------------------------------
+4.1 Regla de Compatibilidad con Microsoft Fabric Direct Lake (Regla D-011):
+    - Archivo: src/core/quality/rules.py
+    - Acción:
+      * Crear la regla `DirectLakeCompatibilityRule`:
+        - Verificar que las entidades de tipo `FACT` que operan sobre Direct Lake
+          no posean atributos con tipo `DATETIME` sin separación fecha/hora (causa común
+          de caída de Direct Lake a DirectQuery por discrepancias V-Order).
+        - Verificar que no existan relaciones activas de tipo Many-to-Many (`N:N`),
+          ya que saturan el motor de paginación VertiPaq en SKUs F64 o inferiores.
+        - Penalización: -15 puntos en `cQS` si se detecta N:N no justificado.
+
+4.2 Regla de Antipatrones DAX VertiPaq (Regla D-012):
+    - Archivo: src/core/quality/rules.py
+    - Acción:
+      * Crear la regla `VertiPaqPerformanceRule`:
+        - Detectar uso de `FILTER(ALL('Tabla'), ...)` sobre tablas con cardinalidad
+          estimada mayor a 1 millón de registros, sugiriendo `KEEPFILTERS` o `CALCULATETABLE`.
+        - Detectar filtrado cruzado bidireccional en relaciones que involucran hechos,
+          alertando riesgo de bucle de ambigüedad.
+        - Severidad: `WARNING` si no es crítico, penalización -5 puntos en `cQS`.
+
+
+FASE 5: SUITE DE PRUEBAS DE SEGURIDAD Y DETERMINISMO (PYTEST)
+--------------------------------------------------------------------------------
+5.1 Tests unitarios de seguridad:
+    - Archivo: tests/test_security_hardening.py (NUEVO ARCHIVO)
+    - Casos de prueba requeridos:
+      1. `test_path_traversal_rejection()`:
+         Invocación de `sanitize_company_id` con `../../etc/passwd`, `..\..\windows`
+         debe disparar `ValueError` o `PermissionError`.
+      2. `test_secret_leak_detection()`:
+         Input que contenga strings sospechosos (`client_secret=...`, `Bearer eyJ...`)
+         debe ser interceptado y detenido por el validador de seguridad.
+      3. `test_dax_injection_and_unbalanced_formula()`:
+         Métricas con DAX desbalanceado (`CALCULATE(SUM(X)`) o comandos `EVALUATE`
+         deben ser rechazados por el validador semántico.
+
+5.2 Tests de regresión Zero-Diff:
+    - Archivo: tests/test_deterministic_emission.py (NUEVO ARCHIVO)
+    - Casos de prueba requeridos:
+      1. `test_tmdl_deterministic_output()`:
+         Ejecutar la compilación de TMDL dos veces consecutivas sobre el mismo modelo
+         con entidades agregadas en desorden; comprobar que los archivos resultantes
+         son idénticos byte a byte (hash SHA-256 idéntico).
+      2. `test_direct_lake_quality_rule()`:
+         Validar que un modelo con relación N:N no controlada reciba penalización
+         en el cálculo del $cQS$.
+
+
+4. COMANDOS DE VALIDACIÓN Y VERIFICACIÓN
+--------------------------------------------------------------------------------
+1. Ejecutar los tests de seguridad y determinismo:
+   `pytest tests/test_security_hardening.py tests/test_deterministic_emission.py -v`
+
+2. Ejecutar la suite completa para comprobar no regresión en los 82 tests previos:
+   `pytest tests/ -v`
+
+3. Probar ejecución del orquestador con empresa sanitizada:
+   `python artifacts/SemanticFlow/run_pipeline.py --company metro_santiago`
+
+4. Probar intento de inyección para verificar intercepción segura:
+   `python artifacts/SemanticFlow/run_pipeline.py --company "../metro_santiago"`
+   (Debe arrojar ValueError y código de salida 1 de forma limpia).
+
+
+5. CRITERIOS DE ACEPTACIÓN BOOLEANOS
+--------------------------------------------------------------------------------
+[X] AC-1: `run_pipeline.py` rechaza cualquier identificador de empresa que no
+          coincida estrictamente con `^[a-zA-Z0-9_-]+$`.
+[X] AC-2: Ningún input que contenga tokens o credenciales puede pasar el validador
+          de `run_pipeline.py`.
+[X] AC-3: Dos compilaciones consecutivas del mismo esquema generan artefactos TMDL
+          y PBIP con idéntico hash SHA-256 (cero diff en Git).
+[X] AC-4: Las fórmulas DAX en `SemanticMetric` validan balanceo léxico y bloquean
+          inyecciones administrativas (`EVALUATE`, `DROP`, etc.).
+[X] AC-5: Las nuevas reglas de calidad D-011 (Direct Lake) y D-012 (VertiPaq)
+          están activas y penalizan el score $cQS$ ante antipatrones.
+[X] AC-6: El 100% de la suite de pruebas (antiguos + nuevos tests) pasa sin fallos.
+================================================================================

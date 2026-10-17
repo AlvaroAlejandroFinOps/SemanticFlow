@@ -10,6 +10,7 @@ from src.core.ast.semantic import SemanticModel
 from src.core.emitter.model_emitter import ModelEmitter
 from src.core.emitter.relationship_emitter import RelationshipEmitter
 from src.core.emitter.table_emitter import TableEmitter
+from src.core.security.sanitize import safe_filename, validate_culture_code, resolve_within
 
 
 class PbipWriter:
@@ -39,6 +40,7 @@ class PbipWriter:
             raise ValueError(f"Target directory '{target_path}' is a protected root path and cannot be overwritten.")
 
         sanitized_name = "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in model.name)
+        safe_culture = validate_culture_code(model.culture)
 
         # Usar directorio temporal para garantizar atomicidad ante fallos
         with tempfile.TemporaryDirectory(prefix="semanticflow_stage_") as tmp_stage:
@@ -59,7 +61,7 @@ class PbipWriter:
                     "enableAutoRecovery": True
                 }
             }
-            pbip_file.write_text(json.dumps(pbip_content, indent=2), encoding="utf-8")
+            pbip_file.write_text(json.dumps(pbip_content, indent=2, sort_keys=True), encoding="utf-8")
 
             # 2. Directorio Report
             report_dir = stage_dir / f"{sanitized_name}.Report"
@@ -74,7 +76,7 @@ class PbipWriter:
                     "byConnection": None
                 }
             }
-            pbir_file.write_text(json.dumps(pbir_content, indent=2), encoding="utf-8")
+            pbir_file.write_text(json.dumps(pbir_content, indent=2, sort_keys=True), encoding="utf-8")
 
             # 2.1. Definición completa del Reporte (PBIR)
             report_def_dir = report_dir / "definition"
@@ -84,13 +86,13 @@ class PbipWriter:
                 "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/1.2.0/schema.json",
                 "activeSectionName": "ReportSection"
             }
-            (report_def_dir / "report.json").write_text(json.dumps(report_json, indent=2), encoding="utf-8")
+            (report_def_dir / "report.json").write_text(json.dumps(report_json, indent=2, sort_keys=True), encoding="utf-8")
 
             version_json = {
                 "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/versionMetadata/1.0.0/schema.json",
                 "version": "2.0.0"
             }
-            (report_def_dir / "version.json").write_text(json.dumps(version_json, indent=2), encoding="utf-8")
+            (report_def_dir / "version.json").write_text(json.dumps(version_json, indent=2, sort_keys=True), encoding="utf-8")
 
             pages_dir = report_def_dir / "pages"
             pages_dir.mkdir(parents=True, exist_ok=True)
@@ -99,7 +101,7 @@ class PbipWriter:
                 "pageOrder": ["ReportSection"],
                 "activePageName": "ReportSection"
             }
-            (pages_dir / "pages.json").write_text(json.dumps(pages_json, indent=2), encoding="utf-8")
+            (pages_dir / "pages.json").write_text(json.dumps(pages_json, indent=2, sort_keys=True), encoding="utf-8")
 
             page1_dir = pages_dir / "ReportSection"
             page1_dir.mkdir(parents=True, exist_ok=True)
@@ -111,7 +113,7 @@ class PbipWriter:
                 "height": 720,
                 "width": 1280
             }
-            (page1_dir / "page.json").write_text(json.dumps(page1_json, indent=2), encoding="utf-8")
+            (page1_dir / "page.json").write_text(json.dumps(page1_json, indent=2, sort_keys=True), encoding="utf-8")
 
             # 3. Directorio SemanticModel
             sem_model_dir = stage_dir / f"{sanitized_name}.SemanticModel"
@@ -121,7 +123,7 @@ class PbipWriter:
                 "version": "4.0",
                 "settings": {}
             }
-            (sem_model_dir / "definition.pbism").write_text(json.dumps(pbism_content, indent=2), encoding="utf-8")
+            (sem_model_dir / "definition.pbism").write_text(json.dumps(pbism_content, indent=2, sort_keys=True), encoding="utf-8")
 
             # 3.1. definition/
             def_dir = sem_model_dir / "definition"
@@ -143,18 +145,22 @@ class PbipWriter:
             # cultures/<culture>.tmdl
             cult_dir = def_dir / "cultures"
             cult_dir.mkdir(parents=True, exist_ok=True)
-            cult_content = self.model_emitter.emit_culture(model.culture)
-            (cult_dir / f"{model.culture}.tmdl").write_text(cult_content, encoding="utf-8")
+            cult_content = self.model_emitter.emit_culture(safe_culture)
+            (cult_dir / f"{safe_culture}.tmdl").write_text(cult_content, encoding="utf-8")
 
-            # tables/<Table>.tmdl
+            # tables/<Table>.tmdl (orden canónico determinista por nombre)
             tables_dir = def_dir / "tables"
             tables_dir.mkdir(parents=True, exist_ok=True)
-            for table in model.tables:
+            sorted_tables = sorted(model.tables, key=lambda t: (t.name.lower(), t.name))
+            for table in sorted_tables:
                 data_file = None
-                if data_dir and (data_dir / f"{table.name}.csv").exists():
-                    data_file = data_dir / f"{table.name}.csv"
+                if data_dir:
+                    candidate_csv = data_dir / f"{table.name}.csv"
+                    if candidate_csv.exists():
+                        data_file = resolve_within(data_dir, candidate_csv)
                 table_content = self.table_emitter.emit_table(table, data_file_path=data_file)
-                (tables_dir / f"{table.name}.tmdl").write_text(table_content, encoding="utf-8")
+                safe_tbl_name = safe_filename(table.name)
+                (tables_dir / f"{safe_tbl_name}.tmdl").write_text(table_content, encoding="utf-8")
 
             # Paso final atómico: transferir desde stage al target_dir final
             target_path.mkdir(parents=True, exist_ok=True)

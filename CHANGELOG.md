@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.0] - 2026-10-17
+
+### Security
+- **Strict Input Sanitization & Path Traversal Eradication**:
+  - Implemented `sanitize_company_id` using strict regex whitelisting (`^[a-zA-Z0-9_-]+$`) in `src/core/security/sanitize.py` and `artifacts/SemanticFlow/run_pipeline.py`.
+  - Added `resolve_within` boundary checks preventing directory traversal out of input and workspace roots.
+  - Hardened `PbipWriter` with `safe_filename` preventing table names from traversing outside `tables/`.
+  - Escaped column names and CSV paths in Power Query M scripts in `src/core/emitter/table_emitter.py`.
+- **Pre-Execution Secret Scanner**:
+  - Implemented `src/core/security/secret_scanner.py` scanning schemas and profiles for Azure AD Client Secrets, Bearer tokens, and private keys without leaking secret values to logs or LLM context.
+  - Added credential mask rules to `.agentignore`.
+  - Added sensitive property name rejection to `schemas/project_governance.schema.json`.
+- **DAX Lexical Sandboxing & Anti-Injection**:
+  - Implemented `src/core/quality/dax_validator.py` with delimiter balancing (`()`, `[]`, `{}`), string literal isolation, and prohibition of administrative escape statements (`EVALUATE`, `DEFINE`, `DROP`, `EXEC`).
+  - Escaped single quotes in `src/core/engine/dax_generator.py`.
+
+### Added
+- **Quality Gate (cQS) Rules D-011 and D-012**:
+  - Rule D-011 (`validate_direct_lake_compatibility`): Flags unpartitioned DATETIME attributes on FACT tables and active Many-to-Many (`N:N`) relationships in Microsoft Fabric Direct Lake models.
+  - Rule D-012 (`validate_vertipaq_performance`): Identifies high-cardinality `FILTER(ALL())` antipatterns and bidirectional cross-filtering involving fact tables.
+- **Zero-Diff Deterministic Invariant**:
+  - Canonical lexicographical ordering across tables, columns, measures, and relationships in `PbipWriter`, `TableEmitter`, `ModelEmitter`, `RelationshipEmitter`, `RelationshipResolver`, and `DbtSemanticEmitter`.
+
+---
+
 ## [2.0.0-rc1] - 2026-09-20
 
 ### Added

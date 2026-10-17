@@ -1,5 +1,5 @@
 """
-Síntesis automática de medidas DAX base para tablas de hechos.
+Síntesis automática de medidas DAX base para tablas de hechos con escape seguro de nombres.
 """
 from src.core.ast.schema import ColumnRaw, TableRaw
 from src.core.ast.semantic import SemanticMeasure, TableRole
@@ -15,12 +15,14 @@ class DaxGenerator:
         if role != TableRole.FACT:
             return measures
 
+        safe_tbl = table.name.replace("'", "''")
+
         # 1. Medida base de conteo de transacciones/eventos
         clean_table_name = table.name.replace("Fact_", "").replace("_", " ")
         measures.append(
             SemanticMeasure(
                 name=f"# Registros {clean_table_name}",
-                expression=f"COUNTROWS('{table.name}')",
+                expression=f"COUNTROWS('{safe_tbl}')",
                 format_string="#,0",
                 display_folder="_KPIs Base",
                 description=f"Total de registros/eventos en {table.name}",
@@ -34,13 +36,14 @@ class DaxGenerator:
 
             col_label = col.name.replace("_", " ")
             name_lower = col.name.lower()
+            safe_col = col.name.replace("]", "]]")
 
             # Métricas financieras (CLP / USD)
             if "clp" in name_lower:
                 measures.append(
                     SemanticMeasure(
                         name=f"Total {col_label}",
-                        expression=f"SUM('{table.name}'[{col.name}])",
+                        expression=f"SUM('{safe_tbl}'[{safe_col}])",
                         format_string="$#,0;($#,0);$0",
                         display_folder="_Métricas Financieras",
                         description=f"Suma total de {col.name}",
@@ -50,7 +53,7 @@ class DaxGenerator:
                 measures.append(
                     SemanticMeasure(
                         name=f"Total {col_label}",
-                        expression=f"SUM('{table.name}'[{col.name}])",
+                        expression=f"SUM('{safe_tbl}'[{safe_col}])",
                         format_string="$#,0.00;($#,0.00);$0.00",
                         display_folder="_Métricas Financieras",
                         description=f"Suma total de {col.name}",
@@ -61,7 +64,7 @@ class DaxGenerator:
                 measures.append(
                     SemanticMeasure(
                         name=f"Promedio {col_label}",
-                        expression=f"AVERAGE('{table.name}'[{col.name}])",
+                        expression=f"AVERAGE('{safe_tbl}'[{safe_col}])",
                         format_string="0.0%",
                         display_folder="_KPIs Calidad & Operación",
                         description=f"Promedio de {col.name}",
@@ -72,7 +75,7 @@ class DaxGenerator:
                 measures.append(
                     SemanticMeasure(
                         name=f"Promedio {col_label}",
-                        expression=f"AVERAGE('{table.name}'[{col.name}])",
+                        expression=f"AVERAGE('{safe_tbl}'[{safe_col}])",
                         format_string="#,0.0",
                         display_folder="_KPIs Calidad & Operación",
                         description=f"Promedio de {col.name}",
@@ -83,7 +86,7 @@ class DaxGenerator:
                 measures.append(
                     SemanticMeasure(
                         name=f"Total {col_label}",
-                        expression=f"SUM('{table.name}'[{col.name}])",
+                        expression=f"SUM('{safe_tbl}'[{safe_col}])",
                         format_string="#,0.00",
                         display_folder="_Operaciones & Sensores",
                         description=f"Suma acumulada de {col.name}",
@@ -92,7 +95,7 @@ class DaxGenerator:
                 measures.append(
                     SemanticMeasure(
                         name=f"Promedio {col_label}",
-                        expression=f"AVERAGE('{table.name}'[{col.name}])",
+                        expression=f"AVERAGE('{safe_tbl}'[{safe_col}])",
                         format_string="#,0.00",
                         display_folder="_Operaciones & Sensores",
                         description=f"Promedio de {col.name}",

@@ -30,6 +30,8 @@ from src.core.parsers.markdown_parser import MarkdownSchemaParser
 from src.core.parsers.yaml_parser import YamlSchemaParser
 from src.core.personas.cockpit import DataLeadershipCockpitEngine
 from src.core.quality.scorer import SemanticQualityScorer
+from src.core.security.sanitize import sanitize_company_id, resolve_within, validate_culture_code
+from src.core.security.secret_scanner import scan_file_for_secrets
 
 console = Console()
 
@@ -67,6 +69,9 @@ def run_pipeline(
     min_score: float = 45.0,
     culture: str = "es-CL",
 ):
+    company_id = sanitize_company_id(company_id)
+    culture = validate_culture_code(culture)
+
     console.print(
         Panel.fit(
             f"[bold cyan]SemanticFlow[/bold cyan] - Enterprise SMaC Orchestrator\n"
@@ -81,6 +86,22 @@ def run_pipeline(
 
     if not input_file.exists():
         console.print(f"[bold red][ERROR][/bold red] El archivo de esquema no existe: {input_file}")
+        sys.exit(1)
+
+    # 0. Escaneo de Seguridad y Fuga de Secretos
+    secret_findings = scan_file_for_secrets(input_file)
+    profile_path = input_file.parent / "company_profile.yaml"
+    if not profile_path.exists():
+        profile_path = input_file.parent / "company_profile.yml"
+    if profile_path.exists():
+        secret_findings.extend(scan_file_for_secrets(profile_path))
+
+    if secret_findings:
+        console.print(
+            "\n[bold red][SECURITY ERROR][/bold red] Se detectó una posible credencial o secreto hardcodeado en los inputs."
+        )
+        for f in secret_findings:
+            console.print(f"   [red]•[/red] {f.format_diagnostic()}")
         sys.exit(1)
 
     # 1. Parsing
@@ -277,14 +298,40 @@ def main():
         default="es-CL",
         help="Código de cultura para Power BI (default: es-CL)",
     )
+    parser.add_argument(
+        "--allow-external-input",
+        action="store_true",
+        default=False,
+        help="Permite especificar archivos de entrada fuera del directorio del repositorio",
+    )
 
     args = parser.parse_args()
 
-    company_id = args.company
+    try:
+        company_id = sanitize_company_id(args.company)
+    except ValueError as e:
+        console.print(f"[bold red][SECURITY ERROR][/bold red] {e}")
+        sys.exit(1)
+
+    base_inputs = (PROJECT_ROOT / "artifacts" / "SemanticFlow" / "inputs" / "companies").resolve()
+    try:
+        company_dir = resolve_within(base_inputs, base_inputs / company_id)
+    except PermissionError as e:
+        console.print(f"[bold red][SECURITY ERROR][/bold red] {e}")
+        sys.exit(1)
+
     if args.input:
-        input_file = args.input
+        input_file = args.input.resolve()
+        if not args.allow_external_input:
+            try:
+                input_file = resolve_within(PROJECT_ROOT, input_file)
+            except PermissionError as e:
+                console.print(
+                    f"[bold red][SECURITY ERROR][/bold red] {e} "
+                    "Use --allow-external-input si desea permitir rutas externas explícitamente."
+                )
+                sys.exit(1)
     else:
-        company_dir = Path(__file__).resolve().parent / "inputs" / "companies" / company_id
         if (company_dir / "schema.md").exists():
             input_file = company_dir / "schema.md"
         else:
@@ -298,14 +345,19 @@ def main():
             else:
                 input_file = company_dir / "schema.md"
 
-    run_pipeline(
-        company_id=company_id,
-        input_file=input_file,
-        base_output_dir=args.output,
-        min_score=args.min_score,
-        culture=args.culture,
-    )
+    try:
+        run_pipeline(
+            company_id=company_id,
+            input_file=input_file,
+            base_output_dir=args.output,
+            min_score=args.min_score,
+            culture=args.culture,
+        )
+    except (ValueError, PermissionError) as e:
+        console.print(f"[bold red][SECURITY ERROR][/bold red] {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
     main()
+

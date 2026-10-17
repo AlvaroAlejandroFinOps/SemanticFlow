@@ -1,7 +1,7 @@
 # Data Platform Infrastructure & Storage Capacity Lens
 
 **Persona Role**: `PLATFORM_ENGINEER` | **Technical Depth**: `TECHNICAL`
-**Generated At**: `2026-10-17T00:54:22.410446+00:00`
+**Generated At**: `2026-10-17T02:24:59.929038+00:00`
 
 ## Executive Summary
 

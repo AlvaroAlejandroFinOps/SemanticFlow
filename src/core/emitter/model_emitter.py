@@ -36,7 +36,7 @@ class ModelEmitter:
         ])
         if model.tables:
             lines.append("")
-            for t in model.tables:
+            for t in sorted(model.tables, key=lambda x: (x.name.lower(), x.name)):
                 t_id = escape_tmdl_identifier(t.name)
                 lines.append(f"ref table {t_id}")
         return "\n".join(lines) + "\n"

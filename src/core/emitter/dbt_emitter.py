@@ -18,7 +18,10 @@ class DbtSemanticEmitter:
         """Generates dbt semantic layer dictionary representation."""
         semantic_models: List[Dict[str, Any]] = []
 
-        for entity in self.project.entities:
+        # Orden canónico determinista de entidades
+        sorted_entities = sorted(self.project.entities, key=lambda e: (e.name.lower(), e.name))
+
+        for entity in sorted_entities:
             model_def: Dict[str, Any] = {
                 "name": entity.name.lower(),
                 "description": entity.description or f"Semantic model for {entity.name}",
@@ -67,6 +70,11 @@ class DbtSemanticEmitter:
                     "agg": "count",
                     "expr": "1",
                 })
+
+            # Orden determinista interno de atributos, dimensiones y medidas
+            model_def["entities"].sort(key=lambda x: x["name"])
+            model_def["dimensions"].sort(key=lambda x: x["name"])
+            model_def["measures"].sort(key=lambda x: x["name"])
 
             semantic_models.append(model_def)
 

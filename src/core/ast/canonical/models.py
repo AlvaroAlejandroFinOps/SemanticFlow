@@ -64,6 +64,7 @@ class Diagnostic(BaseModel):
     object_id: Optional[str] = None
     suggested_action: Optional[str] = None
     target: Optional[str] = None
+    penalty: Optional[float] = None
 
 class GovernanceMetadata(BaseModel):
     owner: Optional[str] = None
@@ -109,6 +110,7 @@ class SemanticEntity(BaseModel):
     grain: Optional[List[str]] = None
     attributes: List[SemanticAttribute] = Field(default_factory=list)
     metrics: List[SemanticMetric] = Field(default_factory=list)
+    estimated_rows: Optional[int] = None
     governance: GovernanceMetadata = Field(default_factory=GovernanceMetadata)
     provenance: List[ProvenanceRecord] = Field(default_factory=list)
 
@@ -127,6 +129,7 @@ class SemanticRelationship(BaseModel):
     to_attribute_id: str
     cardinality: str = '1:N'
     is_active: bool = True
+    cross_filtering: Optional[str] = 'oneDirection'
     provenance: List[ProvenanceRecord] = Field(default_factory=list)
 
 class ProjectGovernance(BaseModel):

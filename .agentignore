@@ -10,3 +10,11 @@ logs/
 __pycache__/
 .git/
 artifacts/plans/archive/
+*.env
+*.env.*
+*.secret
+*.pem
+*.key
+credentials.json
+**/token_cache/**
+**/azure_auth/**

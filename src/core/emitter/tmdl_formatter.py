@@ -21,3 +21,21 @@ def format_tmdl_string_literal(val: str) -> str:
     """Escapa un valor string entre comillas dobles en TMDL."""
     escaped = val.replace('"', '""')
     return f'"{escaped}"'
+
+
+def escape_m_string(val: str) -> str:
+    """
+    Escapa un string literal dentro de código Power Query / M duplicando comillas dobles.
+    Previene inyecciones de código en scripts M (#table, Csv.Document, etc.).
+    """
+    return val.replace('"', '""')
+
+
+def sanitize_single_line_tmdl(val: str, field_name: str = "field") -> str:
+    """
+    Verifica que un valor de una sola línea en TMDL no contenga saltos de línea (\r o \n)
+    que permitan inyectar directivas o romper la estructura del archivo.
+    """
+    if "\n" in val or "\r" in val:
+        raise ValueError(f"El campo '{field_name}' no puede contener saltos de línea en directivas TMDL.")
+    return val

@@ -6,12 +6,24 @@ from src.core.emitter.tmdl_formatter import escape_tmdl_identifier
 
 
 class RelationshipEmitter:
-    """Genera la lista de relaciones en sintaxis TMDL."""
+    """Genera la lista de relaciones en sintaxis TMDL con orden determinista."""
 
     def emit_relationships(self, relationships: list[SemanticRelationship]) -> str:
         blocks: list[str] = []
 
-        for rel in relationships:
+        # Orden determinista para Zero-Diff invariant
+        sorted_relationships = sorted(
+            relationships,
+            key=lambda r: (
+                r.from_table.lower(),
+                r.from_column.lower(),
+                r.to_table.lower(),
+                r.to_column.lower(),
+                r.name.lower(),
+            ),
+        )
+
+        for rel in sorted_relationships:
             rel_id = escape_tmdl_identifier(rel.name)
             lines: list[str] = [f"relationship {rel_id}"]
 

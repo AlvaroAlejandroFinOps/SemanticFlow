@@ -28,10 +28,21 @@ class RelationshipResolver:
 
         # Grafo no dirigido para rastrear caminos activos y prevenir ciclos / caminos ambiguos en VertiPaq
         active_graph = nx.Graph()
-        for t in raw_schema.tables:
+        for t in sorted(raw_schema.tables, key=lambda x: (x.name.lower(), x.name)):
             active_graph.add_node(t.name)
 
-        for rel in raw_schema.relationships:
+        # Ordenar relaciones antes de procesar para garantizar determinismo estricto de is_active
+        sorted_raw_rels = sorted(
+            raw_schema.relationships,
+            key=lambda r: (
+                r.from_table.lower(),
+                r.from_column.lower(),
+                r.to_table.lower(),
+                r.to_column.lower(),
+            ),
+        )
+
+        for rel in sorted_raw_rels:
             from_t = rel.from_table
             from_c = rel.from_column
             to_t = rel.to_table

@@ -1,7 +1,7 @@
 # FinOps, Cloud Cost & Capacity Optimization Lens
 
 **Persona Role**: `FINOPS_SPECIALIST` | **Technical Depth**: `SUMMARY`
-**Generated At**: `2026-10-17T00:54:22.410446+00:00`
+**Generated At**: `2026-10-17T02:24:59.929007+00:00`
 
 ## Executive Summary
 

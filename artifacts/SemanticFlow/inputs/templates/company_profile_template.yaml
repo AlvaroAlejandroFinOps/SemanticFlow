@@ -1,0 +1,99 @@
+# ==============================================================================
+# SemanticFlow Company Profile Template
+# Contrato de Enriquecimiento Empresarial e IA para Modelado Semántico
+# ==============================================================================
+# Este archivo define el perfil corporativo, dominio de negocio y metadatos
+# estratégicos que guían a los agentes IA de SemanticFlow en la inferencia
+# contextual, asignación de personas y gobernanza de datos.
+
+company_id: "nombre_empresa_slug"
+company_name: "Nombre Oficial de la Empresa S.A."
+website: "https://www.empresa.com"
+country: "Chile"
+industry: "Sector Primario"
+sub_industry: "Sub-sector o Especialidad"
+
+overview:
+  summary: >
+    Resumen ejecutivo conciso de la empresa, su modelo de negocio,
+    propuesta de valor y escala operativa en el mercado.
+  founded_year: 1980
+  headquarters: "Santiago, Chile"
+  operating_scale:
+    employees: "500 - 1500"
+    active_projects: "15 - 30"
+    annual_revenue_range: "USD 50M - 150M"
+
+business_units:
+  - id: "unidad_1"
+    name: "Nombre Unidad 1"
+    description: "Misión y alcance operativo de la unidad."
+    core_processes:
+      - "Proceso clave A"
+      - "Proceso clave B"
+  - id: "unidad_2"
+    name: "Nombre Unidad 2"
+    description: "Misión y alcance operativo de la unidad."
+    core_processes:
+      - "Proceso clave C"
+      - "Proceso clave D"
+
+strategic_objectives:
+  - code: "OBJ-01"
+    title: "Objetivo Estratégico 1"
+    description: "Descripción del impacto buscado y meta cuantitativa."
+  - code: "OBJ-02"
+    title: "Objetivo Estratégico 2"
+    description: "Descripción del impacto buscado y meta cuantitativa."
+
+key_performance_indicators:
+  financial:
+    - name: "EBITDA Operacional"
+      description: "Margen operacional consolidado por centro de beneficio."
+      target: "> 18%"
+  operational:
+    - name: "Eficiencia de Ejecución"
+      description: "Desviación presupuestaria y cumplimiento de plazos."
+      target: "< 3% varianza"
+
+technology_ecosystem:
+  erp: "SAP Business One / SAP S/4HANA / Oracle NetSuite"
+  data_lakehouse: "Microsoft Fabric OneLake (Gold Delta Tables)"
+  analytics_engine: "Power BI Pro / Direct Lake"
+  crm_sales: "Salesforce / HubSpot / Procore / PlanOK"
+  identity_security: "Microsoft Entra ID (M365)"
+
+regulatory_and_compliance:
+  frameworks:
+    - code: "LEY_DATOS"
+      name: "Ley 19.628 / 21.096 Protección de Datos Personales"
+      scope: "Anonimización y cifrado de RUT, email y datos bancarios de terceros."
+    - code: "NORMA_SECTORIAL"
+      name: "Normativa Sectorial Aplicable"
+      scope: "Certificaciones laborales, auditorías tributarias y estados de pago."
+
+semantic_governance:
+  data_domain: "Nombre del Dominio Primario"
+  owner: "Gerencia de Planificación y Control de Gestión"
+  steward: "Líder de Arquitectura de Datos y BI"
+  confidentiality_tier: "RESTRICTED"
+  architecture_pattern: "Star Schema Pure / Fact Constellation"
+  direct_lake_rules:
+    - "Modelado 100% puro en estrella unidireccional (1:N)"
+    - "Cero columnas calculadas DAX: transformaciones en OneLake Gold"
+    - "Surrogate keys (SK) enteras optimizadas con V-Order Delta"
+    - "Seguridad RLS dinámica con USERPRINCIPALNAME()"
+
+target_personas:
+  - id: "cfo"
+    role: "Director Financiero"
+    priority: "CRITICAL"
+  - id: "project_manager"
+    role: "Administrador de Contratos y Obras"
+    priority: "HIGH"
+  - id: "sales_lead"
+    role: "Gerente Comercial e Inmobiliario"
+    priority: "HIGH"
+  - id: "bi_analyst"
+    role: "Ingeniero de Datos y Analista BI"
+    priority: "MEDIUM"

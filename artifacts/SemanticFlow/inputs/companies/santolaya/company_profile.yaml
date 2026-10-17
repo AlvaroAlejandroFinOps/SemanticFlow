@@ -1,0 +1,163 @@
+# ==============================================================================
+# Santolaya Constructora e Inmobiliaria - Perfil Empresarial de Enriquecimiento
+# ==============================================================================
+company_id: "santolaya"
+company_name: "Santolaya Constructora e Inmobiliaria"
+website: "https://santolaya.cl/"
+country: "Chile"
+industry: "Construcción e Inmobiliaria"
+sub_industry: "Desarrollo Residencial, Edificación en Altura y Extensión Urbana"
+
+overview:
+  summary: >
+    Santolaya es una destacada empresa chilena de ingeniería, construcción y desarrollo inmobiliario
+    con más de cuatro décadas de liderazgo y excelencia en el mercado nacional. Su modelo integrado
+    abarca desde la prospección, compra de terrenos y estructuración financiera de proyectos, hasta
+    la ejecución integral de obras civiles, comercialización de viviendas y servicio técnico de postventa.
+  founded_year: 1980
+  headquarters: "Santiago, Región Metropolitana, Chile"
+  operating_scale:
+    employees: "800 - 1500"
+    active_projects: "12 - 25 proyectos simultáneos"
+    annual_revenue_range: "USD 80M - 180M"
+
+business_units:
+  - id: "constructora"
+    name: "Santolaya Constructora"
+    description: >
+      Unidad de ejecución de edificación habitacional y obras civiles. Responsable de la gestión
+      de faena, compras de insumos críticos (hormigón, enfierradura), administración de subcontratistas,
+      control presupuestario EVM (Earned Value Management) 4-vías y cumplimiento de la Ley de Subcontratación.
+    core_processes:
+      - "Control Presupuestario y Curva S (EVM: BAC, PV, EV, AC)"
+      - "Abastecimiento y Órdenes de Compra en SAP B1 (OPOR)"
+      - "Recepción y Control de Calidad en Bodega de Faena (OPDN)"
+      - "Liquidación de Estados de Pago y Retenciones de Garantía (OPCH)"
+      - "Auditoría Laboral F30 / F30-1 para Subcontratos"
+
+  - id: "inmobiliaria"
+    name: "Santolaya Inmobiliaria"
+    description: >
+      Unidad de estructuración comercial y venta de departamentos y casas. Lidera el ciclo comercial
+      en blanco, en verde y entrega inmediata, intermediación con brokers, gestión del pie,
+      tramitación de créditos hipotecarios bancarios y escrituración legal.
+    core_processes:
+      - "Fijación de Precios de Lista y Políticas de Descuentos"
+      - "Gestión de Reservas, Promesas y Escrituraciones (ORDR)"
+      - "Monitoreo de Cartera de Clientes, Financiamiento y Subsidios (DS01, DS19)"
+      - "Mitigación y Cobro de Desistimientos Comerciales"
+
+  - id: "postventa"
+    name: "Servicio Técnico y Garantías Postventa"
+    description: >
+      Unidad técnica orientada a la satisfacción del cliente tras la entrega de la unidad vendida.
+      Gestiona inspecciones de recepción, reclamos técnicos (OSCL) y cuadrillas de reparación conforme
+      a los plazos de garantía exigidos por la legislación chilena (LGUC).
+    core_processes:
+      - "Apertura y Trazabilidad de Tickets de Falla en SAP B1 (OSCL)"
+      - "Diagnóstico y Clasificación de Fallas (Gasfitería, Fisuras, Eléctricas, Pintura)"
+      - "Control de Costos de Reparación por Garantía de Obra"
+      - "Cierre Conforme y Medición de SLA de Resolución"
+
+strategic_objectives:
+  - code: "OBJ-EVM"
+    title: "Garantía de Rentabilidad de Obra (Zero Cost Overrun)"
+    description: "Mantener CPI >= 1.00 y SPI >= 0.98 mediante control semanal de Valor Ganado en faena."
+  - code: "OBJ-ABSORCION"
+    title: "Optimización de Velocidad de Ventas y Absorción"
+    description: "Alcanzar tasas de colocación superiores al 85% al momento de la Recepción Municipal (DOM)."
+  - code: "OBJ-CASHFLOW"
+    title: "Aceleración del Ciclo Promesa a Escritura"
+    description: "Reducir el tiempo promedio de maduración bancaria a menos de 75 días tras la recepción final."
+  - code: "OBJ-CUMPLIMIENTO"
+    title: "Riesgo Cero en Ley de Subcontratación"
+    description: "Exigir 100% de certificaciones F30 y F30-1 al día antes de liberar transferencias a subcontratistas."
+  - code: "OBJ-POSTVENTA"
+    title: "Resolución Ágil de Postventa y Retención de Marca"
+    description: "Resolver el 90% de tickets en menos de 15 días hábiles, protegiendo el margen de garantía."
+
+key_performance_indicators:
+  constructora:
+    - name: "Cost Performance Index (CPI)"
+      formula: "EV / AC"
+      target: ">= 1.00"
+    - name: "Schedule Performance Index (SPI)"
+      formula: "EV / PV"
+      target: ">= 0.98"
+    - name: "Variance at Completion (VAC)"
+      formula: "BAC - EAC"
+      target: ">= 0 CLP"
+    - name: "Cumplimiento Laboral F30"
+      formula: "% Estados de Pago con F30 Al Día"
+      target: "100%"
+  inmobiliaria:
+    - name: "Porcentaje de Absorción Comercial"
+      formula: "(Unidades Prometidas + Escrituradas) / Total Unidades Vendibles * 100"
+      target: ">= 85%"
+    - name: "Descuento Promedio Aplicado"
+      formula: "(Precio Lista - Precio Cierre) / Precio Lista * 100"
+      target: "<= 5.0%"
+    - name: "Tasa de Desistimiento"
+      formula: "Monto Desistido UF / Monto Promesado Bruto UF * 100"
+      target: "< 3.5%"
+  postventa:
+    - name: "Días Promedio de Resolución"
+      formula: "Promedio(dias_resolucion)"
+      target: "<= 14 días"
+    - name: "Costo Medio de Reparación"
+      formula: "Promedio(costo_reparacion_clp) por unidad atendida"
+      target: "< 150.000 CLP"
+
+technology_ecosystem:
+  erp: "SAP Business One (OPRJ, OCRD, OOCR, OPOR, OPDN, OPCH, ORDR, OSCL)"
+  data_lakehouse: "Microsoft Fabric OneLake (Gold Delta Tables con V-Order)"
+  analytics_engine: "Power BI Pro en Direct Lake (directLakeOnly)"
+  capacity: "Microsoft Fabric F8 (Optimización de Memoria y Concurrencia)"
+  identity_security: "Microsoft Entra ID (M365) con RLS Dinámico"
+
+regulatory_and_compliance:
+  frameworks:
+    - code: "LGUC_ART18"
+      name: "Ley General de Urbanismo y Construcciones (Art. 18)"
+      scope: "Responsabilidad decenal en estructura, quinquenal en instalaciones y trienal en terminaciones."
+    - code: "LEY_20123"
+      name: "Ley 20.123 sobre Trabajo en Régimen de Subcontratación"
+      scope: "Control estricto de obligaciones laborales y previsionales de contratistas (Certificados F30 y F30-1)."
+    - code: "LEY_19628"
+      name: "Ley 19.628 sobre Protección de la Vida Privada"
+      scope: "Gobernanza y anonimización de RUT, datos bancarios y correos de compradores y contratistas."
+    - code: "SII_DTE"
+      name: "Normativa de Facturación Electrónica SII"
+      scope: "Validación de DTE, devengo contable y retención legal del 5% en garantías de estados de pago."
+
+semantic_governance:
+  data_domain: "Ingeniería, Construcción y Desarrollo Inmobiliario"
+  owner: "Gerencia General y Control de Gestión Santolaya"
+  steward: "Líder de Arquitectura de Datos y BI Santolaya"
+  confidentiality_tier: "CONFIDENTIAL"
+  architecture_pattern: "Fact Constellation con Dimensiones Conformes"
+  direct_lake_rules:
+    - "Modelado 100% puro en estrella con relaciones 1:N unidireccionales"
+    - "Cero columnas calculadas DAX: toda lógica se resuelve en OneLake Silver/Gold"
+    - "Surrogate keys (SK) enteras autoincrementales optimizadas con V-Order"
+    - "Seguridad a nivel de fila (RLS) dinámica gobernada por seguridad_usuarios_obra"
+
+target_personas:
+  - id: "cfo"
+    role: "Gerente de Finanzas y Control de Gestión"
+    priority: "CRITICAL"
+  - id: "project_manager"
+    role: "Administrador de Obra y Jefe de Proyecto"
+    priority: "CRITICAL"
+  - id: "commercial_lead"
+    role: "Gerente Comercial e Inmobiliario"
+    priority: "HIGH"
+  - id: "head_of_procurement"
+    role: "Jefe de Adquisiciones y Abastecimiento"
+    priority: "HIGH"
+  - id: "quality_postventa"
+    role: "Jefe de Postventa y Calidad Técnica"
+    priority: "MEDIUM"
+  - id: "bi_engineer"
+    role: "Ingeniero de Datos y Modelador Direct Lake"
+    priority: "HIGH"

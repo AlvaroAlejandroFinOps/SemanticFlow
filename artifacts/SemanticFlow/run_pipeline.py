@@ -18,6 +18,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+import yaml
+from src.core.ast.canonical.models import ProjectGovernance
 from src.core.ast.semantic import TableRole
 from src.core.emitter.pbip_writer import PbipWriter
 from src.core.emitter.dbt_emitter import DbtSemanticEmitter
@@ -93,6 +95,56 @@ def run_pipeline(
     # 2. Canonical Model & Quality Gate
     console.print("\n[bold cyan]2. Evaluación del Semantic Quality Gate (cQS)...[/bold cyan]")
     canonical_project = raw_to_canonical(raw_schema)
+
+    # Enriquecer con Company Profile si existe en la carpeta de la empresa
+    profile_path = input_file.parent / "company_profile.yaml"
+    if not profile_path.exists():
+        profile_path = input_file.parent / "company_profile.yml"
+
+    if profile_path.exists():
+        try:
+            with open(profile_path, "r", encoding="utf-8") as pf:
+                profile_data = yaml.safe_load(pf) or {}
+            gov_data = profile_data.get("semantic_governance", {})
+            compliance_list = [
+                f.get("code") or f.get("name")
+                for f in profile_data.get("regulatory_and_compliance", {}).get("frameworks", [])
+                if isinstance(f, dict)
+            ]
+            bus_units = [u.get("name") for u in profile_data.get("business_units", []) if isinstance(u, dict)]
+            
+            project_gov = ProjectGovernance(
+                domain_id=profile_data.get("company_id", company_id),
+                domain_name=gov_data.get("data_domain", profile_data.get("industry", "Enterprise")),
+                classification=gov_data.get("confidentiality_tier", "Internal"),
+                data_product_status="Certified",
+                owner=gov_data.get("owner", profile_data.get("company_name")),
+                steward=gov_data.get("steward"),
+                criticality="High",
+                compliance_frameworks=compliance_list,
+                tags=[profile_data.get("industry", "Enterprise"), profile_data.get("country", "Chile")] + bus_units,
+                custom_properties={
+                    "company_name": profile_data.get("company_name"),
+                    "website": profile_data.get("website"),
+                    "industry": profile_data.get("industry"),
+                    "sub_industry": profile_data.get("sub_industry"),
+                    "technology_ecosystem": profile_data.get("technology_ecosystem", {}),
+                    "direct_lake_rules": gov_data.get("direct_lake_rules", []),
+                    "key_performance_indicators": profile_data.get("key_performance_indicators", {}),
+                    "business_units": profile_data.get("business_units", []),
+                    "strategic_objectives": profile_data.get("strategic_objectives", []),
+                },
+            )
+            canonical_project.governance = project_gov
+            if profile_data.get("overview", {}).get("summary"):
+                canonical_project.description = profile_data["overview"]["summary"].strip()
+            console.print(
+                f"   [green][OK][/green] Perfil de empresa integrado: [bold]{profile_data.get('company_name', company_id)}[/bold] "
+                f"([cyan]{len(compliance_list)}[/cyan] marcos normativos, [cyan]{len(bus_units)}[/cyan] unidades de negocio)"
+            )
+        except Exception as e:
+            console.print(f"   [yellow][WARN][/yellow] No se pudo cargar company_profile.yaml: {e}")
+
     scorer = SemanticQualityScorer(canonical_project)
     quality_result = scorer.evaluate()
 
@@ -232,7 +284,19 @@ def main():
     if args.input:
         input_file = args.input
     else:
-        input_file = Path(__file__).resolve().parent / "inputs" / "companies" / company_id / "schema.md"
+        company_dir = Path(__file__).resolve().parent / "inputs" / "companies" / company_id
+        if (company_dir / "schema.md").exists():
+            input_file = company_dir / "schema.md"
+        else:
+            candidates = list(company_dir.glob("*.md")) + list(company_dir.glob("*.yaml")) + list(company_dir.glob("*.yml"))
+            candidates = [
+                c for c in candidates
+                if "profile" not in c.name.lower() and "readme" not in c.name.lower()
+            ]
+            if candidates:
+                input_file = candidates[0]
+            else:
+                input_file = company_dir / "schema.md"
 
     run_pipeline(
         company_id=company_id,

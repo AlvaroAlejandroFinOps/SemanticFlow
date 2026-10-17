@@ -36,7 +36,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Linea` | `DataType.STRING` | `PK` | `-` |
+| `SK_Linea` | `DataType.STRING` | `-` | `-` |
 | `Codigo_Linea` | `DataType.STRING` | `-` | `-` |
 | `Color` | `DataType.STRING` | `-` | `-` |
 | `Tecnologia` | `DataType.STRING` | `-` | `-` |
@@ -49,7 +49,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Estacion` | `DataType.STRING` | `PK` | `-` |
+| `SK_Estacion` | `DataType.STRING` | `-` | `-` |
 | `SK_Linea` | `DataType.STRING` | `PK` | `-` |
 | `Codigo_Estacion` | `DataType.STRING` | `-` | `-` |
 | `Nombre_Estacion` | `DataType.STRING` | `-` | `-` |
@@ -64,7 +64,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Tren` | `DataType.STRING` | `PK` | `-` |
+| `SK_Tren` | `DataType.STRING` | `-` | `-` |
 | `SK_Linea` | `DataType.STRING` | `PK` | `-` |
 | `ID_Formacion` | `DataType.STRING` | `-` | `-` |
 | `Modelo` | `DataType.STRING` | `-` | `-` |
@@ -78,7 +78,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Usuario` | `DataType.INT64` | `PK` | `-` |
+| `SK_Usuario` | `DataType.STRING` | `-` | `-` |
 | `Numero_Tarjeta_Bip` | `DataType.STRING` | `-` | `-` |
 | `Tipo_Usuario` | `DataType.STRING` | `-` | `-` |
 
@@ -89,7 +89,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Equipo` | `DataType.INT64` | `PK` | `-` |
+| `SK_Equipo` | `DataType.STRING` | `-` | `-` |
 | `SK_Tren` | `DataType.STRING` | `PK` | `-` |
 | `SK_Estacion` | `DataType.STRING` | `PK` | `-` |
 | `Sistema` | `DataType.STRING` | `-` | `-` |
@@ -112,7 +112,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Espacio` | `DataType.INT64` | `PK` | `-` |
+| `SK_Espacio` | `DataType.STRING` | `PK` | `-` |
 | `SK_Estacion` | `DataType.STRING` | `PK` | `-` |
 | `Tipo` | `DataType.STRING` | `-` | `-` |
 
@@ -123,7 +123,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Proyecto` | `DataType.STRING` | `PK` | `-` |
+| `SK_Proyecto` | `DataType.STRING` | `-` | `-` |
 | `Nombre` | `DataType.STRING` | `-` | `-` |
 | `Presupuesto_USD` | `DataType.STRING` | `-` | `-` |
 
@@ -134,7 +134,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Iniciativa` | `DataType.STRING` | `PK` | `-` |
+| `SK_Iniciativa` | `DataType.STRING` | `-` | `-` |
 | `Categoria` | `DataType.STRING` | `-` | `-` |
 | `Meta` | `DataType.STRING` | `-` | `-` |
 
@@ -145,8 +145,8 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `Fecha_SK` | `DataType.STRING` | `PK` | `-` |
-| `Fecha` | `DataType.DATETIME` | `-` | `-` |
+| `Fecha_SK` | `DataType.STRING` | `-` | `-` |
+| `Fecha` | `DataType.STRING` | `-` | `-` |
 | `Dia` | `DataType.STRING` | `-` | `-` |
 | `Mes` | `DataType.STRING` | `-` | `-` |
 | `Año` | `DataType.STRING` | `-` | `-` |
@@ -160,11 +160,11 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `ID_Validacion` | `DataType.INT64` | `PK` | `-` |
+| `ID_Validacion` | `DataType.STRING` | `PK` | `-` |
 | `Fecha_SK` | `DataType.STRING` | `PK` | `-` |
 | `Segundo_Dia` | `DataType.STRING` | `-` | `-` |
 | `SK_Estacion` | `DataType.STRING` | `PK` | `-` |
-| `SK_Usuario` | `DataType.INT64` | `PK` | `-` |
+| `SK_Usuario` | `DataType.STRING` | `PK` | `-` |
 | `Tarifa_Cobrada_CLP` | `DataType.STRING` | `-` | `-` |
 | `Canal_Validacion` | `DataType.STRING` | `-` | `-` |
 
@@ -175,7 +175,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `ID_Agente_Flujo` | `DataType.INT64` | `PK` | `-` |
+| `ID_Agente_Flujo` | `DataType.STRING` | `-` | `-` |
 | `Fecha_SK` | `DataType.STRING` | `PK` | `-` |
 | `Segundo_Dia` | `DataType.STRING` | `-` | `-` |
 | `SK_Estacion` | `DataType.STRING` | `PK` | `-` |
@@ -190,10 +190,10 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `ID_Venta_Carga` | `DataType.INT64` | `PK` | `-` |
+| `ID_Venta_Carga` | `DataType.STRING` | `-` | `-` |
 | `Fecha_SK` | `DataType.STRING` | `PK` | `-` |
 | `SK_Estacion` | `DataType.STRING` | `PK` | `-` |
-| `SK_Usuario` | `DataType.INT64` | `PK` | `-` |
+| `SK_Usuario` | `DataType.STRING` | `PK` | `-` |
 | `Monto_Carga_CLP` | `DataType.STRING` | `-` | `-` |
 | `Metodo_Pago` | `DataType.STRING` | `-` | `-` |
 
@@ -204,7 +204,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `ID_Log` | `DataType.INT64` | `PK` | `-` |
+| `ID_Log` | `DataType.STRING` | `-` | `-` |
 | `Fecha_SK` | `DataType.STRING` | `PK` | `-` |
 | `Segundo_Dia` | `DataType.STRING` | `-` | `-` |
 | `SK_Tren` | `DataType.STRING` | `PK` | `-` |
@@ -220,7 +220,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `ID_Sensoraje` | `DataType.INT64` | `PK` | `-` |
+| `ID_Sensoraje` | `DataType.STRING` | `-` | `-` |
 | `Fecha_SK` | `DataType.STRING` | `PK` | `-` |
 | `SK_Linea` | `DataType.STRING` | `PK` | `-` |
 | `Vibracion_RMS_G` | `DataType.STRING` | `-` | `-` |
@@ -234,7 +234,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Periodo` | `DataType.STRING` | `PK` | `-` |
+| `SK_Periodo` | `DataType.STRING` | `-` | `-` |
 | `SK_Linea` | `DataType.STRING` | `PK` | `-` |
 | `SK_Unidad` | `DataType.STRING` | `PK` | `-` |
 | `Ingresos_Tarifarios_CLP` | `DataType.STRING` | `-` | `-` |
@@ -249,7 +249,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Periodo` | `DataType.STRING` | `PK` | `-` |
+| `SK_Periodo` | `DataType.STRING` | `-` | `-` |
 | `SK_Linea` | `DataType.STRING` | `PK` | `-` |
 | `SK_Unidad` | `DataType.STRING` | `PK` | `-` |
 | `Ingreso_Arriendos_Comerciales_CLP` | `DataType.STRING` | `-` | `-` |
@@ -263,7 +263,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Periodo` | `DataType.STRING` | `PK` | `-` |
+| `SK_Periodo` | `DataType.STRING` | `-` | `-` |
 | `SK_Linea` | `DataType.STRING` | `PK` | `-` |
 | `Consumo_Traccion_KWh` | `DataType.STRING` | `-` | `-` |
 | `Indicador_KWh_CKm` | `DataType.STRING` | `-` | `-` |
@@ -277,7 +277,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Periodo` | `DataType.STRING` | `PK` | `-` |
+| `SK_Periodo` | `DataType.STRING` | `-` | `-` |
 | `SK_Linea` | `DataType.STRING` | `PK` | `-` |
 | `Cumplimiento_Frecuencia_Pct` | `DataType.STRING` | `-` | `-` |
 | `MKBF_Km` | `DataType.STRING` | `-` | `-` |
@@ -291,7 +291,7 @@ Esquema extraído desde Markdown
 #### Attributes
 | Attribute | Data Type | Key Type | Classification |
 | --- | --- | --- | --- |
-| `SK_Periodo` | `DataType.STRING` | `PK` | `-` |
+| `SK_Periodo` | `DataType.STRING` | `-` | `-` |
 | `SK_Linea` | `DataType.STRING` | `PK` | `-` |
 | `NPS_Satisfaccion` | `DataType.STRING` | `-` | `-` |
 | `Tasa_Delitos_MillonPax` | `DataType.STRING` | `-` | `-` |

@@ -1,7 +1,7 @@
 # Data Analyst & Self-Service Consumption Lens
 
 **Persona Role**: `DATA_ANALYST` | **Technical Depth**: `SUMMARY`
-**Generated At**: `2026-10-16T20:10:25.196382+00:00`
+**Generated At**: `2026-10-17T00:54:22.407684+00:00`
 
 ## Executive Summary
 

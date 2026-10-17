@@ -3,11 +3,11 @@ semantic_models:
 - name: dim_linea
   description: "Representa las l\xEDneas de la red del Metro de Santiago."
   model: ref('dim_linea')
-  entities:
-  - name: sk_linea
-    type: primary
-    description: "Surrogate Key de la l\xEDnea ferroviaria."
+  entities: []
   dimensions:
+  - name: sk_linea
+    type: categorical
+    description: "Surrogate Key de la l\xEDnea ferroviaria."
   - name: codigo_linea
     type: categorical
     description: "C\xF3digo identificador de la l\xEDnea (ej: L1, L2, L3, L4, L4A,\
@@ -32,13 +32,13 @@ semantic_models:
     neas de metro."
   model: ref('dim_estacion')
   entities:
-  - name: sk_estacion
-    type: primary
-    description: "Surrogate Key de la estaci\xF3n."
   - name: sk_linea
     type: primary
     description: "Relaci\xF3n con la l\xEDnea a la que pertenece la estaci\xF3n."
   dimensions:
+  - name: sk_estacion
+    type: categorical
+    description: "Surrogate Key de la estaci\xF3n."
   - name: codigo_estacion
     type: categorical
     description: "C\xF3digo t\xE9cnico estructurado (ej: EST-L1-01)."
@@ -64,13 +64,13 @@ semantic_models:
   description: Representa la flota de trenes asignados a la red de metro.
   model: ref('dim_tren_coche')
   entities:
-  - name: sk_tren
-    type: primary
-    description: "Surrogate Key \xFAnica para cada tren (formaci\xF3n)."
   - name: sk_linea
     type: primary
     description: "L\xEDnea asignada de operaci\xF3n para el tren."
   dimensions:
+  - name: sk_tren
+    type: categorical
+    description: "Surrogate Key \xFAnica para cada tren (formaci\xF3n)."
   - name: id_formacion
     type: categorical
     description: "Identificador \xFAnico de la formaci\xF3n de trenes (ej: TRN-001)."
@@ -93,11 +93,11 @@ semantic_models:
 - name: dim_usuario_bip
   description: Registro de tarjetas y usuarios del sistema Bip!
   model: ref('dim_usuario_bip')
-  entities:
-  - name: sk_usuario
-    type: primary
-    description: "Surrogate Key \xFAnica a nivel BIGINT del usuario."
+  entities: []
   dimensions:
+  - name: sk_usuario
+    type: categorical
+    description: "Surrogate Key \xFAnica a nivel BIGINT del usuario."
   - name: numero_tarjeta_bip
     type: categorical
     description: "N\xFAmero de la tarjeta Bip!"
@@ -114,9 +114,6 @@ semantic_models:
     \ a trenes o estaciones (m\xF3dulo de mantenimiento/SAP PM)."
   model: ref('dim_equipamiento')
   entities:
-  - name: sk_equipo
-    type: primary
-    description: "Surrogate Key del equipo/activo f\xEDsico."
   - name: sk_tren
     type: primary
     description: "Tren asociado al equipo (o -1 si es equipamiento de estaci\xF3n)."
@@ -124,6 +121,9 @@ semantic_models:
     type: primary
     description: "Estaci\xF3n asociada al equipo (o -1 si es equipamiento de tren)."
   dimensions:
+  - name: sk_equipo
+    type: categorical
+    description: "Surrogate Key del equipo/activo f\xEDsico."
   - name: sistema
     type: categorical
     description: "Subsistema espec\xEDfico (Tracci\xF3n, Frenado, Escaleras Mec\xE1\
@@ -175,11 +175,11 @@ semantic_models:
 - name: dim_proyecto_expansion
   description: Registro de iniciativas de infraestructura y crecimiento de la red.
   model: ref('dim_proyecto_expansion')
-  entities:
-  - name: sk_proyecto
-    type: primary
-    description: "Clave \xFAnica del proyecto de expansi\xF3n."
+  entities: []
   dimensions:
+  - name: sk_proyecto
+    type: categorical
+    description: "Clave \xFAnica del proyecto de expansi\xF3n."
   - name: nombre
     type: categorical
     description: "Nombre del proyecto de expansi\xF3n."
@@ -195,11 +195,11 @@ semantic_models:
   description: "Cat\xE1logo de iniciativas y compromisos ESG (Ambiental, Social y\
     \ Gobernanza)."
   model: ref('dim_organizacion_esg')
-  entities:
-  - name: sk_iniciativa
-    type: primary
-    description: "Clave \xFAnica de la iniciativa ESG."
+  entities: []
   dimensions:
+  - name: sk_iniciativa
+    type: categorical
+    description: "Clave \xFAnica de la iniciativa ESG."
   - name: categoria
     type: categorical
     description: "\xC1mbito de impacto (Emisiones CO2, Energ\xEDa Renovable, Inclusi\xF3\
@@ -216,16 +216,14 @@ semantic_models:
   description: "Dimensi\xF3n temporal detallada para an\xE1lisis de tendencias cronol\xF3\
     gicas."
   model: ref('dim_tiempo')
-  entities:
-  - name: fecha_sk
-    type: primary
-    description: 'Clave de fecha formateada en formato `YYYYMMDD` (ej: 20260115).'
+  entities: []
   dimensions:
+  - name: fecha_sk
+    type: categorical
+    description: 'Clave de fecha formateada en formato `YYYYMMDD` (ej: 20260115).'
   - name: fecha
-    type: time
+    type: categorical
     description: Timestamp representativo de la fecha.
-    type_params:
-      time_granularity: day
   - name: dia
     type: categorical
     description: "D\xEDa del mes (1 - 31)."
@@ -284,9 +282,6 @@ semantic_models:
     n y pasillos de estaciones."
   model: ref('fact_simulacion_flujo')
   entities:
-  - name: id_agente_flujo
-    type: foreign
-    description: Identificador del agente simulado.
   - name: fecha_sk
     type: foreign
     description: "D\xEDa de la ejecuci\xF3n de la simulaci\xF3n."
@@ -294,6 +289,9 @@ semantic_models:
     type: foreign
     description: "Estaci\xF3n f\xEDsica modelada."
   dimensions:
+  - name: id_agente_flujo
+    type: categorical
+    description: Identificador del agente simulado.
   - name: segundo_dia
     type: categorical
     description: "Estampa temporal en segundos desde inicio del d\xEDa."
@@ -316,9 +314,6 @@ semantic_models:
   description: Registra las transacciones de carga monetaria en tarjetas Bip!
   model: ref('fact_venta_carga')
   entities:
-  - name: id_venta_carga
-    type: foreign
-    description: "Clave \xFAnica de la venta/recarga."
   - name: fecha_sk
     type: foreign
     description: "D\xEDa en que se realiz\xF3 la recarga."
@@ -329,6 +324,9 @@ semantic_models:
     type: foreign
     description: "Tarjeta Bip! que recibi\xF3 la carga."
   dimensions:
+  - name: id_venta_carga
+    type: categorical
+    description: "Clave \xFAnica de la venta/recarga."
   - name: monto_carga_clp
     type: categorical
     description: Monto monetario de la recarga en CLP.
@@ -345,9 +343,6 @@ semantic_models:
     n."
   model: ref('fact_telemetria_tren')
   entities:
-  - name: id_log
-    type: foreign
-    description: "Identificador \xFAnico del log de telemetr\xEDa."
   - name: fecha_sk
     type: foreign
     description: "D\xEDa del registro."
@@ -355,6 +350,9 @@ semantic_models:
     type: foreign
     description: "Tren emisor de la telemetr\xEDa."
   dimensions:
+  - name: id_log
+    type: categorical
+    description: "Identificador \xFAnico del log de telemetr\xEDa."
   - name: segundo_dia
     type: categorical
     description: "Segundo del d\xEDa de la medici\xF3n (muestreo cada 5s)."
@@ -381,9 +379,6 @@ semantic_models:
     n de las v\xEDas f\xE9rreas de la red."
   model: ref('fact_sensoraje_via')
   entities:
-  - name: id_sensoraje
-    type: foreign
-    description: "Clave \xFAnica del log del sensor de v\xEDa."
   - name: fecha_sk
     type: foreign
     description: "D\xEDa del an\xE1lisis de v\xEDa."
@@ -391,6 +386,9 @@ semantic_models:
     type: foreign
     description: "L\xEDnea ferroviaria analizada."
   dimensions:
+  - name: id_sensoraje
+    type: categorical
+    description: "Clave \xFAnica del log del sensor de v\xEDa."
   - name: vibracion_rms_g
     type: categorical
     description: "Nivel de vibraci\xF3n RMS en unidades G (gravedad)."
@@ -409,9 +407,6 @@ semantic_models:
   description: "Consolidaci\xF3n financiera mensual por l\xEDnea y unidad de negocio."
   model: ref('fact_estado_resultado')
   entities:
-  - name: sk_periodo
-    type: foreign
-    description: 'Identificador mensual en formato `YYYYMM` (ej: 202512).'
   - name: sk_linea
     type: foreign
     description: "L\xEDnea evaluada financieramente."
@@ -419,6 +414,9 @@ semantic_models:
     type: foreign
     description: 'Unidad organizacional (ej: 1 = Transporte Pasajeros).'
   dimensions:
+  - name: sk_periodo
+    type: categorical
+    description: 'Identificador mensual en formato `YYYYMM` (ej: 202512).'
   - name: ingresos_tarifarios_clp
     type: categorical
     description: Ingreso total bruto por validaciones de pasaje en CLP.
@@ -441,9 +439,6 @@ semantic_models:
     \ (NNT)."
   model: ref('fact_ingresos_nnt')
   entities:
-  - name: sk_periodo
-    type: foreign
-    description: Periodo contable mensual `YYYYMM`.
   - name: sk_linea
     type: foreign
     description: "L\xEDnea comercial asociada."
@@ -451,6 +446,9 @@ semantic_models:
     type: foreign
     description: 'Unidad organizacional (ej: 2 = Negocios No Tarifarios).'
   dimensions:
+  - name: sk_periodo
+    type: categorical
+    description: Periodo contable mensual `YYYYMM`.
   - name: ingreso_arriendos_comerciales_clp
     type: categorical
     description: Ingresos por locales comerciales y cajeros.
@@ -471,13 +469,13 @@ semantic_models:
     \ l\xEDnea."
   model: ref('fact_consumo_esg')
   entities:
-  - name: sk_periodo
-    type: foreign
-    description: Periodo mensual `YYYYMM`.
   - name: sk_linea
     type: foreign
     description: "L\xEDnea evaluada en impacto ambiental."
   dimensions:
+  - name: sk_periodo
+    type: categorical
+    description: Periodo mensual `YYYYMM`.
   - name: consumo_traccion_kwh
     type: categorical
     description: "Energ\xEDa el\xE9ctrica consumida por la tracci\xF3n de trenes (KWh)."
@@ -502,13 +500,13 @@ semantic_models:
     \ por l\xEDnea."
   model: ref('fact_cumplimiento_oferta')
   entities:
-  - name: sk_periodo
-    type: foreign
-    description: Periodo contable mensual `YYYYMM`.
   - name: sk_linea
     type: foreign
     description: "L\xEDnea evaluada."
   dimensions:
+  - name: sk_periodo
+    type: categorical
+    description: Periodo contable mensual `YYYYMM`.
   - name: cumplimiento_frecuencia_pct
     type: categorical
     description: "Porcentaje de cumplimiento de frecuencia te\xF3rica vs ejecutada."
@@ -534,13 +532,13 @@ semantic_models:
     \ por mes."
   model: ref('fact_seguridad_nps')
   entities:
-  - name: sk_periodo
-    type: foreign
-    description: Periodo mensual `YYYYMM`.
   - name: sk_linea
     type: foreign
     description: "L\xEDnea de metro evaluada."
   dimensions:
+  - name: sk_periodo
+    type: categorical
+    description: Periodo mensual `YYYYMM`.
   - name: nps_satisfaccion
     type: categorical
     description: "Puntaje Net Promoter Score de satisfacci\xF3n de pasajeros (-100\

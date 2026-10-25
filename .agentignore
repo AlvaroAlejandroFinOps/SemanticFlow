@@ -10,6 +10,8 @@ logs/
 __pycache__/
 .git/
 artifacts/plans/archive/
+artifacts/semanticflow/outputs/
+artifacts/SemanticFlow/outputs/
 *.env
 *.env.*
 *.secret

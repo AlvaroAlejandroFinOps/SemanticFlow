@@ -144,7 +144,7 @@ class PersonaRegistry:
             safe_file = resolve_within(lenses_path, c_file)
             _ = safe_filename(safe_file.name)
 
-            if safe_file.name.lower() in ("overrides.yaml", "overrides.yml"):
+            if safe_file.name.lower() in ("overrides.yaml", "overrides.yml") or safe_file.name.startswith("."):
                 continue
 
             findings = scan_file_for_secrets(safe_file)

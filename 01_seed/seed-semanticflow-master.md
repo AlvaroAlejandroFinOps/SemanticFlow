@@ -112,8 +112,8 @@ known_analysis_limits:
 ├── 01_seed/                           # ADN y especificación técnica ThinkingSeed
 │   ├── .context.yaml
 │   └── seed-semanticflow-master.md    # Este vector arquitectónico maestro
-├── 02_Foundation/                     # Documentación fundacional de arquitectura
-│   └── Engine/
+├── 02_foundation/                     # Documentación fundacional de arquitectura
+│   └── engine/
 │       ├── .context.yaml
 │       └── engine_readme.md
 ├── action.yml                         # GitHub Action oficial de SemanticFlow para PRs
@@ -475,7 +475,7 @@ known_analysis_limits:
 
 ### 7.1 Cruce adversarial: Reglas declaradas vs Árbol físico real
 - `[RESUELTO]` **Sincronización de `.context/tree.json` y beacons de seed:** Sincronizado `seed-semanticflow-master.md` en `./.context/tree.json` y `./01_seed/.context.yaml`.
-- `[CONFIRMADO]` **Inconsistencia de mayúsculas en árbol físico:** `.context/tree.json` indexa `"02_foundation/engine"` en minúsculas estrictas bajo convención, pero el directorio físico en disco conserva PascalCase: `./02_Foundation/Engine/`.
+- `[RESUELTO]` **Inconsistencia de mayúsculas en árbol físico:** Normalizado a minúsculas estrictas `./02_foundation/engine/` en disco y en el índice de Git, eliminando la duplicidad con `EngineReadme.md`.
 - `[RESUELTO]` **Espacios en nombres de directorios de pruebas:** Eliminados espacios y normalizados a `./tests/stress_massive_v1/`, `./tests/stress_massive_v2/` y `./tests/stress_massive_core/`.
 - `[RESUELTO]` **Constitución para Agente IDE en raíz:** Creado `./AGENTS.md` con la Constitución Operativa del Agente residente y Playbooks A, B, C y D.
 - `[RESUELTO]` **Doble ubicación de carpetas de salida:** Eliminado directorio huérfano `./output/` en la raíz; CLI unificado por defecto hacia `./artifacts/SemanticFlow/outputs/`.

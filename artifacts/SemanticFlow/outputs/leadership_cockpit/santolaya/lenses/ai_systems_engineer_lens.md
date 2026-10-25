@@ -1,12 +1,12 @@
-# AI Systems, Feature Engineering & ML Readiness Lens
+# AI Feature Store, Embeddings & Low-Latency Analytics Lens
 
 **Persona Role**: `AI_SYSTEMS_ENGINEER` | **Technical Depth**: `TECHNICAL`
-**Generated At**: `2026-10-17T00:56:17.166540+00:00`
+**Generated At**: `2026-10-23T00:48:40.854648+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Feature readiness, embeddings/ML attributes, training data provenance, and AI inference latency for esquema_estrella_unificado_santolaya.
+> Feature readiness, embeddings/ML attributes, training data provenance, and AI inference latency for schema.
 
 ### Focus Areas
 - **Ai Readiness**

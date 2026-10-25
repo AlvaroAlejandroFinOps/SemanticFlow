@@ -1,20 +1,24 @@
-# BI Developer, TMDL & Semantic Model Consumption Lens
+# Modelo Direct Lake Gold OneLake - Rendimiento F8 y V-Order
 
 **Persona Role**: `BI_DEVELOPER` | **Technical Depth**: `TECHNICAL`
-**Generated At**: `2026-10-17T00:56:17.167537+00:00`
+**Generated At**: `2026-10-23T00:48:40.855644+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Power BI / TMDL semantic measures, relationships, DAX formulas, and display folders for esquema_estrella_unificado_santolaya.
+> Power BI / TMDL semantic measures, relationships, DAX formulas, and display folders for schema.
 
 ### Focus Areas
 - **Visualization Efficiency**
-- **Data Modeling**
+- **Cost Capacity**
 
 ## Metrics & KPIs Portfolio
 
-_No certified metrics assigned to this primary scope._
+### Certified Metrics
+| Metric Name | Status | Type |
+| :--- | :--- | :--- |
+| **Desviacion_Plazo_Critico_Dias** | Certified | KPI / Core Metric |
+| **Indice_Desempeno_Costo_CPI** | Certified | KPI / Core Metric |
 
 ## Entity Scope
 

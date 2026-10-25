@@ -49,7 +49,7 @@ def compile(
         readable=True,
     ),
     output_dir: Path = typer.Option(
-        Path("output/PBIP"),
+        Path("artifacts/SemanticFlow/outputs/pbip"),
         "--output",
         "-o",
         help="Directorio destino donde se generará el proyecto PBIP y TMDL.",
@@ -194,6 +194,7 @@ def explain(
         "-p",
         help="Proyectar a través de una Persona Lens específica (ej. 'executive', 'data_governance', 'bi_engineer', 'finops', 'ai_systems_engineer', 'compliance_auditor', etc.).",
     ),
+    company_lenses_dir: Optional[Path] = typer.Option(None, "--company-lenses-dir", help="Directorio opcional de lentes custom de la compañía."),
 ):
     """
     Explica la procedencia y evidencia del modelo, o proyecta la perspectiva de una Persona Lens.
@@ -207,6 +208,27 @@ def explain(
     raw_schema = parser.parse(input_path)
     canonical_project = raw_to_canonical(raw_schema)
 
+    profile_path = input_path.parent / "company_profile.yaml"
+    if not profile_path.exists():
+        profile_path = input_path.parent / "company_profile.yml"
+    if profile_path.exists():
+        import yaml
+        from src.core.ast.canonical.models import ProjectGovernance
+        try:
+            with open(profile_path, "r", encoding="utf-8") as pf:
+                profile_data = yaml.safe_load(pf) or {}
+            gov_data = profile_data.get("semantic_governance", {})
+            owner = gov_data.get("owner", profile_data.get("company_name", "Enterprise Owner"))
+            canonical_project.governance = ProjectGovernance(
+                domain_id=profile_data.get("company_id", "domain"),
+                domain_name=gov_data.get("data_domain", profile_data.get("industry", "Enterprise")),
+                classification=gov_data.get("confidentiality_tier", "Internal"),
+                data_product_status="Certified",
+                owner=owner,
+            )
+        except Exception:
+            pass
+
     if persona:
         from src.core.personas.projector import PersonaProjector
         from src.core.personas.renderers import (
@@ -215,7 +237,13 @@ def explain(
             MermaidPersonaRenderer,
         )
 
-        projector = PersonaProjector(canonical_project)
+        from src.core.personas.registry import PersonaRegistry
+        registry = PersonaRegistry.create_default()
+        eff_lenses_dir = company_lenses_dir or (input_path.parent / "lenses")
+        if eff_lenses_dir and eff_lenses_dir.exists():
+            registry.load_company_lenses(eff_lenses_dir)
+
+        projector = PersonaProjector(canonical_project, registry=registry)
         projection = projector.project_lens(persona)
 
         fmt = format.lower()
@@ -264,13 +292,17 @@ app.add_typer(personas_app, name="personas")
 
 
 @personas_app.command("list")
-def personas_list():
+def personas_list(
+    company_lenses_dir: Optional[Path] = typer.Option(None, "--company-lenses-dir", help="Directorio opcional de lentes custom de la compañía."),
+):
     """
     Lista las 10 Persona Lenses estándar registradas y sus aliases organizacionales.
     """
     from src.core.personas.registry import PersonaRegistry
 
     registry = PersonaRegistry.create_default()
+    if company_lenses_dir and company_lenses_dir.exists():
+        registry.load_company_lenses(company_lenses_dir)
     table = Table(
         title="Persona Lenses Registradas (SemanticFlow Enterprise)",
         box=box.ROUNDED,
@@ -306,7 +338,7 @@ def personas_export(
         readable=True,
     ),
     output_dir: Path = typer.Option(
-        Path("output/personas"),
+        Path("artifacts/SemanticFlow/outputs/lenses"),
         "--output",
         "-o",
         help="Directorio de destino para las 10 Lenses y el Leadership Cockpit.",
@@ -317,6 +349,7 @@ def personas_export(
         "-f",
         help="Formatos a exportar separados por coma (ej. 'md,json').",
     ),
+    company_lenses_dir: Optional[Path] = typer.Option(None, "--company-lenses-dir", help="Directorio opcional de lentes custom de la compañía."),
 ):
     """
     Exporta las 10 Persona Lenses individuales y el Data Leadership Cockpit en Markdown y JSON.
@@ -328,8 +361,35 @@ def personas_export(
     raw_schema = parser.parse(input_path)
     canonical_project = raw_to_canonical(raw_schema)
 
+    profile_path = input_path.parent / "company_profile.yaml"
+    if not profile_path.exists():
+        profile_path = input_path.parent / "company_profile.yml"
+    if profile_path.exists():
+        import yaml
+        from src.core.ast.canonical.models import ProjectGovernance
+        try:
+            with open(profile_path, "r", encoding="utf-8") as pf:
+                profile_data = yaml.safe_load(pf) or {}
+            gov_data = profile_data.get("semantic_governance", {})
+            owner = gov_data.get("owner", profile_data.get("company_name", "Enterprise Owner"))
+            canonical_project.governance = ProjectGovernance(
+                domain_id=profile_data.get("company_id", "domain"),
+                domain_name=gov_data.get("data_domain", profile_data.get("industry", "Enterprise")),
+                classification=gov_data.get("confidentiality_tier", "Internal"),
+                data_product_status="Certified",
+                owner=owner,
+            )
+        except Exception:
+            pass
+
     format_list = [fmt.strip().lower() for fmt in formats.split(",")]
-    engine = DataLeadershipCockpitEngine(canonical_project)
+    from src.core.personas.registry import PersonaRegistry
+    registry = PersonaRegistry.create_default()
+    eff_lenses_dir = company_lenses_dir or (input_path.parent / "lenses")
+    if eff_lenses_dir and eff_lenses_dir.exists():
+        registry.load_company_lenses(eff_lenses_dir)
+
+    engine = DataLeadershipCockpitEngine(canonical_project, registry=registry)
     res = engine.export_all(output_dir, include_individual_lenses=True, formats=format_list)
 
     console.print(
@@ -367,6 +427,7 @@ def cockpit(
         "-f",
         help="Formato de salida: 'human' (consola), 'json', o 'md'.",
     ),
+    company_lenses_dir: Optional[Path] = typer.Option(None, "--company-lenses-dir", help="Directorio opcional de lentes custom de la compañía."),
 ):
     """
     Sintetiza y visualiza el C-Level Data Leadership Cockpit para el proyecto semántico.
@@ -379,7 +440,34 @@ def cockpit(
     raw_schema = parser.parse(input_path)
     canonical_project = raw_to_canonical(raw_schema)
 
-    engine = DataLeadershipCockpitEngine(canonical_project)
+    profile_path = input_path.parent / "company_profile.yaml"
+    if not profile_path.exists():
+        profile_path = input_path.parent / "company_profile.yml"
+    if profile_path.exists():
+        import yaml
+        from src.core.ast.canonical.models import ProjectGovernance
+        try:
+            with open(profile_path, "r", encoding="utf-8") as pf:
+                profile_data = yaml.safe_load(pf) or {}
+            gov_data = profile_data.get("semantic_governance", {})
+            owner = gov_data.get("owner", profile_data.get("company_name", "Enterprise Owner"))
+            canonical_project.governance = ProjectGovernance(
+                domain_id=profile_data.get("company_id", "domain"),
+                domain_name=gov_data.get("data_domain", profile_data.get("industry", "Enterprise")),
+                classification=gov_data.get("confidentiality_tier", "Internal"),
+                data_product_status="Certified",
+                owner=owner,
+            )
+        except Exception:
+            pass
+
+    from src.core.personas.registry import PersonaRegistry
+    registry = PersonaRegistry.create_default()
+    eff_lenses_dir = company_lenses_dir or (input_path.parent / "lenses")
+    if eff_lenses_dir and eff_lenses_dir.exists():
+        registry.load_company_lenses(eff_lenses_dir)
+
+    engine = DataLeadershipCockpitEngine(canonical_project, registry=registry)
     cockpit_model = engine.generate_cockpit()
 
     if output_dir:
@@ -434,19 +522,82 @@ def validate(
         "-s",
         help="Puntuación mínima de calidad requerida para pasar la validación (0-100).",
     ),
+    lens: Optional[str] = typer.Option(
+        None,
+        "--lens",
+        "-l",
+        help="Evaluar calidad semántica focalizada en una Persona Lens específica.",
+    ),
+    company_lenses_dir: Optional[Path] = typer.Option(None, "--company-lenses-dir", help="Directorio opcional de lentes custom de la compañía."),
 ):
     """
     Evalúa el Semantic Quality Score (cQS) y valida el modelo contra reglas de gobierno y calidad.
     """
     from src.core.mappers.raw_to_canonical import raw_to_canonical
     from src.core.quality.scorer import SemanticQualityScorer
+    from src.core.quality.policy_loader import GovernancePolicyLoader
+
+    policy_file = input_path.parent / "governance_policy.yaml"
+    if not policy_file.exists():
+        policy_file = input_path.parent / "governance_policy.yml"
+    if policy_file.exists():
+        try:
+            gov_policy = GovernancePolicyLoader.load_policy(company_policy_path=policy_file)
+            req_min = gov_policy.get("quality_thresholds", {}).get("min_score")
+            if req_min and min_score == 70.0:
+                min_score = float(req_min)
+        except Exception as e:
+            console.print(f"[bold red][POLICY ERROR][/bold red] {e}")
+            raise typer.Exit(code=1)
 
     parser = _get_parser_for_file(input_path)
     raw_schema = parser.parse(input_path)
     canonical_project = raw_to_canonical(raw_schema)
 
+    profile_path = input_path.parent / "company_profile.yaml"
+    if not profile_path.exists():
+        profile_path = input_path.parent / "company_profile.yml"
+    if profile_path.exists():
+        import yaml
+        from src.core.ast.canonical.models import ProjectGovernance
+        try:
+            with open(profile_path, "r", encoding="utf-8") as pf:
+                profile_data = yaml.safe_load(pf) or {}
+            gov_data = profile_data.get("semantic_governance", {})
+            owner = gov_data.get("owner", profile_data.get("company_name", "Enterprise Owner"))
+            canonical_project.governance = ProjectGovernance(
+                domain_id=profile_data.get("company_id", "domain"),
+                domain_name=gov_data.get("data_domain", profile_data.get("industry", "Enterprise")),
+                classification=gov_data.get("confidentiality_tier", "Internal"),
+                data_product_status="Certified",
+                owner=owner,
+            )
+        except Exception:
+            pass
+
     scorer = SemanticQualityScorer(canonical_project)
     result = scorer.evaluate()
+
+    if lens:
+        from src.core.personas.registry import PersonaRegistry
+        from src.core.personas.projector import PersonaProjector
+        registry = PersonaRegistry.create_default()
+        eff_lenses_dir = company_lenses_dir or (input_path.parent / "lenses")
+        if eff_lenses_dir and eff_lenses_dir.exists():
+            registry.load_company_lenses(eff_lenses_dir)
+        projector = PersonaProjector(canonical_project, registry=registry)
+        projection = projector.project_lens(lens)
+        console.print(
+            Panel.fit(
+                f"[bold cyan]{projection.title}[/bold cyan]\n"
+                f"[dim]Persona ID:[/dim] {projection.persona_id} | [dim]Rol:[/dim] {projection.role.value}\n"
+                f"[dim]Entidades Primarias ({len(projection.primary_entities)}):[/dim] {', '.join(projection.primary_entities)}\n"
+                f"[dim]KPIs / Métricas Certificadas ({len(projection.certified_metrics)}):[/dim] {', '.join(projection.certified_metrics) or 'Ninguna'}\n"
+                f"[dim]Recomendaciones Activas:[/dim] {len(projection.recommendations)}",
+                title="[bold yellow]Diagnóstico Focalizado por Persona Lens[/bold yellow]",
+                box=box.ROUNDED,
+            )
+        )
 
     score_color = "green" if result.score >= min_score else "red"
     console.print(
@@ -502,7 +653,7 @@ def docgen(
         readable=True,
     ),
     output_dir: Path = typer.Option(
-        Path("output/docs"),
+        Path("artifacts/SemanticFlow/outputs/docs"),
         "--output",
         "-o",
         help="Directorio donde se guardará el Data Dictionary y el Diagrama ERD.",
@@ -517,6 +668,27 @@ def docgen(
     parser = _get_parser_for_file(input_path)
     raw_schema = parser.parse(input_path)
     canonical_project = raw_to_canonical(raw_schema)
+
+    profile_path = input_path.parent / "company_profile.yaml"
+    if not profile_path.exists():
+        profile_path = input_path.parent / "company_profile.yml"
+    if profile_path.exists():
+        import yaml
+        from src.core.ast.canonical.models import ProjectGovernance
+        try:
+            with open(profile_path, "r", encoding="utf-8") as pf:
+                profile_data = yaml.safe_load(pf) or {}
+            gov_data = profile_data.get("semantic_governance", {})
+            owner = gov_data.get("owner", profile_data.get("company_name", "Enterprise Owner"))
+            canonical_project.governance = ProjectGovernance(
+                domain_id=profile_data.get("company_id", "domain"),
+                domain_name=gov_data.get("data_domain", profile_data.get("industry", "Enterprise")),
+                classification=gov_data.get("confidentiality_tier", "Internal"),
+                data_product_status="Certified",
+                owner=owner,
+            )
+        except Exception:
+            pass
 
     emitter = DocumentationEmitter(canonical_project)
     res = emitter.export_all(str(output_dir))
@@ -545,7 +717,7 @@ def export_dbt(
         readable=True,
     ),
     output_file: Path = typer.Option(
-        Path("output/dbt/semantic_models.yml"),
+        Path("artifacts/SemanticFlow/outputs/dbt/semantic_models.yml"),
         "--output",
         "-o",
         help="Ruta del archivo YAML de salida para dbt MetricFlow.",
@@ -560,6 +732,27 @@ def export_dbt(
     parser = _get_parser_for_file(input_path)
     raw_schema = parser.parse(input_path)
     canonical_project = raw_to_canonical(raw_schema)
+
+    profile_path = input_path.parent / "company_profile.yaml"
+    if not profile_path.exists():
+        profile_path = input_path.parent / "company_profile.yml"
+    if profile_path.exists():
+        import yaml
+        from src.core.ast.canonical.models import ProjectGovernance
+        try:
+            with open(profile_path, "r", encoding="utf-8") as pf:
+                profile_data = yaml.safe_load(pf) or {}
+            gov_data = profile_data.get("semantic_governance", {})
+            owner = gov_data.get("owner", profile_data.get("company_name", "Enterprise Owner"))
+            canonical_project.governance = ProjectGovernance(
+                domain_id=profile_data.get("company_id", "domain"),
+                domain_name=gov_data.get("data_domain", profile_data.get("industry", "Enterprise")),
+                classification=gov_data.get("confidentiality_tier", "Internal"),
+                data_product_status="Certified",
+                owner=owner,
+            )
+        except Exception:
+            pass
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
     emitter = DbtSemanticEmitter(canonical_project)

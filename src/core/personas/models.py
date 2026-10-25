@@ -159,6 +159,13 @@ class PersonaDefinition(BaseModel):
     icon: Optional[str] = None
     color_theme: Optional[str] = None
     aliases: List[str] = Field(default_factory=list)
+    scope: str = "core"
+    company_id: Optional[str] = None
+    target_entities: List[str] = Field(default_factory=list)
+    focus_metrics: List[str] = Field(default_factory=list)
+    domain_kpis: List[Dict[str, Any]] = Field(default_factory=list)
+    operational_guidelines: List[str] = Field(default_factory=list)
+    recommendations: List[Dict[str, Any]] = Field(default_factory=list)
     custom_properties: Dict[str, Any] = Field(default_factory=dict)
 
 

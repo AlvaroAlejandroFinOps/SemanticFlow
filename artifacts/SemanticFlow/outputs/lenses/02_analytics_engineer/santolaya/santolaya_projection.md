@@ -1,12 +1,12 @@
 # Analytics Engineering, Dimensional Modeling & Transformation Lens
 
 **Persona Role**: `ANALYTICS_ENGINEER` | **Technical Depth**: `TECHNICAL`
-**Generated At**: `2026-10-17T00:56:17.166540+00:00`
+**Generated At**: `2026-10-23T00:48:40.855644+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Star-schema topology, semantic metrics, SQL transformations, and grain definitions for esquema_estrella_unificado_santolaya.
+> Star-schema topology, semantic metrics, SQL transformations, and grain definitions for schema.
 
 ### Focus Areas
 - **Data Modeling**

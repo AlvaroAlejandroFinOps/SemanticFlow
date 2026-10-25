@@ -1,12 +1,12 @@
 # Data Analyst & Self-Service Consumption Lens
 
 **Persona Role**: `DATA_ANALYST` | **Technical Depth**: `SUMMARY`
-**Generated At**: `2026-10-17T00:56:17.167537+00:00`
+**Generated At**: `2026-10-23T00:48:40.856642+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Certified KPIs, domain dimensions, and self-service exploration catalog for esquema_estrella_unificado_santolaya.
+> Certified KPIs, domain dimensions, and self-service exploration catalog for schema.
 
 ### Focus Areas
 - **Consumption Simplicity**

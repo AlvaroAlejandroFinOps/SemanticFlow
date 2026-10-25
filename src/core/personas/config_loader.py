@@ -84,6 +84,13 @@ class PersonaConfigLoader:
             "color_theme",
             "aliases",
             "custom_properties",
+            "target_entities",
+            "focus_metrics",
+            "domain_kpis",
+            "operational_guidelines",
+            "recommendations",
+            "scope",
+            "company_id",
         }
 
         if field_name in prohibited_fields:

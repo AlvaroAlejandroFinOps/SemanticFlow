@@ -164,6 +164,9 @@ class PbipWriter:
 
             # Paso final atómico: transferir desde stage al target_dir final
             target_path.mkdir(parents=True, exist_ok=True)
+            stale_model_dir = target_path / f"{sanitized_name}.SemanticModel"
+            if stale_model_dir.exists():
+                shutil.rmtree(stale_model_dir, ignore_errors=True)
             shutil.copytree(stage_dir, target_path, dirs_exist_ok=True)
 
         return target_path / f"{sanitized_name}.pbip"

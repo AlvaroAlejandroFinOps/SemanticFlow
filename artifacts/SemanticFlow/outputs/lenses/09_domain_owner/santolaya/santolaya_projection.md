@@ -1,16 +1,16 @@
-# Business Domain Ownership & Data Product Lifecycle Lens
+# Perspectiva de Negocio: Ejecución de Obras y Venta Inmobiliaria
 
 **Persona Role**: `DOMAIN_OWNER` | **Technical Depth**: `SUMMARY`
-**Generated At**: `2026-10-17T00:56:17.170202+00:00`
+**Generated At**: `2026-10-23T00:48:40.860637+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Domain data products, certified KPIs, business ownership, and strategic alignment for esquema_estrella_unificado_santolaya.
+> Domain data products, certified KPIs, business ownership, and strategic alignment for schema.
 
 ### Focus Areas
 - **Business Value**
-- **Product Lifecycle**
+- **Pipeline Health**
 
 ## Metrics & KPIs Portfolio
 

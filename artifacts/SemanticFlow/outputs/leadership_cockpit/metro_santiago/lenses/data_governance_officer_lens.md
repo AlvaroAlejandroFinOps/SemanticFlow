@@ -1,7 +1,7 @@
 # Data Governance, Quality & Ownership Lens
 
 **Persona Role**: `DATA_GOVERNANCE_OFFICER` | **Technical Depth**: `SUMMARY`
-**Generated At**: `2026-10-17T02:24:59.928010+00:00`
+**Generated At**: `2026-10-23T00:27:27.330890+00:00`
 
 ## Executive Summary
 

@@ -4,7 +4,7 @@ import time
 
 import importlib.util
 current_dir = Path(__file__).parent
-project_root = r"D:\0001 HyperScale Thinking\PROYECTOS CLOUD\Data & AI Strategy\SemanticFlow"
+project_root = Path(__file__).resolve().parent.parent.parent
 
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
@@ -55,7 +55,7 @@ def test_massive_metro_santiago_data_stress_v2_pipeline():
 
     # 4. Escribir bundle PBIP con particiones M conectadas a los CSVs locales
     t3 = time.time()
-    output_dir = Path(project_root) / "output" / "SemanticFlow_Data" / "Massive_Stress_v2_PBIP"
+    output_dir = project_root / "artifacts" / "SemanticFlow" / "outputs" / "stress_runs" / "v2" / "Massive_Stress_v2_PBIP"
     writer = PbipWriter()
     pbip_file = writer.write_bundle(semantic_model, output_dir, data_dir=data_dir)
     t_emit = time.time() - t3

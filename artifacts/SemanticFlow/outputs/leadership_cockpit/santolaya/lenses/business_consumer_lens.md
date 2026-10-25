@@ -1,12 +1,12 @@
-# Business Consumer & Self-Service Analytics Lens
+# Business Self-Service & Consumption Simplicity Lens
 
 **Persona Role**: `BUSINESS_CONSUMER` | **Technical Depth**: `EXECUTIVE`
-**Generated At**: `2026-10-17T00:56:17.167537+00:00`
+**Generated At**: `2026-10-23T00:48:40.855644+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Certified business terms, plain-language metric glossary, and intuitive report navigation for esquema_estrella_unificado_santolaya.
+> Certified business terms, plain-language metric glossary, and intuitive report navigation for schema.
 
 ### Focus Areas
 - **Consumption Simplicity**

@@ -1,12 +1,12 @@
 # Data Platform Infrastructure & Storage Capacity Lens
 
 **Persona Role**: `PLATFORM_ENGINEER` | **Technical Depth**: `TECHNICAL`
-**Generated At**: `2026-10-17T00:56:17.170379+00:00`
+**Generated At**: `2026-10-23T00:48:40.860637+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Engine compute capacity, storage modes (Import/DirectLake), partitions, and refresh SLAs for esquema_estrella_unificado_santolaya.
+> Engine compute capacity, storage modes (Import/DirectLake), partitions, and refresh SLAs for schema.
 
 ### Focus Areas
 - **Cost Capacity**

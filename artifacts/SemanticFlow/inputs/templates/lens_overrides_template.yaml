@@ -1,0 +1,50 @@
+# ==============================================================================
+# SemanticFlow Template: Company Lens Overrides Definition
+# Ubicación requerida: ./artifacts/SemanticFlow/inputs/companies/<company_id>/lenses/overrides.yaml
+# Ejemplo: ./artifacts/SemanticFlow/inputs/companies/santolaya/lenses/overrides.yaml
+# Permite enriquecer las 16 Persona Lenses corporativas base para una compañía específica.
+# ==============================================================================
+
+company_id: "your_company_id"
+
+personas:
+  # Enriquecimiento sobre la lente de Liderazgo Analítico / C-Level
+  analytics_leader:
+    display_name: "Líder de Analítica e Inversiones"
+    title: "Perspectiva Ejecutiva: Retorno de Inversión y Control de Cartera"
+    focus_areas:
+      - "STRATEGIC_ALIGNMENT"
+      - "BUSINESS_VALUE"
+      - "COST_CAPACITY"
+    target_entities:
+      - "fact_ventas_inmobiliarias"
+      - "fact_evm_avance_obra"
+      - "dim_proyecto_obra"
+    focus_metrics:
+      - "Margen_Bruto_Proyectado"
+      - "Avance_Fisico_Ponderado"
+      - "Ventas_UF_Total"
+
+  # Enriquecimiento sobre la lente de Ingeniero de BI
+  bi_developer:
+    display_name: "Desarrollador BI Direct Lake"
+    title: "Optimización Direct Lake OneLake y Rendimiento de Capacidad"
+    focus_areas:
+      - "VISUALIZATION_EFFICIENCY"
+      - "COST_CAPACITY"
+    target_entities:
+      - "fact_evm_avance_obra"
+      - "fact_ventas_inmobiliarias"
+      - "fact_recepciones_bodega"
+
+  # Enriquecimiento sobre la lente de Dueño de Dominio
+  domain_owner:
+    display_name: "Gerente de Proyectos y Operaciones"
+    title: "Perspectiva de Negocio: Control de Obras y Comercialización"
+    focus_areas:
+      - "BUSINESS_VALUE"
+      - "PIPELINE_HEALTH"
+    target_entities:
+      - "fact_evm_avance_obra"
+      - "fact_compras_compromisos"
+      - "dim_proyecto_obra"

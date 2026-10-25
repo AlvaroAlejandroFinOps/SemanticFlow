@@ -1,5 +1,5 @@
 version: 1.0
-directory: 02_foundation/engine
+directory: 02_Foundation/Engine
 role: core_engine
 purpose: "Núcleo del framework de automatización, lógica de ruteo, indexación y governance engine."
 relevance: critical

@@ -15,10 +15,10 @@ from data_engine.generator import FalabellaDataGenerator
 
 
 def test_massive_falabella_data_stress_pipeline():
-    schema_path = Path("tests/Massive Data Stress/schemas/falabella_retail_schema.md")
+    schema_path = current_dir / "schemas" / "falabella_retail_schema.md"
     assert schema_path.exists(), "El esquema relacional de Falabella debe existir"
 
-    data_dir = Path("tests/Massive Data Stress/data")
+    data_dir = current_dir / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
 
     # 1. Generar los datos sintéticos de 6 meses (si no existen o para poblar)
@@ -49,7 +49,7 @@ def test_massive_falabella_data_stress_pipeline():
 
     # 4. Escribir bundle PBIP con particiones M conectadas a los CSVs locales
     t3 = time.time()
-    output_dir = Path("output/SemanticFlow_Data/Falabella_Retail_PBIP")
+    output_dir = Path("artifacts/SemanticFlow/outputs/stress_runs/v1/Falabella_Retail_PBIP")
     writer = PbipWriter()
     pbip_file = writer.write_bundle(semantic_model, output_dir, data_dir=data_dir)
     t_emit = time.time() - t3

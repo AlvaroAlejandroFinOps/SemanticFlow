@@ -1,0 +1,21 @@
+# ==============================================================================
+# SemanticFlow Template: Local Company Governance Policy
+# Ubicación requerida: ./artifacts/SemanticFlow/inputs/companies/<company_id>/governance_policy.yaml
+# Floor Guardrails: El motor bloquea cualquier política con min_score < 60.0
+# o que deshabilite block_cyclic_dependencies / require_primary_keys.
+# ==============================================================================
+
+version: "1.0"
+company_id: "your_company_id"
+display_name: "Política Local de Gobernanza Semántica: Su Empresa"
+
+quality_thresholds:
+  min_score: 75.0             # Floor Guardrail: No puede ser inferior a 60.0
+  require_primary_keys: true  # Floor Guardrail: Obligatorio en true
+  block_cyclic_dependencies: true # Floor Guardrail: Obligatorio en true
+  disallow_unidirectional_m2m: true # Floor Guardrail: Obligatorio en true
+
+local_rules:
+  enforce_grain_documentation: true
+  warn_on_missing_metric_owner: true
+  require_certified_kpis: true

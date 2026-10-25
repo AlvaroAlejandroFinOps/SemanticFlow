@@ -1,12 +1,12 @@
 # Data Governance, Quality & Ownership Lens
 
 **Persona Role**: `DATA_GOVERNANCE_OFFICER` | **Technical Depth**: `SUMMARY`
-**Generated At**: `2026-10-17T00:56:17.167537+00:00`
+**Generated At**: `2026-10-23T00:48:40.857640+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Asset ownership, PII privacy boundaries, certification lifecycle, and quality scores for esquema_estrella_unificado_santolaya.
+> Asset ownership, PII privacy boundaries, certification lifecycle, and quality scores for schema.
 
 ### Focus Areas
 - **Governance Compliance**

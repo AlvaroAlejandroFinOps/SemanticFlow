@@ -53,11 +53,62 @@ class PersonaProjector:
 
         # If a custom PersonaLens class is registered, use its custom projection logic
         if lens:
-            return lens.project(self._project, config=config)
+            projection = lens.project(self._project, config=config)
+            if self._registry.override_audit_trail:
+                definition = self._registry.get_definition(pid)
+                self._apply_definition_overrides(projection, definition, lens.definition)
+            return projection
 
         # Otherwise, run the built-in deterministic projection algorithm
         definition = self._registry.get_definition(pid)
         return self._build_deterministic_projection(definition, config)
+
+    def _apply_definition_overrides(
+        self,
+        projection: PersonaProjection,
+        definition: PersonaDefinition,
+        base_definition: PersonaDefinition,
+    ) -> None:
+        """Applies additive company overrides from PersonaDefinition onto a base lens projection."""
+        if definition.title and definition.title != base_definition.title:
+            projection.title = definition.title
+        if definition.focus_areas and definition.focus_areas != base_definition.focus_areas:
+            projection.focus_areas = list(definition.focus_areas)
+
+        existing_primary = {e.lower() for e in projection.primary_entities}
+        for ent in definition.target_entities:
+            if ent.lower() not in existing_primary:
+                projection.primary_entities.append(ent)
+                existing_primary.add(ent.lower())
+                projection.secondary_entities = [
+                    s for s in projection.secondary_entities if s.lower() != ent.lower()
+                ]
+
+        existing_metrics = {m.lower() for m in projection.certified_metrics}
+        for met in definition.focus_metrics:
+            if met.lower() not in existing_metrics:
+                projection.certified_metrics.append(met)
+                existing_metrics.add(met.lower())
+
+        for kpi in definition.domain_kpis:
+            if isinstance(kpi, dict) and "name" in kpi:
+                kname = str(kpi["name"])
+                if kname.lower() not in existing_metrics:
+                    projection.certified_metrics.append(kname)
+                    existing_metrics.add(kname.lower())
+
+        for idx, guide in enumerate(definition.operational_guidelines, start=1):
+            projection.recommendations.append(
+                PersonaRecommendation(
+                    id=f"{definition.persona_id.upper()}-OVR-GUIDE-{idx:03d}",
+                    title=f"Directriz Local: {str(guide)[:60]}",
+                    description=str(guide),
+                    priority=RecommendationPriority.MEDIUM,
+                    impact="Alineación operativa local de la compañía",
+                    effort="Bajo",
+                    target_objects=projection.primary_entities[:3],
+                )
+            )
 
     def project_all(self) -> Dict[str, PersonaProjection]:
         """Projects all registered personas in the registry."""

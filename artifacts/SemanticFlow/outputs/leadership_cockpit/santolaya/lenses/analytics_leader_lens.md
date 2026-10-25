@@ -1,26 +1,31 @@
-# Executive Strategic Analytics & Leadership Cockpit
+# Perspectiva C-Level: Retorno de Cartera Inmobiliaria y Control EVM
 
 **Persona Role**: `ANALYTICS_LEADER` | **Technical Depth**: `EXECUTIVE`
-**Generated At**: `2026-10-17T00:56:17.167537+00:00`
+**Generated At**: `2026-10-23T00:48:40.855644+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Executive portfolio perspective for esquema_estrella_unificado_santolaya highlighting strategic KPIs and domain maturity.
+> Executive portfolio perspective for schema highlighting strategic KPIs and domain maturity.
 
 ### Focus Areas
 - **Strategic Alignment**
 - **Business Value**
-- **Product Metrics**
+- **Cost Capacity**
 
 ## Metrics & KPIs Portfolio
 
-_No certified metrics assigned to this primary scope._
+### Certified Metrics
+| Metric Name | Status | Type |
+| :--- | :--- | :--- |
+| **Ventas_UF_Total** | Certified | KPI / Core Metric |
+| **EVM_EV_Total** | Certified | KPI / Core Metric |
+| **EVM_CPI_Indice_Costo** | Certified | KPI / Core Metric |
 
 ## Entity Scope
 
-- **Primary Entities (6)**: `fact_evm_avance_obra`, `fact_compras_compromisos`, `fact_recepciones_bodega`, `fact_facturacion_contratista`, `fact_ventas_inmobiliarias`, `fact_postventa_servicio`
-- **Secondary Entities (8)**: `dim_proyecto_obra`, `dim_tiempo`, `dim_tercero`, `dim_centro_costo`, `dim_partida_edt`, `dim_unidad_inmobiliaria`, `seguridad_usuarios_obra`, `DIM_EMPRESA_SOCIEDAD`
+- **Primary Entities (7)**: `fact_evm_avance_obra`, `fact_compras_compromisos`, `fact_recepciones_bodega`, `fact_facturacion_contratista`, `fact_ventas_inmobiliarias`, `fact_postventa_servicio`, `DIM_PROYECTO_OBRA`
+- **Secondary Entities (7)**: `dim_tiempo`, `dim_tercero`, `dim_centro_costo`, `dim_partida_edt`, `dim_unidad_inmobiliaria`, `seguridad_usuarios_obra`, `DIM_EMPRESA_SOCIEDAD`
 - **Active Relationships**: 27
 
 ### Entity Topology Diagram
@@ -42,6 +47,9 @@ erDiagram
         string role "Primary Asset"
     }
     fact_postventa_servicio {
+        string role "Primary Asset"
+    }
+    DIM_PROYECTO_OBRA {
         string role "Primary Asset"
     }
 ```

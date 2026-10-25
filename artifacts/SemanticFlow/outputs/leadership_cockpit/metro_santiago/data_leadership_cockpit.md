@@ -1,5 +1,5 @@
 # Data Leadership Cockpit: schema
-**Version**: `1.0.0` | **Generated At**: `2026-10-17T02:24:59.929038+00:00`
+**Version**: `1.0.0` | **Generated At**: `2026-10-23T00:27:27.331886+00:00`
 
 ## Executive Overview
 > [!IMPORTANT]

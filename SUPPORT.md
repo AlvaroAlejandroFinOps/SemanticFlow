@@ -7,7 +7,7 @@ Welcome to the **SemanticFlow** community! Here is how you can get help, ask que
 ## 1. Documentation & Architecture
 
 - **[Architecture Guide](docs/architecture/esquema_relacional.md)**: Deep dive into the Canonical Semantic AST, pipeline stages, and compiler topology.
-- **[Executive Summary](artifacts/plans/active/semanticflow-global-audit/00_EXECUTIVE_SUMMARY.md)**: Overview of the compiler roadmap, audit findings, and capabilities.
+- **[Executive Summary](artifacts/plans/archive/semanticflow-global-audit/00_EXECUTIVE_SUMMARY.md)**: Overview of the compiler roadmap, audit findings, and capabilities.
 - **[Personas & Leadership Cockpit](docs/)**: Details on the 10 Core Canonical Personas, 6 Extension Personas, and executive governance synthesis.
 
 ---

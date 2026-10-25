@@ -1,7 +1,7 @@
 # Regulatory Compliance, Audit Provenance & Risk Lens
 
 **Persona Role**: `AUDIT_RISK` | **Technical Depth**: `EXHAUSTIVE`
-**Generated At**: `2026-10-17T02:24:59.900503+00:00`
+**Generated At**: `2026-10-23T00:27:27.329887+00:00`
 
 ## Executive Summary
 

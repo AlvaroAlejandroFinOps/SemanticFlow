@@ -1,41 +1,107 @@
 version: 2
 semantic_models:
+- name: dim_centro_costo
+  description: "* **Granularidad:** Un registro por centro de costo anal\xEDtico definido\
+    \ en las dimensiones contables de SAP B1."
+  model: ref('dim_centro_costo')
+  entities:
+  - name: sk_centro_costo
+    type: primary
+    description: "Clave surrogada anal\xEDtica"
+  dimensions:
+  - name: codigo_norma_reparto
+    type: categorical
+    description: "C\xF3digo contable de imputaci\xF3n"
+  - name: dimension_contable
+    type: categorical
+    description: "Dimensi\xF3n de negocio en SAP ($1 = \\text{Negocio}$, $2 = \\text{Obra}$,\
+      \ $3 = \\text{Etapa}$)"
+  - name: nombre_centro_costo
+    type: categorical
+    description: Glosa del centro de costo
+  measures:
+  - name: dim_centro_costo_count
+    description: Total count of dim_centro_costo
+    agg: count
+    expr: '1'
+- name: dim_empresa_sociedad
+  description: "Extra\xEDda de Mermaid ERD"
+  model: ref('dim_empresa_sociedad')
+  entities:
+  - name: sk_empresa_sociedad
+    type: primary
+    description: Identifier for sk_empresa_sociedad
+  dimensions:
+  - name: codigo_sociedad_sap
+    type: categorical
+    description: Dimension codigo_sociedad_sap
+  - name: razon_social
+    type: categorical
+    description: Dimension razon_social
+  - name: rut_sociedad
+    type: categorical
+    description: Dimension rut_sociedad
+  measures:
+  - name: dim_empresa_sociedad_count
+    description: Total count of DIM_EMPRESA_SOCIEDAD
+    agg: count
+    expr: '1'
+- name: dim_partida_edt
+  description: "* **Granularidad:** Registro por \xEDtem de presupuesto de obra o\
+    \ partida anal\xEDtica."
+  model: ref('dim_partida_edt')
+  entities:
+  - name: sk_partida_edt
+    type: primary
+    description: Clave surrogada de partida
+  dimensions:
+  - name: capitulo_edt
+    type: categorical
+    description: 'Nivel superior (ej: *Instalaciones*, *Terminaciones*, *Obra Gruesa*)'
+  - name: codigo_partida
+    type: categorical
+    description: "C\xF3digo jer\xE1rquico (`01.01.03`, `02.04.01`)"
+  - name: nombre_partida
+    type: categorical
+    description: "Glosa de la partida (ej: *Hormig\xF3n Estructural H-30 Muros*)"
+  - name: unidad_medida
+    type: categorical
+    description: "Unidad t\xE9cnica ($m^2, m^3, kg, un, gl$)"
+  measures:
+  - name: dim_partida_edt_count
+    description: Total count of dim_partida_edt
+    agg: count
+    expr: '1'
 - name: dim_proyecto_obra
   description: "Conecta la visi\xF3n de obra f\xEDsica con la visi\xF3n de estructuraci\xF3\
     n societaria e inmobiliaria."
   model: ref('dim_proyecto_obra')
   entities:
-  - name: sk_proyecto_obra
-    type: primary
-    description: Clave surrogada entera autoincremental
   - name: sk_empresa_sociedad
     type: primary
     description: Sociedad legal propietaria
+  - name: sk_proyecto_obra
+    type: primary
+    description: Clave surrogada entera autoincremental
   dimensions:
-  - name: codigo_obra_sap
+  - name: administrador_obra_email
     type: categorical
-    description: Identificador del proyecto en SAP (`PrjCode`)
-  - name: nombre_proyecto
-    type: categorical
-    description: "Nombre comercial y t\xE9cnico del proyecto"
-  - name: tipo_negocio
-    type: categorical
-    description: '`INMOBILIARIA`, `CONSTRUCTORA` o `MIXTO`'
-  - name: comuna
-    type: categorical
-    description: Comuna de emplazamiento
-  - name: region
-    type: categorical
-    description: "Regi\xF3n pol\xEDtica"
-  - name: direccion_obra
-    type: categorical
-    description: "Direcci\xF3n f\xEDsica de los trabajos"
-  - name: superficie_construida_m2
-    type: categorical
-    description: Metros cuadrados vendibles / construidos
+    description: Correo administrador para RLS
   - name: cantidad_unidades_totales
     type: categorical
     description: Total de departamentos, locales, casas
+  - name: codigo_obra_sap
+    type: categorical
+    description: Identificador del proyecto en SAP (`PrjCode`)
+  - name: comuna
+    type: categorical
+    description: Comuna de emplazamiento
+  - name: direccion_obra
+    type: categorical
+    description: "Direcci\xF3n f\xEDsica de los trabajos"
+  - name: estado_proyecto
+    type: categorical
+    description: '`PROSPECCION`, `EN_EJECUCION`, `POSTVENTA`, `CERRADO`'
   - name: fecha_inicio_programada
     type: time
     description: Fecha de inicio oficial de faena
@@ -49,58 +115,21 @@ semantic_models:
   - name: jefe_obra_email
     type: categorical
     description: Correo para mapeo de seguridad RLS
-  - name: administrador_obra_email
+  - name: nombre_proyecto
     type: categorical
-    description: Correo administrador para RLS
-  - name: estado_proyecto
+    description: "Nombre comercial y t\xE9cnico del proyecto"
+  - name: region
     type: categorical
-    description: '`PROSPECCION`, `EN_EJECUCION`, `POSTVENTA`, `CERRADO`'
+    description: "Regi\xF3n pol\xEDtica"
+  - name: superficie_construida_m2
+    type: categorical
+    description: Metros cuadrados vendibles / construidos
+  - name: tipo_negocio
+    type: categorical
+    description: '`INMOBILIARIA`, `CONSTRUCTORA` o `MIXTO`'
   measures:
   - name: dim_proyecto_obra_count
     description: Total count of dim_proyecto_obra
-    agg: count
-    expr: '1'
-- name: dim_tiempo
-  description: "* **Granularidad:** Un registro por d\xEDa calendario (1990 - 2040)."
-  model: ref('dim_tiempo')
-  entities:
-  - name: sk_fecha
-    type: primary
-    description: Clave surrogada en formato entero `YYYYMMDD`
-  dimensions:
-  - name: fecha
-    type: time
-    description: Fecha real de calendario
-    type_params:
-      time_granularity: day
-  - name: anio
-    type: categorical
-    description: "A\xF1o calendario ($2024, 2025, 2026$)"
-  - name: mes_numero
-    type: categorical
-    description: "N\xFAmero de mes ($1 \\dots 12$)"
-  - name: mes_nombre
-    type: categorical
-    description: Nombre del mes (`Enero`, `Febrero`, etc.)
-  - name: anio_mes
-    type: categorical
-    description: Cadena `YYYY-MM` para ordenamiento
-  - name: trimestre
-    type: categorical
-    description: '`Q1`, `Q2`, `Q3`, `Q4`'
-  - name: semana_anio
-    type: categorical
-    description: Semana de avance de obra ($1 \dots 52$)
-  - name: dia_habil_construccion
-    type: categorical
-    description: "`TRUE` si excluye domingos, festivos y feriados legales de construcci\xF3\
-      n"
-  - name: valor_uf_cierre
-    type: categorical
-    description: Valor oficial de la Unidad de Fomento (UF) para la fecha
-  measures:
-  - name: dim_tiempo_count
-    description: Total count of dim_tiempo
     agg: count
     expr: '1'
 - name: dim_tercero
@@ -112,77 +141,70 @@ semantic_models:
     type: primary
     description: Clave surrogada
   dimensions:
-  - name: codigo_socio_sap
-    type: categorical
-    description: "C\xF3digo de Socio de Negocio"
-  - name: rut_dni
-    type: categorical
-    description: "Identificador tributario (RUT con d\xEDgito verificador)"
-  - name: razon_social_nombre
-    type: categorical
-    description: "Raz\xF3n social o nombres legales"
-  - name: tipo_tercero
-    type: categorical
-    description: '`PROVEEDOR_INSUMOS`, `SUBCONTRATISTA`, `CLIENTE_COMPRADOR`, `BROKER`'
   - name: calificacion_riesgo
     type: categorical
     description: Rating interno de cumplimiento (A, B, C, D)
+  - name: codigo_socio_sap
+    type: categorical
+    description: "C\xF3digo de Socio de Negocio"
   - name: cuenta_bancaria_asociada
     type: categorical
     description: Cuenta de abono para transferencias masivas
+  - name: razon_social_nombre
+    type: categorical
+    description: "Raz\xF3n social o nombres legales"
+  - name: rut_dni
+    type: categorical
+    description: "Identificador tributario (RUT con d\xEDgito verificador)"
+  - name: tipo_tercero
+    type: categorical
+    description: '`PROVEEDOR_INSUMOS`, `SUBCONTRATISTA`, `CLIENTE_COMPRADOR`, `BROKER`'
   measures:
   - name: dim_tercero_count
     description: Total count of dim_tercero
     agg: count
     expr: '1'
-- name: dim_centro_costo
-  description: "* **Granularidad:** Un registro por centro de costo anal\xEDtico definido\
-    \ en las dimensiones contables de SAP B1."
-  model: ref('dim_centro_costo')
+- name: dim_tiempo
+  description: "* **Granularidad:** Un registro por d\xEDa calendario (1990 - 2040)."
+  model: ref('dim_tiempo')
   entities:
-  - name: sk_centro_costo
+  - name: sk_fecha
     type: primary
-    description: "Clave surrogada anal\xEDtica"
+    description: Clave surrogada en formato entero `YYYYMMDD`
   dimensions:
-  - name: codigo_norma_reparto
+  - name: anio
     type: categorical
-    description: "C\xF3digo contable de imputaci\xF3n"
-  - name: nombre_centro_costo
+    description: "A\xF1o calendario ($2024, 2025, 2026$)"
+  - name: anio_mes
     type: categorical
-    description: Glosa del centro de costo
-  - name: dimension_contable
+    description: Cadena `YYYY-MM` para ordenamiento
+  - name: dia_habil_construccion
     type: categorical
-    description: "Dimensi\xF3n de negocio en SAP ($1 = \\text{Negocio}$, $2 = \\text{Obra}$,\
-      \ $3 = \\text{Etapa}$)"
+    description: "`TRUE` si excluye domingos, festivos y feriados legales de construcci\xF3\
+      n"
+  - name: fecha
+    type: time
+    description: Fecha real de calendario
+    type_params:
+      time_granularity: day
+  - name: mes_nombre
+    type: categorical
+    description: Nombre del mes (`Enero`, `Febrero`, etc.)
+  - name: mes_numero
+    type: categorical
+    description: "N\xFAmero de mes ($1 \\dots 12$)"
+  - name: semana_anio
+    type: categorical
+    description: Semana de avance de obra ($1 \dots 52$)
+  - name: trimestre
+    type: categorical
+    description: '`Q1`, `Q2`, `Q3`, `Q4`'
+  - name: valor_uf_cierre
+    type: categorical
+    description: Valor oficial de la Unidad de Fomento (UF) para la fecha
   measures:
-  - name: dim_centro_costo_count
-    description: Total count of dim_centro_costo
-    agg: count
-    expr: '1'
-- name: dim_partida_edt
-  description: "* **Granularidad:** Registro por \xEDtem de presupuesto de obra o\
-    \ partida anal\xEDtica."
-  model: ref('dim_partida_edt')
-  entities:
-  - name: sk_partida_edt
-    type: primary
-    description: Clave surrogada de partida
-  dimensions:
-  - name: codigo_partida
-    type: categorical
-    description: "C\xF3digo jer\xE1rquico (`01.01.03`, `02.04.01`)"
-  - name: nombre_partida
-    type: categorical
-    description: "Glosa de la partida (ej: *Hormig\xF3n Estructural H-30 Muros*)"
-  - name: capitulo_edt
-    type: categorical
-    description: 'Nivel superior (ej: *Instalaciones*, *Terminaciones*, *Obra Gruesa*)'
-  - name: unidad_medida
-    type: categorical
-    description: "Unidad t\xE9cnica ($m^2, m^3, kg, un, gl$)"
-  measures:
-  - name: dim_partida_edt_count
-    description: Total count of dim_partida_edt
+  - name: dim_tiempo_count
+    description: Total count of dim_tiempo
     agg: count
     expr: '1'
 - name: dim_unidad_inmobiliaria
@@ -190,19 +212,19 @@ semantic_models:
     o estacionamiento de cada desarrollo.'
   model: ref('dim_unidad_inmobiliaria')
   entities:
-  - name: sk_unidad_inmobiliaria
-    type: primary
-    description: Clave surrogada de producto vendible
   - name: sk_proyecto_obra
     type: primary
     description: Proyecto al que pertenece la unidad
+  - name: sk_unidad_inmobiliaria
+    type: primary
+    description: Clave surrogada de producto vendible
   dimensions:
   - name: codigo_unidad
     type: categorical
     description: "C\xF3digo comercial (ej: `EDIF-A-DEP-1204`)"
-  - name: tipo_unidad
+  - name: estado_comercial_actual
     type: categorical
-    description: '`DEPARTAMENTO`, `CASA`, `ESTACIONAMIENTO`, `BODEGA`, `LOCAL_COMERCIAL`'
+    description: '`DISPONIBLE`, `RESERVADO`, `PROMETIDO`, `ESCRITURADO`, `BLOQUEADO`'
   - name: modelo_tipologia
     type: categorical
     description: "Configuraci\xF3n (ej: `2D2B-Mariposa`, `1D1B`, `3D2B`)"
@@ -212,21 +234,65 @@ semantic_models:
   - name: orientacion
     type: categorical
     description: '`NORTE`, `SUR`, `ORIENTE`, `PONIENTE`, `NOR-ORIENTE`, etc.'
-  - name: superficie_util_m2
-    type: categorical
-    description: "Metros cuadrados interiores \xFAtiles"
   - name: superficie_terraza_m2
     type: categorical
     description: Metros cuadrados de terrazas o logias
   - name: superficie_total_m2
     type: categorical
     description: Metros cuadrados totales vendibles
-  - name: estado_comercial_actual
+  - name: superficie_util_m2
     type: categorical
-    description: '`DISPONIBLE`, `RESERVADO`, `PROMETIDO`, `ESCRITURADO`, `BLOQUEADO`'
+    description: "Metros cuadrados interiores \xFAtiles"
+  - name: tipo_unidad
+    type: categorical
+    description: '`DEPARTAMENTO`, `CASA`, `ESTACIONAMIENTO`, `BODEGA`, `LOCAL_COMERCIAL`'
   measures:
   - name: dim_unidad_inmobiliaria_count
     description: Total count of dim_unidad_inmobiliaria
+    agg: count
+    expr: '1'
+- name: fact_compras_compromisos
+  description: "* **Granularidad:** L\xEDnea individual de detalle de cada Orden de\
+    \ Compra emitida en SAP B1."
+  model: ref('fact_compras_compromisos')
+  entities:
+  - name: sk_centro_costo
+    type: foreign
+    description: '`POR1.OcrCode` / `POR1.OcrCode2`'
+  - name: sk_compra
+    type: foreign
+    description: Hashing `DocEntry` + `LineNum`
+  - name: sk_fecha_emision
+    type: foreign
+    description: '`OPOR.DocDate`'
+  - name: sk_partida_edt
+    type: foreign
+    description: Mapeo de insumo a Partida
+  - name: sk_proyecto_obra
+    type: foreign
+    description: '`OPOR.Project`'
+  - name: sk_tercero_proveedor
+    type: foreign
+    description: '`OPOR.CardCode`'
+  dimensions:
+  - name: cantidad_ordenada
+    type: categorical
+    description: Unidades de material contratadas
+  - name: estado_aprobacion
+    type: categorical
+    description: '`PENDIENTE`, `AUTORIZADA`, `CERRADA`, `CANCELADA`'
+  - name: monto_comprometido_neto_clp
+    type: categorical
+    description: Compromiso de costo neto en pesos chilenos
+  - name: monto_comprometido_uf
+    type: categorical
+    description: "Monto indexado a UF de la fecha de emisi\xF3n"
+  - name: num_oc_sap
+    type: categorical
+    description: Folio de la OC (`OPOR.DocNum`)
+  measures:
+  - name: fact_compras_compromisos_count
+    description: Total count of fact_compras_compromisos
     agg: count
     expr: '1'
 - name: fact_evm_avance_obra
@@ -237,122 +303,37 @@ semantic_models:
   - name: sk_evm
     type: foreign
     description: "Identificador \xFAnico del snapshot de control"
-  - name: sk_proyecto_obra
-    type: foreign
-    description: "Relaci\xF3n con `dim_proyecto_obra`"
   - name: sk_fecha
     type: foreign
     description: Fecha de corte del informe de avance semanal
   - name: sk_partida_edt
     type: foreign
     description: "Relaci\xF3n con `dim_partida_edt`"
+  - name: sk_proyecto_obra
+    type: foreign
+    description: "Relaci\xF3n con `dim_proyecto_obra`"
   dimensions:
-  - name: monto_bac_presupuesto_base
-    type: categorical
-    description: "Presupuesto Base a la Conclusi\xF3n ($BAC$) en CLP"
-  - name: monto_pv_planificado
-    type: categorical
-    description: Valor Planificado a la fecha ($PV$) en CLP
-  - name: monto_ev_ganado
-    type: categorical
-    description: "Valor Ganado real f\xEDsico ($EV$) en CLP"
   - name: monto_ac_costo_real
     type: categorical
     description: Costo Real devengado a la fecha ($AC$) en CLP
-  - name: porcentaje_avance_fisico
+  - name: monto_bac_presupuesto_base
     type: categorical
-    description: "% de avance f\xEDsico medido en terreno ($0.0000 \\dots 1.0000$)"
+    description: "Presupuesto Base a la Conclusi\xF3n ($BAC$) en CLP"
+  - name: monto_ev_ganado
+    type: categorical
+    description: "Valor Ganado real f\xEDsico ($EV$) en CLP"
+  - name: monto_pv_planificado
+    type: categorical
+    description: Valor Planificado a la fecha ($PV$) en CLP
   - name: porcentaje_avance_financiero
     type: categorical
     description: '% de costo devengado sobre el presupuesto total'
+  - name: porcentaje_avance_fisico
+    type: categorical
+    description: "% de avance f\xEDsico medido en terreno ($0.0000 \\dots 1.0000$)"
   measures:
   - name: fact_evm_avance_obra_count
     description: Total count of fact_evm_avance_obra
-    agg: count
-    expr: '1'
-- name: fact_compras_compromisos
-  description: "* **Granularidad:** L\xEDnea individual de detalle de cada Orden de\
-    \ Compra emitida en SAP B1."
-  model: ref('fact_compras_compromisos')
-  entities:
-  - name: sk_compra
-    type: foreign
-    description: Hashing `DocEntry` + `LineNum`
-  - name: sk_proyecto_obra
-    type: foreign
-    description: '`OPOR.Project`'
-  - name: sk_tercero_proveedor
-    type: foreign
-    description: '`OPOR.CardCode`'
-  - name: sk_centro_costo
-    type: foreign
-    description: '`POR1.OcrCode` / `POR1.OcrCode2`'
-  - name: sk_partida_edt
-    type: foreign
-    description: Mapeo de insumo a Partida
-  - name: sk_fecha_emision
-    type: foreign
-    description: '`OPOR.DocDate`'
-  dimensions:
-  - name: num_oc_sap
-    type: categorical
-    description: Folio de la OC (`OPOR.DocNum`)
-  - name: cantidad_ordenada
-    type: categorical
-    description: Unidades de material contratadas
-  - name: monto_comprometido_neto_clp
-    type: categorical
-    description: Compromiso de costo neto en pesos chilenos
-  - name: monto_comprometido_uf
-    type: categorical
-    description: "Monto indexado a UF de la fecha de emisi\xF3n"
-  - name: estado_aprobacion
-    type: categorical
-    description: '`PENDIENTE`, `AUTORIZADA`, `CERRADA`, `CANCELADA`'
-  measures:
-  - name: fact_compras_compromisos_count
-    description: Total count of fact_compras_compromisos
-    agg: count
-    expr: '1'
-- name: fact_recepciones_bodega
-  description: "* **Granularidad:** L\xEDnea de entrada f\xEDsica de material recepcionado\
-    \ en la bodega de faena."
-  model: ref('fact_recepciones_bodega')
-  entities:
-  - name: sk_recepcion
-    type: foreign
-    description: Hashing `DocEntry` + `LineNum` (`OPDN`/`PDN1`)
-  - name: sk_proyecto_obra
-    type: foreign
-    description: '`OPDN.Project`'
-  - name: sk_tercero_proveedor
-    type: foreign
-    description: '`OPDN.CardCode`'
-  - name: sk_partida_edt
-    type: foreign
-    description: '`PDN1.ItemCode` $\rightarrow$ Partida'
-  - name: sk_fecha_recepcion
-    type: foreign
-    description: '`OPDN.DocDate`'
-  dimensions:
-  - name: num_guia_despacho
-    type: categorical
-    description: "Gu\xEDa de despacho f\xEDsica del proveedor"
-  - name: num_entrada_sap
-    type: categorical
-    description: "Folio entrada de mercanc\xEDas (`OPDN.DocNum`)"
-  - name: cantidad_recibida
-    type: categorical
-    description: "Unidades f\xEDsicas ingresadas al inventario de obra"
-  - name: monto_recepcionado_clp
-    type: categorical
-    description: Costo recepcionado pendiente de factura
-  - name: indicador_conforme
-    type: categorical
-    description: "Marcado de verificaci\xF3n de calidad en obra"
-  measures:
-  - name: fact_recepciones_bodega_count
-    description: Total count of fact_recepciones_bodega
     agg: count
     expr: '1'
 - name: fact_facturacion_contratista
@@ -360,96 +341,43 @@ semantic_models:
     / Estado de Pago liquidado.'
   model: ref('fact_facturacion_contratista')
   entities:
+  - name: sk_centro_costo
+    type: foreign
+    description: '`PCH1.OcrCode`'
   - name: sk_factura_contratista
     type: foreign
     description: Hashing `DocEntry` + `LineNum` (`OPCH`/`PCH1`)
+  - name: sk_fecha_contable
+    type: foreign
+    description: "Fecha de contabilizaci\xF3n devengada"
   - name: sk_proyecto_obra
     type: foreign
     description: '`OPCH.Project`'
   - name: sk_tercero_contratista
     type: foreign
     description: '`OPCH.CardCode`'
-  - name: sk_centro_costo
-    type: foreign
-    description: '`PCH1.OcrCode`'
-  - name: sk_fecha_contable
-    type: foreign
-    description: "Fecha de contabilizaci\xF3n devengada"
   dimensions:
-  - name: num_factura_tributaria
-    type: categorical
-    description: "N\xFAmero fiscal de Factura Electr\xF3nica (DTE)"
-  - name: num_estado_pago_ep
-    type: categorical
-    description: 'Folio del Estado de Pago de faena (ej: `EP-08`)'
-  - name: monto_bruto_clp
-    type: categorical
-    description: Monto total facturado afecto/exento
-  - name: monto_retencion_garantia_clp
-    type: categorical
-    description: "Retenci\xF3n contractural de garant\xEDa (t\xEDpico $5\\%$)"
-  - name: monto_liquido_a_pago_clp
-    type: categorical
-    description: Neto devengado a transferir al contratista
   - name: certificacion_laboral_f30
     type: categorical
     description: Estado certificado F30/F30-1 (`AL_DIA`, `VENCIDO`, `RECHAZADO`)
+  - name: monto_bruto_clp
+    type: categorical
+    description: Monto total facturado afecto/exento
+  - name: monto_liquido_a_pago_clp
+    type: categorical
+    description: Neto devengado a transferir al contratista
+  - name: monto_retencion_garantia_clp
+    type: categorical
+    description: "Retenci\xF3n contractural de garant\xEDa (t\xEDpico $5\\%$)"
+  - name: num_estado_pago_ep
+    type: categorical
+    description: 'Folio del Estado de Pago de faena (ej: `EP-08`)'
+  - name: num_factura_tributaria
+    type: categorical
+    description: "N\xFAmero fiscal de Factura Electr\xF3nica (DTE)"
   measures:
   - name: fact_facturacion_contratista_count
     description: Total count of fact_facturacion_contratista
-    agg: count
-    expr: '1'
-- name: fact_ventas_inmobiliarias
-  description: '* **Granularidad:** Evento o hito de cambio de estado sobre una unidad
-    inmobiliaria (Reserva, Promesa, Escritura, Desistimiento).'
-  model: ref('fact_ventas_inmobiliarias')
-  entities:
-  - name: sk_venta
-    type: foreign
-    description: "Clave \xFAnica de la transacci\xF3n comercial"
-  - name: sk_proyecto_obra
-    type: foreign
-    description: Proyecto inmobiliario
-  - name: sk_unidad_inmobiliaria
-    type: foreign
-    description: Unidad transada (departamento, casa, local)
-  - name: sk_tercero_cliente
-    type: foreign
-    description: Cliente comprador persona o inversionista
-  - name: sk_tercero_broker
-    type: foreign
-    description: Corredora / Broker externo o canal interno
-  - name: sk_fecha_operacion
-    type: foreign
-    description: Fecha en que se firma o perfecciona el hito
-  dimensions:
-  - name: etapa_comercial
-    type: categorical
-    description: '`RESERVA`, `PROMESA_BLANCO`, `PROMESA_VERDE`, `ESCRITURA`, `DESISTIMIENTO`'
-  - name: precio_lista_uf
-    type: categorical
-    description: "Precio de cat\xE1logo publicado"
-  - name: precio_cierre_uf
-    type: categorical
-    description: Precio transado efectivo tras descuentos comerciales
-  - name: monto_pie_uf
-    type: categorical
-    description: Monto total pagado en cuotas / cheques por pie
-  - name: monto_credito_hipotecario_uf
-    type: categorical
-    description: Saldo a liquidar por banco con carta resguardo
-  - name: monto_subsidio_uf
-    type: categorical
-    description: Aporte estatal (DS01, DS19) si aplica
-  - name: monto_desistimiento_uf
-    type: categorical
-    description: "Multa o retenci\xF3n retenida en caso de ca\xEDda"
-  - name: dias_ciclo_promesa_escritura
-    type: categorical
-    description: "Tiempo de maduraci\xF3n del proceso bancario y legal"
-  measures:
-  - name: fact_ventas_inmobiliarias_count
-    description: Total count of fact_ventas_inmobiliarias
     agg: count
     expr: '1'
 - name: fact_postventa_servicio
@@ -457,34 +385,25 @@ semantic_models:
     \ de departamentos entregados."
   model: ref('fact_postventa_servicio')
   entities:
-  - name: sk_postventa
-    type: foreign
-    description: "Identificador \xFAnico del reclamo (`OSCL.callID`)"
-  - name: sk_proyecto_obra
-    type: foreign
-    description: Proyecto inmobiliario correspondiente
-  - name: sk_unidad_inmobiliaria
-    type: foreign
-    description: Departamento o unidad con incidente
-  - name: sk_tercero_cliente
-    type: foreign
-    description: Propietario o arrendatario afectado
   - name: sk_fecha_apertura
     type: foreign
     description: "Fecha de recepci\xF3n de la llamada o ticket"
   - name: sk_fecha_cierre
     type: foreign
     description: "Fecha de recepci\xF3n conforme de los trabajos"
+  - name: sk_postventa
+    type: foreign
+    description: "Identificador \xFAnico del reclamo (`OSCL.callID`)"
+  - name: sk_proyecto_obra
+    type: foreign
+    description: Proyecto inmobiliario correspondiente
+  - name: sk_tercero_cliente
+    type: foreign
+    description: Propietario o arrendatario afectado
+  - name: sk_unidad_inmobiliaria
+    type: foreign
+    description: Departamento o unidad con incidente
   dimensions:
-  - name: ticket_servicio_sap
-    type: categorical
-    description: "C\xF3digo interno de postventa"
-  - name: recinto_afectado
-    type: categorical
-    description: "`COCINA`, `BA\xD1O_PRINCIPAL`, `TERRAZA`, `DORMITORIO`"
-  - name: tipologia_falla
-    type: categorical
-    description: '`GASFITERIA`, `FISURAS_ESTRUCTURALES`, `ELECTRICIDAD`, `PINTURA`'
   - name: costo_reparacion_clp
     type: categorical
     description: Costo de mano de obra y materiales incurrido
@@ -494,9 +413,112 @@ semantic_models:
   - name: estado_ticket
     type: categorical
     description: '`ABIERTO`, `EN_INSPECCION`, `EN_REPARACION`, `CERRADO_CONFORME`'
+  - name: recinto_afectado
+    type: categorical
+    description: "`COCINA`, `BA\xD1O_PRINCIPAL`, `TERRAZA`, `DORMITORIO`"
+  - name: ticket_servicio_sap
+    type: categorical
+    description: "C\xF3digo interno de postventa"
+  - name: tipologia_falla
+    type: categorical
+    description: '`GASFITERIA`, `FISURAS_ESTRUCTURALES`, `ELECTRICIDAD`, `PINTURA`'
   measures:
   - name: fact_postventa_servicio_count
     description: Total count of fact_postventa_servicio
+    agg: count
+    expr: '1'
+- name: fact_recepciones_bodega
+  description: "* **Granularidad:** L\xEDnea de entrada f\xEDsica de material recepcionado\
+    \ en la bodega de faena."
+  model: ref('fact_recepciones_bodega')
+  entities:
+  - name: sk_fecha_recepcion
+    type: foreign
+    description: '`OPDN.DocDate`'
+  - name: sk_partida_edt
+    type: foreign
+    description: '`PDN1.ItemCode` $\rightarrow$ Partida'
+  - name: sk_proyecto_obra
+    type: foreign
+    description: '`OPDN.Project`'
+  - name: sk_recepcion
+    type: foreign
+    description: Hashing `DocEntry` + `LineNum` (`OPDN`/`PDN1`)
+  - name: sk_tercero_proveedor
+    type: foreign
+    description: '`OPDN.CardCode`'
+  dimensions:
+  - name: cantidad_recibida
+    type: categorical
+    description: "Unidades f\xEDsicas ingresadas al inventario de obra"
+  - name: indicador_conforme
+    type: categorical
+    description: "Marcado de verificaci\xF3n de calidad en obra"
+  - name: monto_recepcionado_clp
+    type: categorical
+    description: Costo recepcionado pendiente de factura
+  - name: num_entrada_sap
+    type: categorical
+    description: "Folio entrada de mercanc\xEDas (`OPDN.DocNum`)"
+  - name: num_guia_despacho
+    type: categorical
+    description: "Gu\xEDa de despacho f\xEDsica del proveedor"
+  measures:
+  - name: fact_recepciones_bodega_count
+    description: Total count of fact_recepciones_bodega
+    agg: count
+    expr: '1'
+- name: fact_ventas_inmobiliarias
+  description: '* **Granularidad:** Evento o hito de cambio de estado sobre una unidad
+    inmobiliaria (Reserva, Promesa, Escritura, Desistimiento).'
+  model: ref('fact_ventas_inmobiliarias')
+  entities:
+  - name: sk_fecha_operacion
+    type: foreign
+    description: Fecha en que se firma o perfecciona el hito
+  - name: sk_proyecto_obra
+    type: foreign
+    description: Proyecto inmobiliario
+  - name: sk_tercero_broker
+    type: foreign
+    description: Corredora / Broker externo o canal interno
+  - name: sk_tercero_cliente
+    type: foreign
+    description: Cliente comprador persona o inversionista
+  - name: sk_unidad_inmobiliaria
+    type: foreign
+    description: Unidad transada (departamento, casa, local)
+  - name: sk_venta
+    type: foreign
+    description: "Clave \xFAnica de la transacci\xF3n comercial"
+  dimensions:
+  - name: dias_ciclo_promesa_escritura
+    type: categorical
+    description: "Tiempo de maduraci\xF3n del proceso bancario y legal"
+  - name: etapa_comercial
+    type: categorical
+    description: '`RESERVA`, `PROMESA_BLANCO`, `PROMESA_VERDE`, `ESCRITURA`, `DESISTIMIENTO`'
+  - name: monto_credito_hipotecario_uf
+    type: categorical
+    description: Saldo a liquidar por banco con carta resguardo
+  - name: monto_desistimiento_uf
+    type: categorical
+    description: "Multa o retenci\xF3n retenida en caso de ca\xEDda"
+  - name: monto_pie_uf
+    type: categorical
+    description: Monto total pagado en cuotas / cheques por pie
+  - name: monto_subsidio_uf
+    type: categorical
+    description: Aporte estatal (DS01, DS19) si aplica
+  - name: precio_cierre_uf
+    type: categorical
+    description: Precio transado efectivo tras descuentos comerciales
+  - name: precio_lista_uf
+    type: categorical
+    description: "Precio de cat\xE1logo publicado"
+  measures:
+  - name: fact_ventas_inmobiliarias_count
+    description: Total count of fact_ventas_inmobiliarias
     agg: count
     expr: '1'
 - name: seguridad_usuarios_obra
@@ -505,42 +527,20 @@ semantic_models:
   model: ref('seguridad_usuarios_obra')
   entities: []
   dimensions:
-  - name: user_email
+  - name: acceso_total
     type: categorical
-    description: Correo corporativo del usuario (`USERPRINCIPALNAME()`)
+    description: "`TRUE` para ejecutivos y directores sin restricci\xF3n territorial"
   - name: codigo_obra_sap
     type: categorical
     description: "C\xF3digo de proyecto permitido (`OPRJ.PrjCode`)"
   - name: rol_usuario
     type: categorical
     description: '`JEFE_OBRA`, `ADMINISTRADOR_CONTRATO`, `GERENTE_ZONAL`, `DIRECTOR`'
-  - name: acceso_total
+  - name: user_email
     type: categorical
-    description: "`TRUE` para ejecutivos y directores sin restricci\xF3n territorial"
+    description: Correo corporativo del usuario (`USERPRINCIPALNAME()`)
   measures:
   - name: seguridad_usuarios_obra_count
     description: Total count of seguridad_usuarios_obra
-    agg: count
-    expr: '1'
-- name: dim_empresa_sociedad
-  description: "Extra\xEDda de Mermaid ERD"
-  model: ref('dim_empresa_sociedad')
-  entities:
-  - name: sk_empresa_sociedad
-    type: primary
-    description: Identifier for sk_empresa_sociedad
-  dimensions:
-  - name: rut_sociedad
-    type: categorical
-    description: Dimension rut_sociedad
-  - name: razon_social
-    type: categorical
-    description: Dimension razon_social
-  - name: codigo_sociedad_sap
-    type: categorical
-    description: Dimension codigo_sociedad_sap
-  measures:
-  - name: dim_empresa_sociedad_count
-    description: Total count of DIM_EMPRESA_SOCIEDAD
     agg: count
     expr: '1'

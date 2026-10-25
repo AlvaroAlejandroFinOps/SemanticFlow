@@ -1,0 +1,101 @@
+# ==============================================================================
+# Santolaya - Lente de Negocio: Jefe de Obra y Control de Obras (17)
+# Dominio: Constructora Santolaya - Control Presupuestario EVM, Faena y Abastecimiento
+# ==============================================================================
+
+persona_id: "17_jefe_obra_control"
+scope: "company_custom"
+company_id: "santolaya"
+name: "Jefe de Obra y Control de Obras"
+display_name: "Jefe de Obra y Control de Obras"
+title: "Perspectiva Operativa: Jefe de Obra y Control de Faena"
+role: "operational"
+technical_depth: "operational"
+summary_template: "Control operativo y financiero en faena para {display_name} en el proyecto {project_name}."
+aliases:
+  - "site_manager"
+  - "control_obras"
+  - "jefe_obra"
+
+focus_areas:
+  - "BUSINESS_VALUE"
+  - "MODELING_QUALITY"
+  - "PIPELINE_HEALTH"
+
+target_entities:
+  - "FACT_EVM_AVANCE_OBRA"
+  - "FACT_COMPRAS_COMPROMISOS"
+  - "FACT_RECEPCIONES_BODEGA"
+  - "FACT_FACTURACION_CONTRATISTA"
+  - "DIM_PROYECTO_OBRA"
+  - "DIM_CENTRO_COSTO"
+
+focus_metrics:
+  - "EVM_PV_Total"
+  - "EVM_EV_Total"
+  - "EVM_AC_Total"
+  - "EVM_CPI_Indice_Costo"
+  - "EVM_SPI_Indice_Plazo"
+  - "EVM_CV_Variacion_Costo"
+  - "EVM_SV_Variacion_Plazo"
+  - "Compras_Monto_Comprometido"
+  - "Bodega_Monto_Recepcionado"
+  - "Contratistas_Monto_Facturado"
+
+domain_kpis:
+  - name: "EVM_SPI_Indice_Plazo"
+    formula: "DIVIDE([EVM_EV_Total], [EVM_PV_Total], 0)"
+    unit: "Ratio"
+    description: "Índice de Rendimiento del Cronograma (SPI > 1.0 indica adelanto; < 1.0 indica retraso)."
+  - name: "EVM_CPI_Indice_Costo"
+    formula: "DIVIDE([EVM_EV_Total], [EVM_AC_Total], 0)"
+    unit: "Ratio"
+    description: "Índice de Rendimiento del Costo (CPI > 1.0 indica ahorro; < 1.0 indica sobrecosto)."
+  - name: "Porcentaje_Avance_Fisico_Ponderado"
+    formula: "DIVIDE(SUM(FACT_EVM_AVANCE_OBRA[monto_ev_uf]), SUM(FACT_EVM_AVANCE_OBRA[monto_bac_uf]), 0) * 100"
+    unit: "%"
+    description: "Porcentaje ponderado del avance físico de obra según presupuesto contractual (BAC)."
+  - name: "Rotacion_Consumo_Materiales_Criticos"
+    formula: "DIVIDE(SUM(FACT_RECEPCIONES_BODEGA[monto_neto_uf]), SUM(FACT_COMPRAS_COMPROMISOS[monto_neto_uf]), 0)"
+    unit: "Ratio"
+    description: "Índice de rotación y consumo de materiales críticos en terreno (hormigón, acero) frente a órdenes de compra comprometidas."
+  - name: "Tasa_Cumplimiento_EP_Seguridad_Obra"
+    formula: "DIVIDE(COUNTROWS(FACT_FACTURACION_CONTRATISTA), COUNTROWS(FACT_COMPRAS_COMPROMISOS), 0) * 100"
+    unit: "%"
+    description: "Cumplimiento de Estados de Pago de Subcontratos con certificación laboral F30/F30-1 y prevención de riesgos (Ley 20.123 / LGUC)."
+
+operational_guidelines:
+  - "¿Cuál es la variación del plazo (SV) en las partidas críticas de hormigón y enfierradura?"
+  - "¿El índice de costo (CPI) de la faena se encuentra por encima del umbral de rentabilidad (>= 0.98)?"
+  - "¿Existen recepciones en bodega (OPDN) pendientes de facturar por más de 15 días?"
+  - "¿Todos los contratistas cuentan con certificación laboral F30/F30-1 al día antes del estado de pago?"
+
+quality_gate_rules:
+  - rule_id: "QG_SANTOLAYA_EVM_001"
+    title: "Consistencia de Partidas EVM con Centro de Costo"
+    description: "Toda imputación de costo o avance físico debe tener asignado un Centro de Costo válido."
+    blocking: true
+  - rule_id: "QG_SANTOLAYA_PROC_002"
+    title: "Trazabilidad de Órdenes de Compra y Recepción en Bodega"
+    description: "El monto recepcionado en bodega no puede superar el monto autorizado en la Orden de Compra (OPOR)."
+    blocking: false
+
+recommendations:
+  - id: "REC-JO-001"
+    title: "Auditoría de Curva S y Mitigación de Desviación SPI"
+    description: "Convocar reunión de obra semanal si el SPI desciende por debajo de 0.95 en partidas de terminaciones."
+    priority: "HIGH"
+    impact: "Prevención de multas contractuales por atraso de entrega"
+    effort: "Bajo"
+    target_objects:
+      - "FACT_EVM_AVANCE_OBRA"
+    suggested_action: "Reasignar cuadrillas de subcontratistas en partidas con holgura cero"
+  - id: "REC-JO-002"
+    title: "Conciliación de Entregas de Hormigón y Cubicaciones"
+    description: "Cruzar guías de despacho físicas de mixer con metros cúbicos cubicados en el modelo BIM/CAD."
+    priority: "MEDIUM"
+    impact: "Control estricto de mermas de insumos críticos de obra"
+    effort: "Medio"
+    target_objects:
+      - "FACT_RECEPCIONES_BODEGA"
+    suggested_action: "Exigir número de guía SAP en cada recepción de obra"

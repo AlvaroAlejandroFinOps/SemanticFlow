@@ -1,0 +1,87 @@
+# ==============================================================================
+# SemanticFlow Template: Custom Domain Lens Definition
+# Ubicación requerida: ./artifacts/SemanticFlow/inputs/companies/<company_id>/lenses/<numero>_<id_lente>.yaml
+# Ejemplo: ./artifacts/SemanticFlow/inputs/companies/santolaya/lenses/17_jefe_obra_control.yaml
+# ==============================================================================
+
+# Identificador único de la lente (snake_case, alfanumérico)
+persona_id: "custom_domain_role"
+
+# Ámbito de la lente: company (lente personalizada por empresa)
+scope: "company"
+
+# Código identificador de la compañía propietaria
+company_id: "your_company_id"
+
+# Nombre formal del rol de negocio
+name: "Nombre del Rol de Negocio"
+display_name: "Nombre del Rol de Negocio"
+
+# Título de la perspectiva para reportes ejecutivos
+title: "Perspectiva de Control y Gestión: Nombre del Rol"
+
+# Rol funcional del schema: executive, management, operational, technical, governance, audit, custom
+role: "operational"
+
+# Nivel de profundidad técnica: c_level, strategic, operational, deep_technical
+technical_depth: "operational"
+
+# Plantilla de resumen ejecutivo
+summary_template: "Perspectiva operativa y analítica para {display_name} en el modelo {project_name}."
+
+# Áreas foco del rol
+focus_areas:
+  - "BUSINESS_VALUE"
+  - "MODELING_QUALITY"
+
+# Tablas objetivo prioritarias (coincidencia por nombre exacto o rol: FACT, DIMENSION)
+target_entities:
+  - "fact_tabla_hechos_principal"
+  - "fact_tabla_hechos_secundaria"
+  - "dim_entidad_clave"
+
+# Métricas prioritarias observadas por esta lente
+focus_metrics:
+  - "Total_Monto"
+  - "Indice_Rendimiento"
+  - "Porcentaje_Cumplimiento"
+
+# KPIs específicos de dominio (con fórmula explicativa y unidad)
+domain_kpis:
+  - name: "KPI_Eficiencia_Operativa"
+    formula: "DIVIDE([Metrica_Real], [Metrica_Presupuesto], 0)"
+    unit: "Ratio"
+    description: "Rendimiento y eficiencia operativa del proceso de negocio."
+  - name: "KPI_Desviacion_Porcentual"
+    formula: "DIVIDE([Metrica_Real] - [Metrica_Presupuesto], [Metrica_Presupuesto], 0)"
+    unit: "%"
+    description: "Porcentaje de desviación respecto al plan aprobado."
+
+# Guías de acción y preguntas clave de control de gestión
+operational_guidelines:
+  - "¿Cuál es la desviación porcentual actual respecto al presupuesto aprobado?"
+  - "¿Existen alertas de retraso o sobrecostos en las partidas críticas?"
+  - "¿Se cuenta con las recepciones conformes previas a la liquidación de compromisos?"
+
+# Reglas de compuerta de calidad (Quality Gate Rules) específicas
+quality_gate_rules:
+  - rule_id: "QG_INTEGRITY_001"
+    title: "Consistencia de Claves Foráneas de Dominio"
+    description: "Toda transacción operativa debe vincularse a una dimensión válida de proyecto/entidad."
+    blocking: true
+  - rule_id: "QG_TIMELINESS_002"
+    title: "Oportunidad de Registro Transaccional"
+    description: "Los registros no deben superar los 7 días de desfase respecto a la fecha de evento."
+    blocking: false
+
+# Recomendaciones pre-configuradas para tableros del rol
+recommendations:
+  - id: "REC-001"
+    title: "Implementar Alerta Temprana de Desviación"
+    description: "Configurar alertas automáticas cuando la desviación operativa supere el 5%."
+    priority: "HIGH"
+    impact: "Mitigación oportuna de pérdidas y sobrecostos"
+    effort: "Bajo"
+    target_objects:
+      - "fact_tabla_hechos_principal"
+    suggested_action: "Agregar indicador condicional en informe Power BI"

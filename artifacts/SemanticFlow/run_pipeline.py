@@ -30,8 +30,9 @@ from src.core.parsers.markdown_parser import MarkdownSchemaParser
 from src.core.parsers.yaml_parser import YamlSchemaParser
 from src.core.personas.cockpit import DataLeadershipCockpitEngine
 from src.core.quality.scorer import SemanticQualityScorer
-from src.core.security.sanitize import sanitize_company_id, resolve_within, validate_culture_code
+from src.core.security.sanitize import sanitize_company_id, resolve_within, safe_filename, validate_culture_code
 from src.core.security.secret_scanner import scan_file_for_secrets
+from src.core.security.concurrency import acquire_company_lock
 
 console = Console()
 
@@ -71,6 +72,24 @@ def run_pipeline(
 ):
     company_id = sanitize_company_id(company_id)
     culture = validate_culture_code(culture)
+
+    with acquire_company_lock(company_id, base_output_dir):
+        _execute_pipeline_locked(
+            company_id=company_id,
+            input_file=input_file,
+            base_output_dir=base_output_dir,
+            min_score=min_score,
+            culture=culture,
+        )
+
+
+def _execute_pipeline_locked(
+    company_id: str,
+    input_file: Path,
+    base_output_dir: Path,
+    min_score: float = 45.0,
+    culture: str = "es-CL",
+):
 
     console.print(
         Panel.fit(
@@ -220,9 +239,17 @@ def run_pipeline(
 
     # 6. Generate Leadership Cockpit & Individual Lenses
     console.print("\n[bold cyan]6. Síntesis del Data Leadership Cockpit & Persona Lenses...[/bold cyan]")
+    from src.core.personas.registry import PersonaRegistry
+    registry = PersonaRegistry.create_default()
+    company_lenses_dir = input_file.parent / "lenses"
+    if company_lenses_dir.exists():
+        custom_lenses = registry.load_company_lenses(company_lenses_dir, company_id=company_id)
+        if custom_lenses:
+            console.print(f"   [green][OK][/green] [bold]{len(custom_lenses)}[/bold] lentes personalizadas cargadas para [yellow]{company_id}[/yellow].")
+
     cockpit_dir = base_output_dir / "leadership_cockpit" / company_id
     cockpit_dir.mkdir(parents=True, exist_ok=True)
-    cockpit_engine = DataLeadershipCockpitEngine(canonical_project)
+    cockpit_engine = DataLeadershipCockpitEngine(canonical_project, registry=registry)
     cockpit_res = cockpit_engine.export_all(cockpit_dir, include_individual_lenses=True, formats=["md", "json"])
     console.print(f"   [green][OK][/green] Cockpit C-Level generado en: [bold]{cockpit_res.get('cockpit_markdown')}[/bold]")
 
@@ -243,6 +270,19 @@ def run_pipeline(
             if src_json.exists():
                 shutil.copy2(src_json, target_lens_dir / f"{company_id}_projection.json")
             distributed_count += 1
+
+        for custom_lens_file in sorted(lenses_source_dir.glob("*.md"), key=lambda p: p.name.lower()):
+            lens_stem = custom_lens_file.stem
+            if lens_stem.endswith("_lens"):
+                clean_pid = safe_filename(lens_stem[:-5])
+                if clean_pid not in LENS_FOLDER_MAP:
+                    target_custom_dir = lenses_base_dir / clean_pid / company_id
+                    target_custom_dir.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(custom_lens_file, target_custom_dir / f"{company_id}_projection.md")
+                    custom_json = lenses_source_dir / f"{clean_pid}_lens.json"
+                    if custom_json.exists():
+                        shutil.copy2(custom_json, target_custom_dir / f"{company_id}_projection.json")
+                    distributed_count += 1
 
         console.print(f"   [green][OK][/green] Proyecciones distribuidas a [bold]{distributed_count}[/bold] carpetas especializadas en [bold]{lenses_base_dir}[/bold].")
 
@@ -353,8 +393,8 @@ def main():
             min_score=args.min_score,
             culture=args.culture,
         )
-    except (ValueError, PermissionError) as e:
-        console.print(f"[bold red][SECURITY ERROR][/bold red] {e}")
+    except (ValueError, PermissionError, RuntimeError, TimeoutError) as e:
+        console.print(f"[bold red][SECURITY/CONCURRENCY ERROR][/bold red] {e}")
         sys.exit(1)
 
 

@@ -1,12 +1,12 @@
 # Data Science, Feature Engineering & Statistical Lens
 
 **Persona Role**: `DATA_SCIENTIST` | **Technical Depth**: `TECHNICAL`
-**Generated At**: `2026-10-17T00:56:17.169532+00:00`
+**Generated At**: `2026-10-23T00:48:40.860637+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Analytical features, continuous variables, entity grains, and training dimensions for esquema_estrella_unificado_santolaya.
+> Analytical features, continuous variables, entity grains, and training dimensions for schema.
 
 ### Focus Areas
 - **Ai Readiness**

@@ -176,7 +176,7 @@ def validate_dax_expression(expression: str, object_id: Optional[str] = None) ->
 
 
 def validate_project_dax_metrics(project: CanonicalSemanticProject) -> List[Diagnostic]:
-    """Valida todas las métricas definidas en el proyecto canónico."""
+    """Valida todas las métricas definidas en el proyecto canónico (léxico y símbolos)."""
     diagnostics: List[Diagnostic] = []
     for entity in project.entities:
         for metric in entity.metrics:
@@ -185,4 +185,8 @@ def validate_project_dax_metrics(project: CanonicalSemanticProject) -> List[Diag
                     metric.expression, object_id=f"{entity.name}.{metric.name}"
                 )
                 diagnostics.extend(diags)
+
+    from src.core.quality.dax_symbol_validator import SymbolTableDaxValidator
+    symbol_validator = SymbolTableDaxValidator(project)
+    diagnostics.extend(symbol_validator.validate_project())
     return diagnostics

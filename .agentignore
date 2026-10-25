@@ -18,3 +18,6 @@ artifacts/plans/archive/
 credentials.json
 **/token_cache/**
 **/azure_auth/**
+
+# >>> FPAI-PRUNE-START
+# <<< FPAI-PRUNE-END

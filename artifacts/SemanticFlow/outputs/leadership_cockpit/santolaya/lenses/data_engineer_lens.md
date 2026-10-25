@@ -1,12 +1,12 @@
 # Data Engineering, Ingestion & Pipeline Health Lens
 
 **Persona Role**: `DATA_ENGINEER` | **Technical Depth**: `TECHNICAL`
-**Generated At**: `2026-10-17T00:56:17.167537+00:00`
+**Generated At**: `2026-10-23T00:48:40.856642+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Physical schema, partition grain, upstream sources, and pipeline integrity for esquema_estrella_unificado_santolaya.
+> Physical schema, partition grain, upstream sources, and pipeline integrity for schema.
 
 ### Focus Areas
 - **Pipeline Health**

@@ -1,3 +1,4 @@
+import tempfile
 import time
 from pathlib import Path
 from src.core.parsers.markdown_parser import MarkdownSchemaParser
@@ -7,7 +8,7 @@ from src.core.ast.semantic import TableRole
 
 
 def test_massive_stress_suite_runner():
-    base_schemas_path = Path("tests/Massive Stress Test/schemas")
+    base_schemas_path = Path("tests/stress_massive_core/schemas")
     all_schema_files = sorted(list(base_schemas_path.rglob("*.md")))
 
     assert len(all_schema_files) == 12, f"Se esperaban 12 esquemas relacionales, se encontraron {len(all_schema_files)}"
@@ -16,7 +17,7 @@ def test_massive_stress_suite_runner():
     compiler = SemanticCompiler()
     writer = PbipWriter()
 
-    output_root = Path("output/SemanticFlow_Empty/Massive_Stress_PBIP")
+    output_root = Path(tempfile.gettempdir()) / "sf_stress_core"
     output_root.mkdir(parents=True, exist_ok=True)
 
     summary_metrics = []

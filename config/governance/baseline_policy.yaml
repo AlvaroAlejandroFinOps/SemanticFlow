@@ -1,0 +1,45 @@
+# ==============================================================================
+# SemanticFlow Corporate Standard - Baseline Governance Policy
+# Guardrails mínimos no negociables del motor de calidad semántica (Floor Guardrails)
+# ==============================================================================
+
+version: "1.0"
+policy_id: "corporate_baseline"
+display_name: "Corporate Standard Baseline Governance"
+
+min_cqs_score: 75.0
+min_operational_score: 45.0
+mandatory_rules:
+  - "GOV_PII_001"
+  - "D-011"
+  - "D-012"
+
+floor_guardrails:
+  min_score: 60.0
+  min_cqs_score: 75.0
+  min_operational_score: 45.0
+  require_primary_keys: true
+  block_cyclic_dependencies: true
+  disallow_unidirectional_m2m: true
+  mandatory_rules:
+    - "GOV_PII_001"
+    - "D-011"
+    - "D-012"
+
+quality_thresholds:
+  min_score: 60.0
+  require_primary_keys: true
+  block_cyclic_dependencies: true
+  disallow_unidirectional_m2m: true
+  max_warning_deductions: 35.0
+  disallow_unnamed_entities: true
+  enforce_strict_dax_types: true
+
+direct_lake_rules:
+  disallow_calc_columns: true
+  enforce_single_direction_relationships: true
+  warn_on_null_datetime_keys: true
+
+vertipaq_rules:
+  max_unindexed_fact_rows: 1000000
+  block_filter_all_on_facts: true

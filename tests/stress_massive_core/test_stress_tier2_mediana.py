@@ -7,7 +7,7 @@ from src.core.ast.semantic import TableRole
 
 
 def get_tier2_schemas():
-    base_path = Path("tests/Massive Stress Test/schemas/tier2_mediana")
+    base_path = Path("tests/stress_massive_core/schemas/tier2_mediana")
     return list(base_path.glob("*.md"))
 
 

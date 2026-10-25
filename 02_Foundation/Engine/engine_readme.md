@@ -5,13 +5,13 @@ Framework modular gobernado por **Gravity HyperScale Thinking** con Context Engi
 > **Protocolo de Ingesta para Agentes (Bootloader):**
 > 1. Lee `AGENTS.md` (o `GEMINI.md` / `CLAUDE.md`).
 > 2. Lee `.context/tree.json` (Mapa Topológico Satelital de ~250 tokens).
-> 3. Lee `01_seed/seed-idirectory-master.md` (ADN y Ground Truth del proyecto).
+> 3. Lee `01_seed/seed-semanticflow-master.md` (ADN y Ground Truth del proyecto).
 > 4. Lee el `.context.yaml` del directorio objetivo antes de modificar archivos.
 
 ## Manifiesto de Directorios y Roles
 
 - **`01_seed/`**: Semilla de proyecto y memoria técnica (ThinkingSeed Master). ADN arquitectónico del sistema. `[Priority: p0]`
-- **`02_foundation/engine/`**: Núcleo del framework de automatización, lógica de ruteo, indexación y governance engine. `[Priority: p1]`
+- **`02_Foundation/Engine/`**: Núcleo del framework de automatización, lógica de ruteo, indexación y governance engine. `[Priority: p1]`
 - **`03_research/notebooks/`**: Notebooks de desarrollo interactivo (Jupyter/Colab/Fabric/Databricks) para análisis exploratorio (EDA). `[Priority: p2]`
 - **`03_research/prompts/`**: Estructuras de prompts para LLMs, system prompts, árboles de contexto y plantillas de inferencia. `[Priority: p1]`
 - **`03_research/experiments/`**: Pruebas de concepto (PoCs), prototipos de modelos algorítmicos, benchmarks e I+D. `[Priority: p2]`

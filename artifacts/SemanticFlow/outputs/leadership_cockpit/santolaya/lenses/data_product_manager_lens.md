@@ -1,17 +1,16 @@
-# Data Product Management, Lifecycle & Consumer Value Lens
+# Data Product Lifecycle, SLOs & Feedback Lens
 
 **Persona Role**: `DATA_PRODUCT_MANAGER` | **Technical Depth**: `SUMMARY`
-**Generated At**: `2026-10-17T00:56:17.169532+00:00`
+**Generated At**: `2026-10-23T00:48:40.860637+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Data product SLA, consumer adoption contracts, release maturity, and product telemetry for esquema_estrella_unificado_santolaya.
+> Data product SLA, consumer adoption contracts, release maturity, and product telemetry for schema.
 
 ### Focus Areas
 - **Product Lifecycle**
 - **Product Metrics**
-- **Business Value**
 
 ## Metrics & KPIs Portfolio
 

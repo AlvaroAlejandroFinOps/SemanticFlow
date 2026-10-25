@@ -1,16 +1,15 @@
 # Enterprise Data Architecture & Domain Modeling Lens
 
 **Persona Role**: `DATA_ARCHITECT` | **Technical Depth**: `EXHAUSTIVE`
-**Generated At**: `2026-10-17T00:56:17.167537+00:00`
+**Generated At**: `2026-10-23T00:48:40.856642+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Relational graph topology, domain conformances, entity lifecycle, and architectural standards for esquema_estrella_unificado_santolaya.
+> Relational graph topology, domain conformances, entity lifecycle, and architectural standards for schema.
 
 ### Focus Areas
 - **Data Modeling**
-- **Modeling Quality**
 - **Strategic Alignment**
 
 ## Metrics & KPIs Portfolio

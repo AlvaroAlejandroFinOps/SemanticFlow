@@ -1,12 +1,12 @@
 # Regulatory Compliance, Audit Provenance & Risk Lens
 
 **Persona Role**: `AUDIT_RISK` | **Technical Depth**: `EXHAUSTIVE`
-**Generated At**: `2026-10-17T00:56:17.167537+00:00`
+**Generated At**: `2026-10-23T00:48:40.855644+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Regulatory compliance (GDPR/SOX), provenance audit trail, and risk exceptions for esquema_estrella_unificado_santolaya.
+> Regulatory compliance (GDPR/SOX), provenance audit trail, and risk exceptions for schema.
 
 ### Focus Areas
 - **Audit Traceability**

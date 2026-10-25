@@ -1,0 +1,18 @@
+# ==============================================================================
+# Santolaya - Política Local de Gobernanza Semántica y Control cQS
+# ==============================================================================
+
+version: "1.0"
+company_id: "santolaya"
+display_name: "Gobernanza Semántica Santolaya Constructora e Inmobiliaria"
+
+quality_thresholds:
+  min_score: 70.0
+  require_primary_keys: true
+  block_cyclic_dependencies: true
+  disallow_unidirectional_m2m: true
+
+local_rules:
+  enforce_evm_consistency: true
+  enforce_grain_documentation: true
+  disallow_calc_columns: true

@@ -204,6 +204,26 @@ def validate_vertipaq_performance(project: CanonicalSemanticProject) -> List[Dia
     entity_map = {e.id: e for e in project.entities}
     entity_name_map = {e.name.lower(): e for e in project.entities}
 
+    # 0. Cardinalidad no declarada en tablas FACT con métricas o grano (QUAL_CARD_001)
+    for entity in project.entities:
+        if entity.role == EntityRole.FACT:
+            if entity.estimated_rows is None or entity.estimated_rows <= 0:
+                if entity.grain or entity.metrics:
+                    diagnostics.append(
+                        Diagnostic(
+                            code="QUAL_CARD_001",
+                            severity=DiagnosticSeverity.WARNING,
+                            category=DiagnosticCategory.QUALITY,
+                            message=(
+                                f"La tabla de hechos '{entity.name}' no declara 'estimated_rows'. "
+                                "Se asume cardinalidad conservadora (>= 1,000,000) para optimización VertiPaq."
+                            ),
+                            object_id=entity.id,
+                            suggested_action="Declarar 'estimated_rows' en los metadatos de la tabla para afinar el análisis de compresión.",
+                            penalty=2.0,
+                        )
+                    )
+
     # 1. Antipatrón FILTER(ALL('Tabla'), ...)
     filter_all_re = re.compile(r"FILTER\s*\(\s*ALL\s*\(\s*'?(?P<table>[a-zA-Z0-9_ -]+)'?\s*\)", re.IGNORECASE)
 
@@ -214,7 +234,18 @@ def validate_vertipaq_performance(project: CanonicalSemanticProject) -> List[Dia
             for match in filter_all_re.finditer(metric.expression):
                 target_table = match.group("table").strip().lower()
                 target_entity = entity_name_map.get(target_table) or entity
+                is_high_card = False
                 if target_entity.estimated_rows and target_entity.estimated_rows > 1_000_000:
+                    is_high_card = True
+                elif target_entity.estimated_rows is None and target_entity.role == EntityRole.FACT:
+                    is_high_card = True
+
+                if is_high_card:
+                    rows_desc = (
+                        f"{target_entity.estimated_rows:,} registros"
+                        if target_entity.estimated_rows
+                        else "cardinalidad no declarada (asumiendo >= 1,000,000)"
+                    )
                     diagnostics.append(
                         Diagnostic(
                             code="QUAL_VPAQ_FILTER_012",
@@ -222,7 +253,7 @@ def validate_vertipaq_performance(project: CanonicalSemanticProject) -> List[Dia
                             category=DiagnosticCategory.QUALITY,
                             message=(
                                 f"La métrica '{metric.name}' usa FILTER(ALL('{target_entity.name}')) sobre una tabla "
-                                f"con alta cardinalidad estimada ({target_entity.estimated_rows:,} registros)."
+                                f"con alta cardinalidad estimada ({rows_desc})."
                             ),
                             object_id=metric.id,
                             suggested_action="Reescribir usando KEEPFILTERS o CALCULATETABLE para aprovechar los índices segmentados de VertiPaq.",

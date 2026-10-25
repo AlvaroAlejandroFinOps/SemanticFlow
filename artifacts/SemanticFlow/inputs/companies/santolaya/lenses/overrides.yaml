@@ -1,0 +1,64 @@
+# ==============================================================================
+# Santolaya - Overrides sobre las 16 Persona Lenses Base
+# ==============================================================================
+
+company_id: "santolaya"
+
+personas:
+  analytics_leader:
+    display_name: "Director de Operaciones e Inversiones Santolaya"
+    title: "Perspectiva C-Level: Retorno de Cartera Inmobiliaria y Control EVM"
+    focus_areas:
+      - "STRATEGIC_ALIGNMENT"
+      - "BUSINESS_VALUE"
+      - "COST_CAPACITY"
+    target_entities:
+      - "FACT_VENTAS_INMOBILIARIAS"
+      - "FACT_EVM_AVANCE_OBRA"
+      - "DIM_PROYECTO_OBRA"
+    focus_metrics:
+      - "Ventas_UF_Total"
+      - "EVM_EV_Total"
+      - "EVM_CPI_Indice_Costo"
+
+  bi_developer:
+    display_name: "Desarrollador Power BI Direct Lake Santolaya"
+    title: "Modelo Direct Lake Gold OneLake - Rendimiento F8 y V-Order"
+    focus_areas:
+      - "VISUALIZATION_EFFICIENCY"
+      - "COST_CAPACITY"
+    target_entities:
+      - "FACT_EVM_AVANCE_OBRA"
+      - "FACT_VENTAS_INMOBILIARIAS"
+      - "FACT_RECEPCIONES_BODEGA"
+    focus_metrics:
+      - "Desviacion_Plazo_Critico_Dias"
+      - "Indice_Desempeno_Costo_CPI"
+
+  domain_owner:
+    display_name: "Gerente de Construcción y Gerente Comercial"
+    title: "Perspectiva de Negocio: Ejecución de Obras y Venta Inmobiliaria"
+    focus_areas:
+      - "BUSINESS_VALUE"
+      - "PIPELINE_HEALTH"
+    target_entities:
+      - "FACT_EVM_AVANCE_OBRA"
+      - "FACT_COMPRAS_COMPROMISOS"
+      - "FACT_VENTAS_INMOBILIARIAS"
+
+  finops_specialist:
+    display_name: "Especialista FinOps Cloud & Capacidad Fabric Santolaya"
+    title: "Optimización de Capacity Units (SKU F8 Direct Lake) y Memoria VertiPaq"
+    focus_areas:
+      - "COST_CAPACITY"
+      - "VISUALIZATION_EFFICIENCY"
+    target_entities:
+      - "FACT_EVM_AVANCE_OBRA"
+      - "FACT_COMPRAS_COMPROMISOS"
+      - "FACT_RECEPCIONES_BODEGA"
+    focus_metrics:
+      - "EVM_AC_Total"
+      - "Compras_Monto_Comprometido"
+    operational_guidelines:
+      - "Monitorear paginación Delta Parquet en OneLake para evitar fallback a DirectQuery sobre SKU F8."
+      - "Evitar expresiones FILTER(ALL()) sobre FACT_EVM_AVANCE_OBRA y FACT_COMPRAS_COMPROMISOS (Regla D-012)."

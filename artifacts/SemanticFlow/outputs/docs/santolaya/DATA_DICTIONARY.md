@@ -1,4 +1,4 @@
-# Data Dictionary: esquema_estrella_unificado_santolaya
+# Data Dictionary: schema
 
 Santolaya es una destacada empresa chilena de ingeniería, construcción y desarrollo inmobiliario con más de cuatro décadas de liderazgo y excelencia en el mercado nacional. Su modelo integrado abarca desde la prospección, compra de terrenos y estructuración financiera de proyectos, hasta la ejecución integral de obras civiles, comercialización de viviendas y servicio técnico de postventa.
 

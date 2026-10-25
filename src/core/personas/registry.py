@@ -107,6 +107,103 @@ class PersonaRegistry:
         self._override_audit_trail.extend(audit_log)
         return audit_log
 
+    def load_company_lenses(
+        self, lenses_dir: Path, company_id: Optional[str] = None
+    ) -> List[Any]:
+        """
+        Loads company-specific declarative lenses and overrides from a directory.
+        Performs boundary isolation, secret scanning, and schema validation.
+        """
+        import json
+        import jsonschema
+        import yaml
+        from src.core.personas.declarative_lens import DeclarativeDomainLens
+        from src.core.security.sanitize import resolve_within, safe_filename
+        from src.core.security.secret_scanner import scan_file_for_secrets
+
+        if not lenses_dir or not Path(lenses_dir).exists() or not Path(lenses_dir).is_dir():
+            return []
+
+        lenses_path = Path(lenses_dir)
+        loaded_lenses: List[DeclarativeDomainLens] = []
+
+        schema_path = Path("schemas/persona_definition.schema.json")
+        schema_data = None
+        if schema_path.exists():
+            with open(schema_path, "r", encoding="utf-8") as sf:
+                schema_data = json.load(sf)
+
+        candidate_files = sorted(
+            list(lenses_path.glob("*.yaml")) + list(lenses_path.glob("*.yml")),
+            key=lambda p: p.name.lower()
+        )
+
+        banned_property_substrings = ("password", "secret", "token", "credential", "api_key")
+
+        for c_file in candidate_files:
+            safe_file = resolve_within(lenses_path, c_file)
+            _ = safe_filename(safe_file.name)
+
+            if safe_file.name.lower() in ("overrides.yaml", "overrides.yml"):
+                continue
+
+            findings = scan_file_for_secrets(safe_file)
+            if findings:
+                raise PermissionError(
+                    f"Violación de seguridad: secretos detectados en archivo de lente '{safe_file.name}': "
+                    f"{[f.rule_id for f in findings]}"
+                )
+
+            with open(safe_file, "r", encoding="utf-8") as lf:
+                lens_data = yaml.safe_load(lf)
+
+            if not isinstance(lens_data, dict):
+                continue
+
+            for key in lens_data.keys():
+                low_key = key.lower()
+                if any(banned in low_key for banned in banned_property_substrings):
+                    raise PermissionError(
+                        f"Propiedad sensible no autorizada '{key}' detectada en lente '{safe_file.name}'."
+                    )
+
+            if schema_data and "persona_id" in lens_data:
+                validation_copy = dict(lens_data)
+                if "role" not in validation_copy:
+                    validation_copy["role"] = "CUSTOM"
+                if "display_name" not in validation_copy:
+                    validation_copy["display_name"] = validation_copy.get(
+                        "name", str(validation_copy["persona_id"]).replace("_", " ").title()
+                    )
+                if "title" not in validation_copy:
+                    validation_copy["title"] = f"{validation_copy['display_name']} Perspective"
+                if "technical_depth" not in validation_copy:
+                    validation_copy["technical_depth"] = "SUMMARY"
+                jsonschema.validate(instance=validation_copy, schema=schema_data)
+
+            if company_id:
+                lens_data["company_id"] = company_id
+            if "scope" not in lens_data:
+                lens_data["scope"] = "company_custom"
+
+            lens = DeclarativeDomainLens(lens_data, filepath=safe_file)
+            self.register_lens(lens)
+            loaded_lenses.append(lens)
+
+        for ov_name in ("overrides.yaml", "overrides.yml"):
+            ov_path = lenses_path / ov_name
+            if ov_path.exists():
+                safe_ov = resolve_within(lenses_path, ov_path)
+                findings = scan_file_for_secrets(safe_ov)
+                if findings:
+                    raise PermissionError(
+                        f"Violación de seguridad: secretos detectados en '{safe_ov.name}': "
+                        f"{[f.rule_id for f in findings]}"
+                    )
+                self.load_overrides(safe_ov)
+
+        return loaded_lenses
+
     @property
     def override_audit_trail(self) -> List[OverrideValidationResult]:
         """Returns all overrides validated and applied during the registry's lifecycle."""

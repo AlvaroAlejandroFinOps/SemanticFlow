@@ -17,6 +17,7 @@ dependencies = [
     "pyyaml>=6.0",
     "typer>=0.9.0",
     "rich>=13.0.0",
+    "filelock>=3.13.0",
 ]
 
 [project.optional-dependencies]
@@ -41,9 +42,9 @@ target-version = "py310"
 exclude = [
     ".venv",
     ".git",
-    "tests/Massive Stress Test",
-    "tests/Massive Data Stress",
-    "tests/Massive Data Stress v2",
+    "tests/stress_massive_core",
+    "tests/stress_massive_v1",
+    "tests/stress_massive_v2",
 ]
 
 [tool.ruff.lint]
@@ -56,9 +57,9 @@ warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
 exclude = [
-    "tests/Massive Stress Test",
-    "tests/Massive Data Stress",
-    "tests/Massive Data Stress v2",
+    "tests/stress_massive_core",
+    "tests/stress_massive_v1",
+    "tests/stress_massive_v2",
 ]
 
 [[tool.mypy.overrides]]

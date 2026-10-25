@@ -1,12 +1,12 @@
-# Regulatory Compliance, Privacy & Audit Traceability Lens
+# Regulatory Audit, Lineage Provenance & Risk Lens
 
 **Persona Role**: `COMPLIANCE_AUDITOR` | **Technical Depth**: `EXHAUSTIVE`
-**Generated At**: `2026-10-17T00:56:17.167537+00:00`
+**Generated At**: `2026-10-23T00:48:40.855644+00:00`
 
 ## Executive Summary
 
 > [!NOTE]
-> Full regulatory audit trace, GDPR/SOX compliance verification, PII lineage, and access boundaries for esquema_estrella_unificado_santolaya.
+> Full regulatory audit trace, GDPR/SOX compliance verification, PII lineage, and access boundaries for schema.
 
 ### Focus Areas
 - **Audit Traceability**

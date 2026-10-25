@@ -1,0 +1,11 @@
+version: 1.0
+directory: src/core/targets/powerbi
+role: shared_backend
+purpose: Subdominio powerbi de src/core/targets/ (auto scaffold).
+relevance: high
+crawl: true
+read_priority: p1
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de src/core/targets/. Enriquecer con /idir enrich.

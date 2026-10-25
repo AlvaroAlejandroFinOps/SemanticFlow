@@ -1,0 +1,11 @@
+version: 1.0
+directory: src/core/ast/canonical
+role: shared_backend
+purpose: Subdominio canonical de src/core/ast/ (auto scaffold).
+relevance: high
+crawl: true
+read_priority: p1
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de src/core/ast/. Enriquecer con /idir enrich.

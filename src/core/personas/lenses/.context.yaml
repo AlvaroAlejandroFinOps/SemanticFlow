@@ -1,0 +1,11 @@
+version: 1.0
+directory: src/core/personas/lenses
+role: shared_backend
+purpose: Subdominio lenses de src/core/personas/ (auto scaffold).
+relevance: high
+crawl: true
+read_priority: p1
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de src/core/personas/. Enriquecer con /idir enrich.

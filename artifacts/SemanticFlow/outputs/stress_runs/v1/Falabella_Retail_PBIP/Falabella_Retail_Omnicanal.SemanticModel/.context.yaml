@@ -1,0 +1,11 @@
+version: 1.0
+directory: artifacts/semanticflow/outputs/stress_runs/v1/Falabella_Retail_PBIP/Falabella_Retail_Omnicanal.SemanticModel
+role: namespace
+purpose: Subdominio falabella_retail_omnicanal.semanticmodel de artifacts/semanticflow/outputs/stress_runs/v1/falabella_retail_pbip/ (auto scaffold).
+relevance: medium
+crawl: true
+read_priority: p2
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de artifacts/semanticflow/outputs/stress_runs/v1/falabella_retail_pbip/. Enriquecer con /idir enrich.

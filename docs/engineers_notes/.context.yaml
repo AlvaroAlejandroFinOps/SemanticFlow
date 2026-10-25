@@ -1,0 +1,11 @@
+version: 1.0
+directory: docs/engineers_notes
+role: namespace
+purpose: Subdominio engineers_notes de docs/ (auto scaffold).
+relevance: medium
+crawl: true
+read_priority: p2
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de docs/. Enriquecer con /idir enrich.

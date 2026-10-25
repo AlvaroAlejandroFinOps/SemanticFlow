@@ -1,0 +1,11 @@
+version: 1.0
+directory: artifacts/semanticflow/outputs/pbip/santolaya/schema.Report/definition/pages/ReportSection
+role: namespace
+purpose: Subdominio reportsection de artifacts/semanticflow/outputs/pbip/santolaya/schema.report/definition/pages/ (auto scaffold).
+relevance: medium
+crawl: true
+read_priority: p2
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de artifacts/semanticflow/outputs/pbip/santolaya/schema.report/definition/pages/. Enriquecer con /idir enrich.

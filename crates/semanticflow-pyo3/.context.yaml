@@ -1,0 +1,11 @@
+version: 1.0
+directory: "crates/semanticflow-pyo3"
+role: domain_extension
+purpose: "Subdominio semanticflow-pyo3 de crates/ (auto scaffold)."
+relevance: high
+crawl: true
+read_priority: p1
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de crates/. Enriquecer con /idir enrich.

@@ -1,0 +1,11 @@
+version: 1.0
+directory: "terraform-provider-semanticflow/internal/provider"
+role: domain_extension
+purpose: "Subdominio provider de terraform-provider-semanticflow/internal/ (auto scaffold)."
+relevance: high
+crawl: true
+read_priority: p1
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: "Hereda directivas de terraform-provider-semanticflow/internal/. Enriquecer con /idir enrich."

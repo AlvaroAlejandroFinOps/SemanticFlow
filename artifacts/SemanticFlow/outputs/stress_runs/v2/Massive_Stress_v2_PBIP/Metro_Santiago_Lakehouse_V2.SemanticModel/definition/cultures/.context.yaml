@@ -1,0 +1,11 @@
+version: 1.0
+directory: artifacts/semanticflow/outputs/stress_runs/v2/Massive_Stress_v2_PBIP/Metro_Santiago_Lakehouse_V2.SemanticModel/definition/cultures
+role: namespace
+purpose: Subdominio cultures de artifacts/semanticflow/outputs/stress_runs/v2/massive_stress_v2_pbip/metro_santiago_lakehouse_v2.semanticmodel/definition/ (auto scaffold).
+relevance: medium
+crawl: true
+read_priority: p2
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de artifacts/semanticflow/outputs/stress_runs/v2/massive_stress_v2_pbip/metro_santiago_lakehouse_v2.semanticmodel/definition/. Enriquecer con /idir enrich.

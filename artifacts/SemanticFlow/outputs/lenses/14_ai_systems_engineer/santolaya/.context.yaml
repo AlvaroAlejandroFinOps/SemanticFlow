@@ -1,0 +1,11 @@
+version: 1.0
+directory: artifacts/semanticflow/outputs/lenses/14_ai_systems_engineer/santolaya
+role: namespace
+purpose: Subdominio santolaya de artifacts/semanticflow/outputs/lenses/14_ai_systems_engineer/ (auto scaffold).
+relevance: medium
+crawl: true
+read_priority: p2
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de artifacts/semanticflow/outputs/lenses/14_ai_systems_engineer/. Enriquecer con /idir enrich.

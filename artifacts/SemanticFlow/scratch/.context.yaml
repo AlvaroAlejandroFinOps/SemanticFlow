@@ -1,0 +1,11 @@
+version: 1.0
+directory: artifacts/semanticflow/scratch
+role: namespace
+purpose: Subdominio scratch de artifacts/semanticflow/ (auto scaffold).
+relevance: medium
+crawl: true
+read_priority: p2
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de artifacts/semanticflow/. Enriquecer con /idir enrich.

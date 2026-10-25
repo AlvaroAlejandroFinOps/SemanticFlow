@@ -1,0 +1,11 @@
+version: 1.0
+directory: artifacts/semanticflow/outputs/pbip/metro_santiago/schema.SemanticModel/definition
+role: namespace
+purpose: Subdominio definition de artifacts/semanticflow/outputs/pbip/metro_santiago/schema.semanticmodel/ (auto scaffold).
+relevance: medium
+crawl: true
+read_priority: p2
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de artifacts/semanticflow/outputs/pbip/metro_santiago/schema.semanticmodel/. Enriquecer con /idir enrich.

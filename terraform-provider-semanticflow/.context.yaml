@@ -1,0 +1,11 @@
+version: 1.0
+directory: "terraform-provider-semanticflow"
+role: domain_extension
+purpose: "Dominio no canónico terraform-provider-semanticflow (auto scaffold)."
+relevance: high
+crawl: true
+read_priority: p1
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Extensión de dominio. Enriquecer con /idir enrich.

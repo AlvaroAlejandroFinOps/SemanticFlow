@@ -1,0 +1,11 @@
+version: 1.0
+directory: artifacts/semanticflow/outputs/stress_runs/v2/Massive_Stress_v2_PBIP
+role: namespace
+purpose: Subdominio massive_stress_v2_pbip de artifacts/semanticflow/outputs/stress_runs/v2/ (auto scaffold).
+relevance: medium
+crawl: true
+read_priority: p2
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de artifacts/semanticflow/outputs/stress_runs/v2/. Enriquecer con /idir enrich.

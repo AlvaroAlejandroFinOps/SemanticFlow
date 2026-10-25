@@ -1,0 +1,11 @@
+version: 1.0
+directory: artifacts/semanticflow/outputs/lenses/04_data_scientist/santolaya
+role: namespace
+purpose: Subdominio santolaya de artifacts/semanticflow/outputs/lenses/04_data_scientist/ (auto scaffold).
+relevance: medium
+crawl: true
+read_priority: p2
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de artifacts/semanticflow/outputs/lenses/04_data_scientist/. Enriquecer con /idir enrich.

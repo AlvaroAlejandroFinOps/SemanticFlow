@@ -1,0 +1,11 @@
+version: 1.0
+directory: artifacts/semanticflow/outputs/stress_runs/core/Massive_Stress_PBIP/tier2_mediana/05_mediana_inmobiliaria
+role: namespace
+purpose: Subdominio 05_mediana_inmobiliaria de artifacts/semanticflow/outputs/stress_runs/core/massive_stress_pbip/tier2_mediana/ (auto scaffold).
+relevance: medium
+crawl: true
+read_priority: p2
+seed_reference: optional
+tier1_preload: false
+token_density: sparse
+instructions: Hereda directivas de artifacts/semanticflow/outputs/stress_runs/core/massive_stress_pbip/tier2_mediana/. Enriquecer con /idir enrich.

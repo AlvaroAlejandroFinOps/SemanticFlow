@@ -1,17 +1,17 @@
 # SemanticFlow: Deterministic Semantic Modeling, Security-Hardened Translation, and Governance Engine for Heterogeneous Analytical Architectures
 
-[English](README.md) | [Español](README_ES.md)
+**Language:** [English](README.md) | [Español](README_ES.md)
 
-![Architecture-Deterministic Engine](https://img.shields.io/badge/Architecture-Deterministic%20Compiler-blue?style=flat-square)
-![Verification-98/98 Tests Passing](https://img.shields.io/badge/Verification-98%2F98%20Tests%20Passing%20(100%25)-brightgreen?style=flat-square)
-![Zero-Diff-Deterministic Emission](https://img.shields.io/badge/Zero--Diff-Bitwise%20Reproducible-purple?style=flat-square)
-![Quality Gate-cQS Invariant Engine](https://img.shields.io/badge/Quality%20Gate-cQS%20%E2%89%A5%2085.0%20(A)--grade-teal?style=flat-square)
-![Security-Strict Sanitization & Scanner](https://img.shields.io/badge/Security-Strict%20Sanitization%20%26%20Scanner-red?style=flat-square)
-![License-Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-gray?style=flat-square)
+[![Engine](https://img.shields.io/badge/Engine-SMaC%20Compiler-1a1a1a?style=flat-square)](#)
+[![Standard](https://img.shields.io/badge/Standard-Enterprise%20Paper--Grade%20v2.0-2b2b2b?style=flat-square)](#)
+[![Ecosystem](https://img.shields.io/badge/Ecosystem-Multi--AI%20%28Google%20%7C%20Claude%20%7C%20OpenAI%20%7C%20Cursor%29-34495e?style=flat-square)](#)
+[![Architecture](https://img.shields.io/badge/Architecture-Deterministic%20Compiler-4b5563?style=flat-square)](#)
+[![Verification](https://img.shields.io/badge/Verification-Invariants%20100%25-000000?style=flat-square)](#)
+[![License](https://img.shields.io/badge/License-Apache%202.0-1a1a1a?style=flat-square)](#)
 
 ---
 
-## 1. Executive Summary and Strategic Value Proposition
+## 1. Executive Abstract
 
 ### 1.1 The Enterprise Semantic Dilemma
 Modern analytical architectures frequently exhibit structural divergence between engineering layers (dbt Core/Cloud) and executive consumption platforms (Power BI / Microsoft Fabric TMDL, PBIP, Tabular Editor). This divergence induces semantic drift, silent metric discrepancies, operational security vulnerabilities, and compounding maintenance overheads across heterogeneous teams.
@@ -28,7 +28,7 @@ Deployment across enterprise analytics infrastructures demonstrates substantial 
 
 ---
 
-## 2. Theoretical Architecture and Systems Topology
+## 2. System Architecture & Topology
 
 SemanticFlow operates as a five-stage pipelined compiler with strict defensive boundary invariants. Every stage enforces bidirectional isolation through an integrated Security Kernel.
 
@@ -91,7 +91,7 @@ SemanticFlow operates as a five-stage pipelined compiler with strict defensive b
 
 ---
 
-## 3. Mathematical Foundations and Invariant Formulations
+## 3. Mathematical Formulation & Analytical Engines
 
 The compilation lifecycle is governed by deterministic mathematical proofs enforcing structural integrity, cost containment, and output reproducibility.
 
@@ -134,7 +134,7 @@ This invariance is enforced through lexicographical sorting of dictionary keys, 
 
 ---
 
-## 4. Empirical Performance and Benchmark Matrix
+## 4. Empirical Performance & Benchmarks
 
 Performance metrics derived from empirical validation across synthetic and production analytical workloads:
 
@@ -149,7 +149,7 @@ Performance metrics derived from empirical validation across synthetic and produ
 
 ---
 
-## 5. Repository Layout and Modular Decomposition
+## 5. Repository Structure & Artifacts
 
 ```
 SemanticFlow/
@@ -201,7 +201,7 @@ SemanticFlow/
 
 ---
 
-## 6. Verification Protocol and Execution Runbook
+## 6. Execution & Verification Protocol
 
 ### 6.1 Prerequisites and Environment Setup
 The SemanticFlow compiler requires Python 3.10 or higher. Execute environment initialization within an isolated virtual environment:
@@ -258,19 +258,17 @@ python -m src.cli.main `
 
 ---
 
-## 7. Troubleshooting, Error Taxonomy, and Triage
+## 7. Domain Glossary
 
-| Error Code / Symptom | Root Cause Invariant | Diagnostic & Resolution Strategy |
-| :--- | :--- | :--- |
-| **`SEC-PATH-001: Path Traversal Detected`** | Target company or directory resolves outside sandbox boundaries | Ensure `--company` contains only alphanumeric characters and underscores. Remove relative traversal markers (`../`, `..\`). |
-| **`SEC-LEAK-002: Secret Detected in Input`** | High-entropy string or credential pattern encountered in schema | Inspect input YAML/CSV files. Remove embedded database passwords, Bearer tokens, or private keys. |
-| **`SEC-DAX-003: Disallowed DAX Lexeme`** | Measure expression contains dangerous or state-modifying tokens | Remove `EVALUATE`, `USERELATIONSHIP`, DDL or DML statements from metric definitions. Use canonical CALCULATE aggregations. |
-| **`CQS-GATE-001: Quality Score Below Threshold`** | cQS calculated score is $< 85.0$ due to rule penalties | Inspect compiler console report. Resolve missing descriptions (D-001), ambiguous relationships (D-004), or FinOps memory limits (D-012). |
-| **`TOPO-CYC-002: Cyclic Dependency Detected`** | Foreign-key graph contains closed loops | Review entity relationships. Break bidirectional filter dependencies and enforce strict Star/Snowflake hierarchy. |
+* **SMaC:** Semantic Modeling as Code; declarative semantic intent treated as versioned source.
+* **Zero-Diff:** Byte-stable emission for semantically equivalent inputs.
+* **cQS:** Composite Quality Score used as the compilation decision gate.
+* **D-011:** Direct Lake and relationship compatibility guardrail.
+* **D-012:** FinOps and VertiPaq resource guardrail.
 
 ---
 
-## 8. Scholarly References and Prior Art
+## 8. Academic & Engineering References
 
 ```bibtex
 @article{armbrust2021lakehouse,

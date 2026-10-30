@@ -1,11 +1,16 @@
 version: 1.0
 directory: tests/stress_massive_v1
 role: test_suites
-purpose: Subdominio stress_massive_v1 de tests/ (auto scaffold).
+purpose: "Estrés volumétrico v1 (retail), integridad y datos sintéticos."
 relevance: high
 crawl: true
 read_priority: p1
 seed_reference: optional
-tier1_preload: false
 token_density: sparse
-instructions: Hereda directivas de tests/. Enriquecer con /idir enrich.
+instructions: "Validar con pytest compilación relacional y emisión PBIP/TMDL."
+key_files:
+  - "test_massive_data_stress_runner.py: test_massive_falabella_data_stress_pipeline()"
+  - "test_data_generation_integrity.py: test_generate_and_validate_falabella_data()"
+imports_from:
+  - "src/core/engine/compiler.py"
+  - "src/core/emitter/pbip_writer.py"

@@ -1,17 +1,17 @@
 # SemanticFlow: Modelado Semántico Determinista, Traducción con Hardening de Seguridad y Motor de Gobernanza para Arquitecturas Analíticas Heterogéneas
 
-[English](README.md) | [Español](README_ES.md)
+**Idioma:** [English](README.md) | [Español](README_ES.md)
 
-![Arquitectura-Compilador Determinista](https://img.shields.io/badge/Arquitectura-Compilador%20Determinista-blue?style=flat-square)
-![Verificacion-98/98 Tests Aprobados](https://img.shields.io/badge/Verificaci%C3%B3n-98%2F98%20Tests%20Aprobados%20(100%25)-brightgreen?style=flat-square)
-![Zero-Diff-Emision Determinista](https://img.shields.io/badge/Zero--Diff-Bitwise%20Reproducible-purple?style=flat-square)
-![Quality Gate-Motor de Invariantes cQS](https://img.shields.io/badge/Quality%20Gate-cQS%20%E2%89%A5%2085.0%20(Grado%20A)-teal?style=flat-square)
-![Seguridad-Sanitizacion Estricta y Escaner](https://img.shields.io/badge/Seguridad-Sanitizaci%C3%B3n%20Estricta%20y%20Esc%C3%A1ner-red?style=flat-square)
-![Licencia-Apache 2.0](https://img.shields.io/badge/Licencia-Apache%202.0-gray?style=flat-square)
+[![Motor](https://img.shields.io/badge/Motor-Compilador%20SMaC-1a1a1a?style=flat-square)](#)
+[![Estándar](https://img.shields.io/badge/Est%C3%A1ndar-Enterprise%20Paper--Grade%20v2.0-2b2b2b?style=flat-square)](#)
+[![Ecosistema](https://img.shields.io/badge/Ecosistema-Multi--IA%20%28Google%20%7C%20Claude%20%7C%20OpenAI%20%7C%20Cursor%29-34495e?style=flat-square)](#)
+[![Arquitectura](https://img.shields.io/badge/Arquitectura-Compilador%20Determinista-4b5563?style=flat-square)](#)
+[![Verificación](https://img.shields.io/badge/Verificaci%C3%B3n-Invariantes%20100%25-000000?style=flat-square)](#)
+[![Licencia](https://img.shields.io/badge/Licencia-Apache%202.0-1a1a1a?style=flat-square)](#)
 
 ---
 
-## 1. Resumen Ejecutivo y Propuesta de Valor Estratégica
+## 1. Resumen Ejecutivo
 
 ### 1.1 El Dilema Semántico Corporativo
 Las arquitecturas analíticas contemporáneas experimentan una divergencia estructural crítica entre las capas de ingeniería de datos (dbt Core/Cloud) y las plataformas ejecutivas de consumo analítico (Power BI / Microsoft Fabric TMDL, PBIP, Tabular Editor). Dicha divergencia produce deriva semántica (*semantic drift*), discrepancias silenciosas en las métricas de negocio, brechas de seguridad operacional y un coste recurrente de mantenimiento a través de equipos heterogéneos.
@@ -28,7 +28,7 @@ La adopción de SemanticFlow en entornos empresariales de analítica avanzada de
 
 ---
 
-## 2. Arquitectura Teórica y Topología de Sistemas
+## 2. Arquitectura y Topología del Sistema
 
 SemanticFlow se estructura como un compilador secuencial de cinco etapas gobernado por barreras estrictas de invariantes defensivas. Cada fase garantiza aislamiento bidireccional mediante un Núcleo de Seguridad (*Security Kernel*) integrado.
 
@@ -91,7 +91,7 @@ SemanticFlow se estructura como un compilador secuencial de cinco etapas goberna
 
 ---
 
-## 3. Fundamentos Matemáticos y Formulación de Invariantes
+## 3. Formulación Matemática y Motores Analíticos
 
 El ciclo de compilación se encuentra regido por demostraciones matemáticas deterministas que garantizan integridad estructural, restricción presupuestaria y reproducibilidad bit a bit.
 
@@ -134,7 +134,7 @@ Esta invariancia se garantiza mediante ordenamiento lexicográfico de claves, es
 
 ---
 
-## 4. Rendimiento Empírico y Matriz Comparativa
+## 4. Rendimiento Empírico y Benchmarks
 
 Métricas registradas mediante validación empírica en entornos analíticos sintéticos y de producción:
 
@@ -149,7 +149,7 @@ Métricas registradas mediante validación empírica en entornos analíticos sin
 
 ---
 
-## 5. Estructura del Repositorio y Descomposición Modular
+## 5. Estructura del Repositorio y Artefactos
 
 ```
 SemanticFlow/
@@ -201,7 +201,7 @@ SemanticFlow/
 
 ---
 
-## 6. Protocolo de Verificación y Guía de Operación
+## 6. Protocolo de Ejecución y Verificación
 
 ### 6.1 Requisitos Previos e Inicialización del Entorno
 El compilador requiere Python 3.10 o superior. La inicialización debe efectuarse en un entorno virtual aislado:
@@ -258,19 +258,17 @@ python -m src.cli.main `
 
 ---
 
-## 7. Diagnóstico, Taxonomía de Errores y Resolución
+## 7. Glosario de Dominio
 
-| Código de Error / Síntoma | Invariante Causal | Diagnóstico y Acción Correctiva |
-| :--- | :--- | :--- |
-| **`SEC-PATH-001: Path Traversal Detected`** | La empresa o ruta especificada resuelve fuera del sandbox permitido | Verifique que el parámetro `--company` contenga únicamente caracteres alfanuméricos y guiones bajos. Elimine marcadores de ruta relativa (`../`, `..\`). |
-| **`SEC-LEAK-002: Secret Detected in Input`** | Detección de cadenas de alta entropía o patrones de credenciales | Revise los archivos de entrada YAML/CSV. Remueva contraseñas de bases de datos, tokens Bearer o claves privadas incrustadas. |
-| **`SEC-DAX-003: Disallowed DAX Lexeme`** | Expresión de medida contiene lexemas de modificación de estado o no seguros | Remueva `EVALUATE`, `USERELATIONSHIP`, sentencias DDL o DML de las métricas. Utilice agregaciones canónicas sobre CALCULATE. |
-| **`CQS-GATE-001: Quality Score Below Threshold`** | Puntuación cQS calculada es $< 85.0$ por penalizaciones de reglas | Revise el informe de consola. Complete descripciones ausentes (D-001), resuelva relaciones ambiguas (D-004) o ajuste límites de memoria FinOps (D-012). |
-| **`TOPO-CYC-002: Cyclic Dependency Detected`** | El grafo de relaciones foráneas contiene bucles cerrados | Audite las relaciones entre tablas. Desactive filtros cruzados bidireccionales y asegure jerarquía estricta en Estrella o Copo de Nieve. |
+* **SMaC:** Semantic Modeling as Code; intención semántica declarativa tratada como fuente versionada.
+* **Zero-Diff:** Emisión estable byte a byte para entradas semánticamente equivalentes.
+* **cQS:** Composite Quality Score utilizado como compuerta de decisión de compilación.
+* **D-011:** Guardrail de compatibilidad de Direct Lake y relaciones.
+* **D-012:** Guardrail de FinOps y recursos VertiPaq.
 
 ---
 
-## 8. Referencias Académicas y Literatura Previa
+## 8. Referencias Académicas y de Ingeniería
 
 ```bibtex
 @article{armbrust2021lakehouse,
